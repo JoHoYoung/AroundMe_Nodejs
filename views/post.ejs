@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 테스트</title>
+    </head>
+    <body>
+    <h1>게시판</h1>
+       <% for(var i = 0 ;i <results.length ; i++)
+            {
+                var curTitle = results[i]._doc.title;
+                var curContent = results[i]._doc.content;%>
+        <li>#<= i>제목 : <%= curTitle%>, 내용 : <%= curContent%></li>
+            <%}%>
+        <h3 ><a href="/public/create.html" >글 쓰기</a></h3>
+    </body>
+</html>
