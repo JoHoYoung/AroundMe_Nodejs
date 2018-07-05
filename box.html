@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+    /*
+    block level element . 가로 전체를 박스로 가진다.
+    h3{
+      border-width:5px;
+      border-color:red;
+      border-style: solid;
+      display:inline;
+    }
+
+    inline element . 그 텍스트의 크기만큼 박스로 가진다.
+    a{
+      border-width:5px;
+      border-color:red;
+      border-style: solid;
+      display:block;
+    }
+    */
+    /*
+    border는 그 태그(element = tag)가 차지하는 공간을 볼 수 있게 하며,
+    기존에 설정된 기본값인 inline과 block은 css로 언제든지 변경할 수 있다.
+    display:none;을 하면 해당 태그에 해당하는 내용을 안 보이게 할 수 있다.
+    */
+
+    /*중복을 처리하는 방법(위의 코드를)*/
+    h3,a{
+      border:5px solid red;
+      padding:20px;
+      margin:20px;
+      width:100px;
+    }
+    /*padding: 상자 안에서의 여백
+    margin: 상자와 상자 사이의 여백
+    width: 박스의 설정을 원하는 픽셀값으로 설정
+
+    마우스 우클릭-> 검사 => css 적용 요소를 볼 수 있다.
+    */
+    </style>
+  </head>
+
+  <body> <!--본문-->
+    <h3> CSS</h3>
+    <h3> CSS</h3>
+    <a>Hypertext Markup Language (HTML)</a>
+ is the standard markup language for creating web pages
+ and web applications. With Cascading Style Sheets (CSS)
+  and JavaScript, it forms a triad of cornerstone technologies
+   for the World Wide Web.
+  </body>
+</html>
