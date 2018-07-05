@@ -2,16 +2,37 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>로그인 테스트</title>
+    <title>글</title>
     </head>
     <body>
-    <h1>게시판</h1>
-       <% for(var i = 0 ;i <results.length ; i++)
-            {
-                var curTitle = results[i]._doc.title;
-                var curContent = results[i]._doc.content;%>
-        <li>#<= i>제목 : <%= curTitle%>, 내용 : <%= curContent%></li>
+    <h1>글</h1>
+       <%       var curTitle = results[0]._doc.title;
+                var curContent = results[0]._doc.content;%>
+        <li>제목 : <%= curTitle%>, 내용 : <%= curContent%></li>
+        <br>
+        <a href  = "/process/posts">목록으로</a>
+        <% if(req.session.user.id == results[0]._doc.writer){ %>
+               <a href="/process/post/destroy/<%= results[0]._doc._id%>" >삭제!</a> 
+                
             <%}%>
-        <h3 ><a href="/public/create.html" >글 쓰기</a></h3>
+        <% var Comments = results[0]._doc.comments;
+        for( var i=0; i<Comments.length;i++)
+            {%>
+              글쓴이 : <%= Comments[i].writer %>
+              내용 : <%= Comments[i].content %><br>
+        <% if(Comments[i].writer == req.session.user.id){%>
+        <form method="post" action="/process/comment/destroy/<%= results[0]._doc._id%>">
+                <td><input type="hidden" name="commentid" value="<%= Comments[i]._id%>" /></td>
+            <input type="submit" value="삭제" />
+        </form>
+        <%}%>
+            <%}%>
+         <form method="post" action="/process/comment/create/<%= results[0]._doc._id%>" >
+        <table>
+            <td><lable>댓글</lable></td>
+                <td><input type="text" name="content" placeholder="댓글 입력하세용"/></td>
+            </table>
+            <input type="submit" value="작성" />
+        </form>
     </body>
 </html>

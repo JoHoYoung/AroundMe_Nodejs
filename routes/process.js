@@ -45,8 +45,6 @@ router.route('/process/login').post(function (req, res) {
                         uid: paramId,
                         uname: username
                     });
-                    console.dir(docs);
-
 
                     console.log('로그인 정보 저장');
                     res.end();
@@ -90,7 +88,6 @@ router.route('/process/adduser').post(function (req, res) {
             if (err) {
                 throw err;
             }
-            console.log('왜 에러?');
             if (result) {
                 res.redirect('/public/login.html')
                 res.end();
@@ -121,14 +118,14 @@ router.route('/process/create').post(function (req, res) {
     var paramuser = req.session.user.id;
     if (database) {
         //var addContent = function(database, title, content,id,callback) 
-        user.addContent(database, paramtitle, paramcontent, req.session.user.id, function (err, result) {
+        user.addPost(database, paramtitle, paramcontent, req.session.user.id, function (err, result) {
 
             if (err) {
                 throw err;
             }
             console.log('왜 에러?');
             if (result) {
-                res.redirect('/process/post')
+                res.redirect('/process/posts')
                 res.end();
 
             } else {
@@ -179,20 +176,21 @@ router.route('/process/logout').get(function (req, res) {
     }
 });
 
-router.route('/process/post').get(function (req, res) {
+router.route('/process/posts').get(function (req, res) {
 
     var database = req.app.get('database');
 
     if (database.db) {
 
-        database.ContentModel.find({}, function (err, results) {
+        database.PostModel.find({}, function (err, results) {
             if (err) {
                 return;
             }
 
             if (results) {
-                res.render('post', {
-                    results: results
+                res.render('posts', {
+                    results: results,
+                    req : req
                 });
             }
         });
@@ -200,7 +198,86 @@ router.route('/process/post').get(function (req, res) {
 
 });
 
+router.route('/process/comment/create/:ObjectId').post(function(req,res)
+                                                      {
+    var database = req.app.get('database')
+    var filterd = path.parse(req.params.ObjectId).base;
+    database.PostModel.findOne({"_id":filterd},function(err,rawContent){
+        if(err) throw err;
+        
+        rawContent.comments.push({content:req.body.content, writer:req.session.user.id});
+        rawContent.save(function(err){
+            if(err) throw err;
+        });
+    });
+    
+    res.redirect(`/process/post/${filterd}`);
+});
 
+router.route('/process/comment/destroy/:postroot').post(function(req,res)
+                                                      {
+    var database = req.app.get('database')
+    var postroot = path.parse(req.params.postroot).base;
+    var filterd = req.body.commentid;
+    database.PostModel.findOne({"_id":postroot},function(err,rawContent){
+        if(err) throw err;
+        var idx;
+        for(var i=0;i<rawContent.comments.length;i++)
+            {
+                console.log(rawContent.comments[i]._id);
+                console.log('필터드');
+                console.log(filterd);
+                if(rawContent.comments[i]._id==filterd)
+                {idx=i;
+                 console.log(idx);
+                break;
+                }
+            }
+        rawContent.comments.splice(idx,1);
+        
+        rawContent.save(function(err){
+            if(err) throw err;
+        });
+    });
+    
+    res.redirect(`/process/post/${postroot}`);
+});
+
+
+router.route('/process/post/:ObjectId').get(function(req, res) {
+
+    var database = req.app.get('database');
+    var filterd = path.parse(req.params.ObjectId).base;
+    
+    if(database.db)
+        {
+            database.PostModel.find({"_id":filterd},function(err,results){
+                
+                if(results)
+                    {
+                        res.render('post',{results:results, req:req});
+                    }
+            });
+            
+        }
+
+});
+
+router.route('/process/post/destroy/:ObjectId').get(function(req, res) {
+
+    var database = req.app.get('database');
+    var filterd = path.parse(req.params.ObjectId).base;
+
+    if(database.db)
+        {
+            database.PostModel.remove({"_id":filterd},function(err,results){
+                
+              res.redirect('/process/posts');
+            });
+            
+        }
+
+});
 router.route('/').get(function (req, res) {
 
     console.log('로그아웃 시도');

@@ -34,12 +34,12 @@ var addUser = function(database, id, password, name, callback){
     
 }
 
-var addcontent = function(database, title, content,id,callback){
+var addpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var content = new database.ContentModel({"title":title,"content":content,"id":id});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id});
  
-     content.save(function(err){
+    post.save(function(err){
         if(err){
             callback(err,null);
             return;
@@ -53,4 +53,4 @@ var addcontent = function(database, title, content,id,callback){
 
 module.exports.authUser=authUser;
 module.exports.addUser=addUser;
-module.exports.addContent=addcontent;
+module.exports.addPost=addpost;

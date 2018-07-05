@@ -66,34 +66,35 @@ function connectDB()
         
         console.log('데이터 베이스에 연결되었습니다.');
         
-        database.UserSchema=mongoose.Schema({
-            id : {type : String, required : true, unique : true},
-            name : {type : String, required : true},
-            password: {type : String, required : true}
-        });
-        
-        database.ContentSchema=mongoose.Schema({
-            title : {type : String, required : true},
-            content : {type : String,required : false},
-            id : {type : String, requre : true}
-        })
-        console.log('스키마 정의함');
-        
-        database.UserModel=mongoose.model("users",database.UserSchema);
-        database.ContentModel=mongoose.model("content",database.ContentSchema)
-        console.log('모델 정의 함');
+        createUserSchema(database);
+        createPostSchema(database);  
+      
+     });
     
-    });
     database.on('disconnected',function(){
         
         console.log('연결 끊어짐');
         setInterval(connectDB,5000);
     });
+    
     app.set('database',database);
 
 }
 
+function createUserSchema(database){
+    
+    database.UserSchema = require('./database/user_schema').createSchema(mongoose);
+    
+    database.UserModel = mongoose.model("users",database.UserSchema);
+}
 
+function createPostSchema(database)
+{
+    database.PostSchema = require('./database/post_schema').createSchema(mongoose);
+    
+    database.PostModel = mongoose.model("post",database.PostSchema);
+    
+}
          
 http.createServer(app).listen(app.get('port'),function(){
     console.log('서버 시작');
