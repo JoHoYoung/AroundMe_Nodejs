@@ -17,8 +17,6 @@ Schema.createSchema = function(mongoose)
             created_at : {type : Date, 'default' : Date.now}
         }]
   });
-    console.log('값 값값::');
-    console.log(mongoose.Schema.ObjectId);
     //console.dir(PostSchema);
   
     return PostSchema;

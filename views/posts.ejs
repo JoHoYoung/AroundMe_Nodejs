@@ -9,9 +9,8 @@
        <% for(var i = 0 ;i <results.length ; i++)
             {
                 var curTitle = results[i]._doc.title;
-                var curContent = results[i]._doc.content;
-                console.dir(results[i]);%>
-        <li><a href = "/process/post/<%= results[i]._doc._id%>">제목 : <%= curTitle%></a>, 내용 : <%= curContent%></li>
+                var curContent = results[i]._doc.content;%>
+        <li><a href = "/post/<%= results[i]._doc._id%>">제목 : <%= curTitle%></a>, 내용 : <%= curContent%></li>
             <%}%>
         <h3 ><a href="/public/create.html" >글 쓰기</a></h3>
     </body>
