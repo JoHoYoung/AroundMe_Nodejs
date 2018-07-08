@@ -15,7 +15,9 @@ Schema.createSchema = function(mongoose)
             content : {type : String, trim : true, 'default' : ''},
             writer : {type : String , 'default' : ''},
             created_at : {type : Date, 'default' : Date.now}
-        }]
+        }],
+        views : {type : Number, 'default':0},
+        recommender : [{ recommender :{type : String}}]
   });
     //console.dir(PostSchema);
   

@@ -6,22 +6,26 @@
     </head>
     <body>
     <h1>글</h1>
-       <%       var curTitle = results[0]._doc.title;
-                var curContent = results[0]._doc.content;%>
+       <%       var curTitle = results._doc.title;
+                var curContent = results._doc.content;%>
         <li>제목 : <%= curTitle%>, 내용 : <%= curContent%></li>
         <br>
         <a href  = "/posts">목록으로</a>
-        <% if(req.session.user.id == results[0]._doc.writer){ %>
+        <form method="post" action="/post/recommend">
+                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+            <input type="submit" value="추천" />
+        </form>
+        <% if(req.session.user.id == results._doc.writer){ %>
         <form method="post" action="/post/destroy">
-                <td><input type="hidden" name="postid" value="<%= results[0]._doc._id%>" /></td>
+                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
             <input type="submit" value="삭제" />
         </form>   
          <form method="post" action="/post/update">
-                <td><input type="hidden" name="postid" value="<%= results[0]._doc._id%>" /></td>
+                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
             <input type="submit" value="수정" />
         </form>
             <%}%>
-        <% var Comments = results[0]._doc.comments;
+        <% var Comments = results._doc.comments;
         for( var i=0; i<Comments.length;i++)
             {%>
               글쓴이 : <%= Comments[i].writer %>
@@ -33,7 +37,7 @@
         </form>
         <%}%>
             <%}%>
-         <form method="post" action="/post/comment/create/<%= results[0]._doc._id%>" >
+         <form method="post" action="/post/comment/create/<%= results._doc._id%>" >
         <table>
             <td><lable>댓글</lable></td>
                 <td><input type="text" name="content" placeholder="댓글 입력하세용"/></td>

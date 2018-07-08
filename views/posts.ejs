@@ -1,3 +1,12 @@
+<!-- 합쳐지고 최소화된 최신 CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- 부가적인 테마 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,12 +15,52 @@
     </head>
     <body>
     <h1>게시판</h1>
+        <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">게시판</div>
+            <ul class="list-group">
        <% for(var i = 0 ;i <results.length ; i++)
             {
                 var curTitle = results[i]._doc.title;
                 var curContent = results[i]._doc.content;%>
-        <li><a href = "/post/<%= results[i]._doc._id%>">제목 : <%= curTitle%></a>, 내용 : <%= curContent%></li>
+        <li class="list-group-item"><a href = "/post/<%= results[i]._doc._id%>">제목 : <%= curTitle%></a>조회수 :<%=results[i]._doc.views%></li>
             <%}%>
-        <h3 ><a href="/public/create.html" >글 쓰기</a></h3>
+        </ul>
+            <nav>
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+      <% var temppivot = {};
+      temppivot = Math.floor((num-1)/5);
+      console.log(num);
+      var pivot = (temppivot)*5+1;
+      var btnNum = PostNum/10;
+      var de = num%6;
+      var c = [{},{},{},{},{}];
+      for(var i=0; i<5;i++)
+          {
+              if((i+1)==de)
+              {c[i]="active";
+              }else
+               { c[i]="";
+          }
+          } 
+      for(var q=0; q<5; q++){%>
+      <%if(Math.ceil(PostNum/10)>pivot+q){%>
+      <li class = "<%= c[q] %>" ><a href="/posts/<%= pivot+q%>"><%= pivot+q %></a></li>
+    <%}%>
+      <%}%>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+                <h3 ><a href="/public/create.html" >글 쓰기</a></h3>
+        </div>
     </body>
 </html>
