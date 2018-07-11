@@ -10,7 +10,12 @@
                 var curContent = results._doc.content;%>
         <li>제목 : <%= curTitle%>, 내용 : <%= curContent%></li>
         <br>
-        <a href  = "/posts">목록으로</a>
+        <% var images=results._doc.images;
+        for(var i=0;i<images.length;i++)
+            {%>
+                <img src="../uploads/<%= results._doc.images[i].images%>">
+            <%}%>
+        <a href  = "/posts/1">목록으로</a>
         <form method="post" action="/post/recommend">
                 <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
             <input type="submit" value="추천" />
@@ -31,7 +36,7 @@
               글쓴이 : <%= Comments[i].writer %>
               내용 : <%= Comments[i].content %><br>
         <% if(Comments[i].writer == req.session.user.id){%>
-        <form method="post" action="/post/comment/destroy/<%= results[0]._doc._id%>">
+        <form method="post" action="/post/comment/destroy/<%= results._doc._id%>">
                 <td><input type="hidden" name="commentid" value="<%= Comments[i]._id%>" /></td>
             <input type="submit" value="삭제" />
         </form>

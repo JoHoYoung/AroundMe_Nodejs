@@ -7,7 +7,7 @@
     <body>
     <h1>글 쓰기</h1>
         <br>
-        <form method="post" action="/post/create" >
+        <form method="post" action="/post/create" enctype="multipart/form-data">
         <table>
             <tr>
             <td><label>제목</label></td>
@@ -18,6 +18,10 @@
                 <td><input type="text" name="content" placeholder="내용"/></td>
             </tr>
             </table>
+            <input type='file' name='userimage' multiple='multiple'>
+            <div di='preview'>
+            
+            </div>
             <input type="submit" value="작성" />
         </form>
         <br>

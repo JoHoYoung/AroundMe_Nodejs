@@ -21,7 +21,7 @@ Schema.createSchema = function(mongoose)
     .set(function(password){
         this._password=password;
         this.salt = this.makeSalt();
-        this.hashed_passwrod = thi.encryptPassword(password);
+        this.hashed_password = this.encryptPassword(password);
     })
     .get(function(){return this._password});
     
@@ -34,6 +34,16 @@ Schema.createSchema = function(mongoose)
 			return crypto.createHmac('sha1', inSalt).update(plainText).digest('hex');
 		} else {
 			return crypto.createHmac('sha1', this.salt).update(plainText).digest('hex');
+		}
+	});
+    
+    	UserSchema.method('authenticate', function(plainText, inSalt, hashed_password) {
+		if (inSalt) {
+			console.log('authenticate 호출됨 : %s -> %s : %s', plainText, this.encryptPassword(plainText, inSalt), hashed_password);
+			return this.encryptPassword(plainText, inSalt) === hashed_password;
+		} else {
+			console.log('authenticate 호출됨 : %s -> %s : %s', plainText, this.encryptPassword(plainText), this.hashed_password);
+			return this.encryptPassword(plainText) === this.hashed_password;
 		}
 	});
     

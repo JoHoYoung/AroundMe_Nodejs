@@ -29,8 +29,16 @@
             <nav>
   <ul class="pagination">
     <li>
-      <a href="#" aria-label="Previous">
+      <a href="/posts/1" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li>
+        <% var Previous;
+        if((num-1)<1)
+         {Previous = 1;}else{Previous = num-1;} %>
+      <a href='/posts/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true">&lang;</span>
       </a>
     </li>
       <% var temppivot = {};
@@ -38,23 +46,31 @@
       console.log(num);
       var pivot = (temppivot)*5+1;
       var btnNum = PostNum/10;
-      var de = num%6;
+      var de = num%5+1;
       var c = [{},{},{},{},{}];
       for(var i=0; i<5;i++)
           {
-              if((i+1)==de)
+              if((i+2)==de)
               {c[i]="active";
               }else
                { c[i]="";
           }
           } 
       for(var q=0; q<5; q++){%>
-      <%if(Math.ceil(PostNum/10)>pivot+q){%>
+      <%if(Math.ceil(PostNum/10)>=pivot+q){%>
       <li class = "<%= c[q] %>" ><a href="/posts/<%= pivot+q%>"><%= pivot+q %></a></li>
     <%}%>
       <%}%>
     <li>
-      <a href="#" aria-label="Next">
+        <% var Next;
+         if((num+1)<=Math.ceil(PostNum/10)){
+              Next = num+1;}else{Next = Math.ceil(PostNum/10);}%>
+      <a href="/posts/<%= Next %>" aria-label="Next">
+        <span aria-hidden="true">&rang;</span>
+      </a>
+    </li>
+    <li>
+      <a href="/posts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>

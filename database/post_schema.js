@@ -17,7 +17,8 @@ Schema.createSchema = function(mongoose)
             created_at : {type : Date, 'default' : Date.now}
         }],
         views : {type : Number, 'default':0},
-        recommender : [{ recommender :{type : String}}]
+        recommender : [{ recommender :{type : String}}],
+        images : [{images : {type :String}}]
   });
     //console.dir(PostSchema);
   
