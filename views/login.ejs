@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<% if(can == -1){%>    
+<script>
+function myFunction() {
+    alert("아이디, 비밀번호를 확인하세요.");
+}
+myFunction();
+</script>
+    <%}%>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 테스트</title>
+    <style>
+    body{
+      font-family:"나눔스퀘어";
+    }
+    #grid{
+      padding-bottom: 100px;
+      border:1px solid white;
+      display:grid;
+      grid-template-columns: 5fr 1fr;
+      padding-top: 10px;
+    }
+    #leftimage{
+      border-left: 1px solid white;
+    }
+    #rightimage{
+      padding-top:100px;
+      border-left: 1px solid white;
+    }
+    form{
+      padding: 10px;
+      text-align: center;
+    }
+    .sign{
+      text-align:center;
+    }
+    tr{
+      border:10px;
+    }
+    input[type=submit] {
+  margin-top: 7px;
+  border: 1px #999;
+  border-radius: 0px;
+  background-color: #b5d3f8;
+  width:160.8px;
+  -webkit-appearance: none;
+    }
+    h3{
+      margin:0px;
+      text-align: center;
+    }
+a{
+  text-decoration:none;
+  color:#b5d3f8;
+}
+table{
+  margin:1px;
+}
+    </style>
+    </head>
+    <body>
+        <img src="../public/sourceimage.jpg" width = "100%" height = "50px">
+      <div id="grid">
+      <div id="leftimage">
+        <img src="../public/source2.jpg" width = "100%" height = "100%"></div>
+      <div id="rightimage">
+    <h3>동네방네></h3>
+        <form method="post" action="/login">
+        <table>
+            <input type="text" name="id" placeholder="아이디" />
+    </table>
+            <table>
+                <input type="password" name="password" placeholder="비밀번호"/>
+            <input type="submit" value="로그인" name="login" style="color:white" />
+        </table>
+
+        </form>
+        <div class="sign">
+        <a href="/public/signin.html" style="font-size:0.8em" style="color:#b5d3f8">회원가입</a>
+      </div>
+      </div>
+    </div>
+    </body>
+</html>
