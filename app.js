@@ -78,6 +78,9 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
     var paramuser = req.session.user.id;
+    var area = req.body.area;
+    console.log("지역은!?");
+    console.log(area);
     if (database) {
         user.addPost(database, paramtitle, paramcontent, req.session.user.id, function (err, result) {
 

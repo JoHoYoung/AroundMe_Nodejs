@@ -67,7 +67,7 @@
     alert("Your browser doesn't support to File API")
   }
 });
-        document.getElementById("area").value = ''
+        
     </script>
     </head>
     <body>
@@ -78,6 +78,22 @@
         <table>
             <tr>
             <td><label>제목</label></td>
+    <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
+      지역
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <a onclick='area("영등포구")'><li>영등포구</li></a>
+        <a onclick='area("서초구")'><li>서초구</li></a>
+        <a onclick='area("관악구")'><li>관악구</li></a>
+        <a onclick='area("동작구")'><li>동작구</li></a>
+        <a onclick='area("강남구")'><li>강남구</li></a>
+        <a onclick='area("양천구")'><li>양천구</li></a>
+        <a onclick='area("구로구")'><li>구로구</li></a>
+        
+    </ul>
+  </div>
                 <input type="hidden" id="area" name="area"/>
             <td><input type="text" name="title" placeholder="제목"/></td>
             </tr>
@@ -92,6 +108,26 @@
             </div>
             <input type="submit" value="작성" />
         </form>
+        <script>
+            document.getElementById("area").value = '';
+        function area(text)
+            {
+                console.log(text);
+                document.getElementById("area").value = text;
+                document.getElementById("Toggle").innerHTML = text;
+            }
+        function validtation()
+            {
+                if(document.getElementById("area").value =='')
+                    {
+                        console.log("실패");
+                       window.history.back();
+                   // returnToPreviousPage();
+                        return false;
+                    }
+               else{ return true;}
+            }
+        </script>
         <br>
     </body>
 </html>
