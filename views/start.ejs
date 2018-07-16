@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <meta charset="UTF-8">
+            <title>濡�洹몄�� �����ㅽ��</title>
+            <style>
+                * {
+                    margin: 0;
+                    border: 0;
+                    padding: 0;
+                }
+
+                body {
+                    font-family: "나눔스퀘어";
+                    letter-spacing: -0.5px;
+                    display: block;
+                }
+
+                .leftside {
+                    display: block;
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    width: 330px;
+                    height: 100%;
+                    overflow-y: auto;
+                    border-right: 1px solid rgba(240, 240, 240, 255);
+                    background-color: white;
+                    z-index:10;
+
+                }
+                .login{
+                    top:0;
+                    left:0;
+                    position:fixed;
+                    width:330px;
+                    height:350px;
+                    border-bottom: 2px solid rgba(240, 240, 240, 255);
+                    margin-bottom:3px;
+                    z-index:13;
+                }
+                .search{
+                    padding:10px 10px;
+                    width:310px;
+                    top:353px;
+                    left:0;
+                    position:fixed;
+                    z-index:12;
+                    border-bottom: 2px solid rgba(240, 240, 240, 255);
+                }
+                .search p{
+                    font-size:15px;
+                    font-weight:bold;
+                    text-align:center;
+                    margin:3px 0px 7px 0px;
+                    
+                }
+                .search input{
+                    padding:0 10px;
+                    width:100%;
+                    height:40px;
+                    box-sizing:border-box;
+                    border:1px #e3e3e3 solid;
+                    color:#4c4c4c;
+                    background:#f2f2f2;
+                    font-size:14px;
+                }
+
+                .leftside img {
+                    display: block;
+                    margin: 0 auto;
+                    padding-bottom: 10px;
+                }
+
+                .mainbox {
+                    padding-left: 301px;
+                    width: 100%-301px;
+                    height: 1000px;
+                    display: block;
+                    position: relative;
+                    background-color: rgba(250, 250, 250, 255);
+                    word-break: break-all;
+                    overflow: scroll;
+                    
+                }
+
+                .mainbox img {
+                    display: block;
+
+                }
+
+                .leftside #logo {
+                    margin-top: 50px;
+
+                }
+                .leftside #tit{
+                    margin-bottom:30px;
+                }
+
+                .mainbox #tmp {
+                    position: absolute;
+                    left: 420px;
+                    top: 50px;
+                }
+
+                .mainbox h1 {
+                    position: absolute;
+                    top: 200px;
+                    left: 860px;
+                    text-align: left;
+                    font-weight: normal;
+                }
+
+                h1 strong {
+                    font-weight: bold;
+                    color: #64a2e8;
+                }
+
+                form {
+                    text-align: center;
+                }
+
+                .sign {
+                    text-align: center;
+                }
+
+                tr {
+                    border: 10px;
+                }
+
+                input[type=submit] {
+                    margin-top: 7px;
+                    border: 1px #999;
+                    border-radius: 0px;
+                    background-color: #b5d3f8;
+                    width: 160.8px;
+                    -webkit-appearance: none;
+                }
+
+                h3 {
+                    margin: 0px;
+                    text-align: center;
+                }
+
+                a {
+                    text-decoration: none;
+                    color: #b5d3f8;
+                }
+
+                table {
+                    margin: 1px;
+                }
+
+                .sign {
+                    margin-top: 10px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 250px;
+                    height: 40px;
+                    display: block;
+                    background-color: white;
+                    border: 0.3px rgb(200, 200, 200) solid;
+                }
+                #signup{
+                    background:#64a2e8;
+                }
+                #signup a{
+                    color:white;
+                }
+
+                .login a {
+                    color: rgb(100, 100, 100);
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 15px !important;
+                    line-height: 40px;
+                }
+                .arealist{
+                    position:fixed;
+                    top:442px;
+                    left:0px;
+                    width:330px;
+                    height:200px;
+                    z-index:11;
+                    overflow-y:scroll;
+                    
+                }
+                .arealist a{
+                    display:block;
+                    font-size:16px;
+                    text-align:center;
+                    width:100%;
+                    padding:0 15px;
+                    line-height:40px;
+                    height:40px;
+                    box-sizing:border-box;
+                    border-bottom:1px #e3e3e3 solid;
+                    color:#404040;
+                }
+
+            </style>
+        </head>
+
+        <body>
+            <div class="leftside">
+                <div class="login">
+                    <img id="logo" src="../public/tmp2.PNG" width="130px" height="130px">
+                    <form method="post" action="/login">
+                    </form>
+                    <a href="/login"><div class="sign" id="signin">로그인</div></a>
+
+                    <div class="sign" id="signup">
+                        <a href="/public/signin.html">회원가입</a>
+                    </div>
+                </div>
+              <div class="search">
+                    <p>우리동네 찾기</p>
+                    <input type="text" name="name" placeholder="찾으시는 지역을 검색하세요." autocomplete="off">
+                </div>
+                <div class="arealist">
+                    <a href="">동작구</a>
+                    <a href="">영등포구</a>
+                    <a href="">서초구</a>
+                    <a href="">관악구</a>
+                    <a href="">동작구</a>
+                    <a href="">강남구</a>
+                    <a href="">양천구</a>
+                    <a href="">구로구</a>
+                    <a href="">관악구</a>
+                    <a href="">동작구</a>
+                    <a href="">강남구</a>
+                    <a href="">양천구</a>
+                    <a href="">구로구</a>
+                </div>
+            </div>
+            <div class="mainbox">
+                <h1>생활 안전 정보 공유 커뮤니티<br><strong>동네방네</strong></h1>
+                <img id="tmp" src="../public/tmp4.PNG" width="500px" height="500px">
+            </div>
+        </body>
+
+</html>

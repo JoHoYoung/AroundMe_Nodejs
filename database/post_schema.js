@@ -18,6 +18,7 @@ Schema.createSchema = function(mongoose)
         }],
         views : {type : Number, 'default':0},
         recommender : [{ recommender :{type : String}}],
+        area : {type : String,'default' : ''},
         images : [{images : {type :String}}]
   });
     //console.dir(PostSchema);

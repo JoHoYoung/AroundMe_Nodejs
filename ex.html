@@ -37,7 +37,6 @@
   color: black;
 }
     </style>
-    <% var temp=results._doc.images %>
     <script type="text/javascript">
     $(document).ready(function() {
   if (window.File && window.FileList && window.FileReader) {
@@ -67,56 +66,8 @@
     </script>
     </head>
     <body>
-    <h1>글 쓰기</h1>
-        <br>
-        <form method="post" action="/process/post/update/<%= results._doc._id%>" enctype="multipart/form-data" >
-        <table>
-            <%       var curTitle = results._doc.title;
-                var curContent = results._doc.content;
-            %>
-            <tr>
-            <td><label>제목</label></td>
-            <td><input type="text" name="title" value="<%= curTitle%>"/></td>
-            </tr>
-            <tr>
-            <td><lable>글내용</lable></td>
-                <td><input type="text" name="content" value="<%= curContent%>"/></td>
-            </tr>
-            </table>
-           <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <input type='file' id='files' name='userimage' multiple='multiple'>
-            <div id='preview'> 
-            </div>
-          <p id="firstP"></p>
-<script>
-              var p = document.getElementById("firstP");
-                   var images = [];
-                   var todelete = [];         
-    <% var q=0; %>
-    <% for(var i=0;i< temp.length;i++)
-        {%>
-            var str = "<%= temp[i].images %>";
-            images.push(str);
-        <%}%>
-	           for(var i=0;i<images.length;i++)
-               {
-                   $("<span class=\"pip\">" +
-            "<img class=\"imageThumb\" src=\"../uploads/" + images[i] + "\" id=\"" + i + "\"/>" +
-            "<br/><span class=\"remove\" id=\"" + i + "\">Remove image</span>" +
-            "</span>").insertAfter("#files");
-               }
-    $(".remove").click(function(){
-              todelete.push((this).id);
-              console.log((this).id);
-              console.log("투딜맅");
-              console.log(todelete);
-            $(this).parent(".pip").remove();
-    document.getElementById("delimg").value = todelete;     
-    });
-            </script>
-            <input type="hidden" id="delimg" name="todelete" />
-            <input type="submit" value="작성" />
-        </form>
-        <br>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <h3>Upload your images</h3>
+  <input type="file" id="files" name="userimages" multiple />
     </body>
 </html>
