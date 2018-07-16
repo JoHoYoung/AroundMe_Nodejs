@@ -160,7 +160,7 @@ router.route('/logout').get(function (req, res) {
             if (err) {throw err;    }
             res.render('login', {can: 0,});
         });
-    } else {res.render('login', {can: -1,});}
+    } else {res.render('start', {can: -1,});}
 });
 
 router.route('/posts/:num').get(function (req, res) {
