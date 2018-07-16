@@ -30,8 +30,14 @@ var user = require('./user.js');
 
 var popup = require('window-popup').windowPopup;
 
+router.route('/login').get(function (req, res) {
 
-router.route('/login').post(function (req, res) {
+                    res.render('login',{can:0});
+                    res.end();        
+});
+
+
+router.route('/process/login').post(function (req, res) {
 
     var database = req.app.get('database');
     var paramId = req.body.id || req.query.id;
@@ -52,7 +58,7 @@ router.route('/login').post(function (req, res) {
                                            authorized: true};
                     res.render('main', {uid: paramId, uname: username});
                     res.end();
-                } else {res.render('login', {can: -1,});}});
+                } else {res.render('login', {can: -1});}});
         } else {res.end();}
     }
 });
@@ -89,6 +95,47 @@ router.route('/adduser').post(function (req, res) {
         res.write('<h2>데이터 베이스 연결 실패</h2>');
         res.end();
     }
+});
+
+router.route('/imagedelete/:postroot/:idx').get(function(req, res) {
+  var database = req.app.get('database');
+    var filterd = path.parse(req.params.postroot).base;
+    var index = path.parse(req.params.idx).base;
+    if (database.db) {
+        database.PostModel.findOne({"_id":filterd},function(err,results){
+        if(results)
+        {console.log("리절트!!");
+            if(results.images)
+            {var images = results.images;
+            
+            fs.unlink(`./uploads/${images[index].images}`,function(err){
+                         if(err){throw err;} });
+            results.images.splice(index,1);
+            results.save(function (err) {
+            if (err) throw err;
+        });
+          }
+                 res.redirect(`/post/updating/${filterd}`);
+         res.end();
+        }
+        });     
+    }  
+});
+
+
+router.route('/post/updating/:postroot').get(function (req, res) {
+
+    var database = req.app.get('database');
+    var filterd = path.parse(req.params.postroot).base;
+    if (database.db) {
+        database.PostModel.findOne({"_id":filterd},function(err,results){
+        if(results)
+        {        res.render('postupdate',{results:results});
+                res.end();
+        }
+        });     
+    }  
+
 });
 
 
@@ -154,6 +201,12 @@ router.route('/post/comment/create/:ObjectId').post(function (req, res) {
     res.redirect(`/post/${filterd}`);
 });
 
+router.route('/post/create').get(function (req, res) {
+    
+    console.log('크리에이트!');
+    res.render('create',{can : 1});
+});
+
 router.route('/post/comment/destroy/:postroot').post(function (req, res) {
     var database = req.app.get('database')
     var postroot = path.parse(req.params.postroot).base;
@@ -212,7 +265,6 @@ router.route('/post/destroy').post(function (req, res) {
         database.PostModel.findOne({"_id":filterd},function(err,results){
             if(results.images)
             {var images = results.images;
-            console.log(images);
             for(var i=0;i<images.length;i++)
           {     fs.unlink(`./uploads/${images[i].images}`,function(err){
                          if(err){throw err;};         
@@ -229,7 +281,7 @@ router.route('/post/destroy').post(function (req, res) {
     }
 });
 
-router.route('/post/update').post(function (req, res) {
+router.route('/post/update').post(function(req, res) {
 
     var database = req.app.get('database');
     var filterd = req.body.postid;
@@ -238,7 +290,7 @@ router.route('/post/update').post(function (req, res) {
         "_id": filterd
     }, function (err, results) {
 
-        if (results) {        res.render('postupdate', {results: results,req: req});
+        if (results) {  res.render('postupdate', {results: results,req: req});
         }
     });
 });
@@ -273,23 +325,26 @@ router.route('/post/recommend').post(function (req, res) {
     });
 });
 
+router.route('/hotposts/:num').get(function (req, res) {
 
-//router.route('/process/post/update/:postroot').post(function (req, res) {
-//    var database = req.app.get('database');
-//    var postroot = path.parse(req.params.postroot).base;
-//    var paramtitle = req.body.title || req.query.title;
-//    var paramcontent = req.body.content || req.query.content;
-//
-//    database.PostModel.findOneAndUpdate({
-//        "_id": postroot
-//    }, {
-//        "title": paramtitle,
-//        "content": paramcontent
-//    }, function (err, results) {
-//        if (err) throw err;
-//    });
-//    res.redirect('/posts/1');
-//});
+  var database = req.app.get('database');
+    var skip = path.parse(req.params.num).base;
+    var Postnum;
+    database.PostModel.count({star:{$gt:10}}, function (err, count) {
+        Postnum = count;
+    });
+    if (database.db) {
+        database.PostModel.find({star:{$gt:10}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+            if (err) {return;}
+            if (results) {
+                res.render('hotposts', {results: results,num: skip,req: req,PostNum: Postnum});
+            }
+        });
+    }
+});
+
+
+
 
 router.route('/').get(function (req, res) {
 
@@ -299,9 +354,7 @@ router.route('/').get(function (req, res) {
             can: 0,
         });;
     } else {
-        res.render('login', {
-            can: 0,
-        });;
+        res.render('start');
     }
 });
 

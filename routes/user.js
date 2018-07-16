@@ -53,7 +53,7 @@ var addUser = function(database, id, password, name, callback){
 var addpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"star":15});
  
     post.save(function(err){
         if(err){

@@ -1,9 +1,17 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    
     <title>글</title>
-    </head>
+</head>
     <body>
     <h1>글</h1>
        <%       var curTitle = results._doc.title;
@@ -13,7 +21,7 @@
         <% var images=results._doc.images;
         for(var i=0;i<images.length;i++)
             {%>
-                <img src="../uploads/<%= results._doc.images[i].images%>">
+                <img src="../uploads/<%= results._doc.images[i].images%>" width="100">
             <%}%>
         <a href  = "/posts/1">목록으로</a>
         <form method="post" action="/post/recommend">
@@ -21,15 +29,10 @@
             <input type="submit" value="추천" />
         </form>
         <% if(req.session.user.id == results._doc.writer){ %>
-        <form method="post" action="/post/destroy">
-                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
-            <input type="submit" value="삭제" />
-        </form>   
-         <form method="post" action="/post/update">
-                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
-            <input type="submit" value="수정" />
-        </form>
-            <%}%>
+        <button type="button" class="btn btn-primary" id="Delbtn" data-toggle="modal" data-target="#Delmodal">삭제
+</button>
+        <button type="button" class="btn btn-primary" id="UpdateBtn" data-toggle="modal" data-target="#Updatemodal">수정</button>
+   <%}%>
         <% var Comments = results._doc.comments;
         for( var i=0; i<Comments.length;i++)
             {%>
@@ -49,5 +52,51 @@
             </table>
             <input type="submit" value="작성" />
         </form>
+      
+        <div class="modal fade" id="Delmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        게시글을 삭제 하시겠습니까?
+      </div>
+      <div class="modal-footer">
+          <form method="post" action="/post/destroy">
+                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+            <input type="submit" value="삭제" >
+          </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+        
+          <div class="modal fade" id="Updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        게시글을 수정 하시겠습니까?
+      </div>
+      <div class="modal-footer">
+           <form method="post" action="/post/update">
+                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+            <input type="submit" value="수정" />
+        </form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
     </body>
 </html>

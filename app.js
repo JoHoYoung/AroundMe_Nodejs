@@ -2,7 +2,7 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-
+var fs = require('fs');
 var multer = require('multer');
 
 var storage = multer.diskStorage({
@@ -73,17 +73,12 @@ app.post('/upload', upload.array('userfile', 12), function (req, res) {
     res.send('uploaded : ' + req.file);
 });
 
-app.post('/post/create', upload.array('userimage', 12), function (req, res) {
+app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
-    console.log('바디는!?');
-    //console.dir(req.session);
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
     var paramuser = req.session.user.id;
-    //console.dir(req.file);
-    // console.log(paramtitle);
     if (database) {
-        //var addContent = function(database, title, content,id,callback) 
         user.addPost(database, paramtitle, paramcontent, req.session.user.id, function (err, result) {
 
             if (err) {
@@ -91,7 +86,6 @@ app.post('/post/create', upload.array('userimage', 12), function (req, res) {
             }
             if (result) {
 
-                console.dir(result);
                 for (var i = 0; i < req.files.length; i++) {
                     result.images.push({
                         images: req.files[i].filename
@@ -123,7 +117,8 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
     var postroot = path.parse(req.params.postroot).base;
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
-    console.log(req.files);
+    var todelete= req.body.todelete;
+    console.log(todelete);
     database.PostModel.findOneAndUpdate({
         "_id": postroot
     }, {
@@ -131,11 +126,20 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
         "content": paramcontent
     }, function (err, results) {
         if (err) throw err;
-       
-       console.log(results.images);
-       console.log(results.images.length); 
-       var idx=results.images.length; results.images.splice(0,idx);
-     console.log(req.files.length);
+       console.log(todelete);
+        todelete = todelete.split(',');
+        todelete = todelete.sort().reverse();
+        console.log(todelete.length);
+        
+        for(var i=0;i<todelete.length;i++)
+            {
+                console.log("지울것은1?");
+           console.log(todelete[i]); fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
+                         if(err){throw err;}});
+                results.images.splice(todelete[i],1);
+    
+            }
+      // var idx=results.images.length; results.images.splice(0,idx);
         for (var i = 0; i < req.files.length; i++) {
                     results.images.push({
                         images: req.files[i].filename
@@ -159,15 +163,12 @@ var UserModel;
 function connectDB() {
     var databaseUrl = 'mongodb://localhost:27017/local';
 
-    console.log('데이터 베이스 연결을 시도합니다.');
     mongoose.Promise = global.Promise;
     mongoose.connect(databaseUrl);
     database = mongoose.connection;
 
     database.on('error', console.error.bind(console, 'mongoose connection error'));
     database.on('open', function () {
-
-        console.log('데이터 베이스에 연결되었습니다.');
 
         createUserSchema(database);
         createPostSchema(database);
