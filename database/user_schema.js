@@ -13,7 +13,10 @@ Schema.createSchema = function(mongoose)
         name: {type:String, index:'hashed','default': ''},
         age : {type:Number, 'default':-1},
         created_at: {type: Date, index: {unique: false}, 'default': Date.now},
-	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now}
+	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
+        sex : {type:String, 'default':"남"},
+        birth : {type:String, 'default':'0'},
+        phone : {type:String, 'default':'0'}
      });
     
     UserSchema

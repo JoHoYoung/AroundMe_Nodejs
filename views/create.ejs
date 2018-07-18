@@ -5,6 +5,7 @@
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+<base href="/">
 <!DOCTYPE html>
 <html>
 <head>
@@ -94,12 +95,14 @@
         
     </ul>
   </div>
+                <p id="areaerror">
+        </p>
                 <input type="hidden" id="area" name="area"/>
-            <td><input type="text" name="title" placeholder="제목"/></td>
+            <td><input type="text" id="title" name="title" placeholder="제목"/></td>
             </tr>
             <tr>
             <td><lable>글내용</lable></td>
-                <td><input type="text" name="content" placeholder="내용"/></td>
+                <td><input type="text" id="content" name="content" placeholder="내용"/></td>
             </tr>
             </table>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -110,22 +113,38 @@
         </form>
         <script>
             document.getElementById("area").value = '';
+            document.getElementById("title").value = '';
+            document.getElementById("content").value = '';
         function area(text)
             {
                 console.log(text);
                 document.getElementById("area").value = text;
                 document.getElementById("Toggle").innerHTML = text;
+                document.getElementById("areaerror").innerHTML = '';
             }
-        function validtation()
+        function validation()
             {
+                console.log("유효성 체크!");
                 if(document.getElementById("area").value =='')
                     {
+                        document.getElementById("areaerror").innerHTML = "지역을 선택해 주세요";
                         console.log("실패");
-                       window.history.back();
-                   // returnToPreviousPage();
                         return false;
                     }
-               else{ return true;}
+                if(document.getElementById("title").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "제목을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                if(document.getElementById("content").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "내용을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                
+                return true;
             }
         </script>
         <br>

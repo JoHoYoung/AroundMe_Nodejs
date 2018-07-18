@@ -82,7 +82,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     console.log("지역은!?");
     console.log(area);
     if (database) {
-        user.addPost(database, paramtitle, paramcontent, req.session.user.id, function (err, result) {
+        user.addPost(database, paramtitle, paramcontent, req.session.user.id,area,function (err, result) {
 
             if (err) {
                 throw err;
@@ -121,24 +121,29 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
     var todelete= req.body.todelete;
+    var area = req.body.area;
     console.log(todelete);
     database.PostModel.findOneAndUpdate({
         "_id": postroot
     }, {
         "title": paramtitle,
-        "content": paramcontent
+        "content": paramcontent,
+        "area": area
     }, function (err, results) {
         if (err) throw err;
        console.log(todelete);
         todelete = todelete.split(',');
         todelete = todelete.sort().reverse();
+        console.log("투딜릿");
+        console.log(todelete);
         console.log(todelete.length);
         
         for(var i=0;i<todelete.length;i++)
             {
                 console.log("지울것은1?");
-           console.log(todelete[i]); fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
+   if(todelete[i]!='') {fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
                          if(err){throw err;}});
+                       }
                 results.images.splice(todelete[i],1);
     
             }

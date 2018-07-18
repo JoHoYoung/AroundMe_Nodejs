@@ -70,8 +70,12 @@ router.route('/adduser').post(function (req, res) {
     var paramId = req.body.id || req.query.id;
     var paramPassword = req.body.password || req.query.password;
     var paramName = req.body.name || req.query.name;
+    var sex = req.body.sex;
+    var birth=req.body.year+'.'+req.body.month+'.'+req.body.day;
+    var phone=req.body.phonefirst+req.body.phonemiddle+req.body.phonelast;
+    console.log(birth);
     if (database) {
-        user.addUser(database, paramId, paramPassword, paramName, function (err, result) {
+        user.addUser(database, paramId, paramPassword, paramName,sex,birth,phone,function (err, result) {
 
             if (err) {
                 throw err;
@@ -95,31 +99,6 @@ router.route('/adduser').post(function (req, res) {
         res.write('<h2>데이터 베이스 연결 실패</h2>');
         res.end();
     }
-});
-
-router.route('/imagedelete/:postroot/:idx').get(function(req, res) {
-  var database = req.app.get('database');
-    var filterd = path.parse(req.params.postroot).base;
-    var index = path.parse(req.params.idx).base;
-    if (database.db) {
-        database.PostModel.findOne({"_id":filterd},function(err,results){
-        if(results)
-        {console.log("리절트!!");
-            if(results.images)
-            {var images = results.images;
-            
-            fs.unlink(`./uploads/${images[index].images}`,function(err){
-                         if(err){throw err;} });
-            results.images.splice(index,1);
-            results.save(function (err) {
-            if (err) throw err;
-        });
-          }
-                 res.redirect(`/post/updating/${filterd}`);
-         res.end();
-        }
-        });     
-    }  
 });
 
 
@@ -184,7 +163,8 @@ router.route('/posts/:num').get(function (req, res) {
 router.route('/post/comment/create/:ObjectId').post(function (req, res) {
     var database = req.app.get('database')
     var filterd = path.parse(req.params.ObjectId).base;
-    database.PostModel.findOne({
+    if(req.session.user)
+    {database.PostModel.findOne({
         "_id": filterd
     }, function (err, rawContent) {
         if (err) throw err;
@@ -199,12 +179,19 @@ router.route('/post/comment/create/:ObjectId').post(function (req, res) {
     });
 
     res.redirect(`/post/${filterd}`);
+    }else {
+        res.render('login', {can:0});
+    }
 });
 
 router.route('/post/create').get(function (req, res) {
     
     console.log('크리에이트!');
-    res.render('create',{can : 1});
+    if(req.session.user)
+    {res.render('create',{can : 1});
+    }else {
+        res.render('login', {can: 0});
+    }
 });
 
 router.route('/post/comment/destroy/:postroot').post(function (req, res) {
@@ -228,7 +215,6 @@ router.route('/post/comment/destroy/:postroot').post(function (req, res) {
             if (err) throw err;
         });
     });
-
     res.redirect(`/post/${postroot}`);
 });
 
@@ -300,7 +286,8 @@ router.route('/post/recommend').post(function (req, res) {
     var database = req.app.get('database');
     var filterd = req.body.postid;
 
-    database.PostModel.findOne({
+    if(req.session.user)
+    {database.PostModel.findOne({
         "_id": filterd
     }, function (err, results) {
         var can = 0;
@@ -323,6 +310,9 @@ router.route('/post/recommend').post(function (req, res) {
             res.redirect(`/post/${filterd}`);
         }
     });
+    }else{
+        res.render('login', {can:0});
+    }
 });
 
 router.route('/hotposts/:num').get(function (req, res) {
@@ -342,9 +332,6 @@ router.route('/hotposts/:num').get(function (req, res) {
         });
     }
 });
-
-
-
 
 router.route('/').get(function (req, res) {
 

@@ -9,9 +9,36 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    
     <title>글</title>
 </head>
+    <script>
+    function doImgPop(img){ 
+ img1= new Image(); 
+ img1.src=(img); 
+ imgControll(img); 
+} 
+  
+function imgControll(img){ 
+ if((img1.width!=0)&&(img1.height!=0)){ 
+    viewImage(img); 
+  } 
+  else{ 
+     controller="imgControll('"+img+"')"; 
+     intervalID=setTimeout(controller,20); 
+  } 
+}
+
+function viewImage(img){ 
+ W=img1.width; 
+ H=img1.height; 
+ O="width="+W+",height="+H+",scrollbars=yes"; 
+ imgWin=window.open("","",O); 
+ imgWin.document.write("<html><head><title>:*:*:*: 이미지상세보기 :*:*:*:*:*:*:</title></head>");
+ imgWin.document.write("<body topmargin=0 leftmargin=0>");
+ imgWin.document.write("<img src="+img+" onclick='self.close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+ imgWin.document.close();
+}
+</script>
     <body>
     <h1>글</h1>
        <%       var curTitle = results._doc.title;
@@ -21,14 +48,16 @@
         <% var images=results._doc.images;
         for(var i=0;i<images.length;i++)
             {%>
-                <img src="../uploads/<%= results._doc.images[i].images%>" width="100">
+                <img src="../uploads/<%= results._doc.images[i].images%>" width="100" onclick="doImgPop('../uploads/<%= results._doc.images[i].images%>')">
             <%}%>
         <a href  = "/posts/1">목록으로</a>
         <form method="post" action="/post/recommend">
                 <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
             <input type="submit" value="추천" />
         </form>
-        <% if(req.session.user.id == results._doc.writer){ %>
+        <%
+        if(req.session.user)
+        if(req.session.user.id == results._doc.writer){ %>
         <button type="button" class="btn btn-primary" id="Delbtn" data-toggle="modal" data-target="#Delmodal">삭제
 </button>
         <button type="button" class="btn btn-primary" id="UpdateBtn" data-toggle="modal" data-target="#Updatemodal">수정</button>

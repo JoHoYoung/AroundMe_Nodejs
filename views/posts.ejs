@@ -28,9 +28,9 @@
                 var curTitle = results[i]._doc.title;
                 var curContent = results[i]._doc.content;%>
                 <li class="list-group-item"><a href="/post/<%= results[i]._doc._id%>">제목 : <%= curTitle%></a>
-                    <%=results[i]._doc.views%>  : <%=results[i]._doc.star%><%=results[i]._doc.created_at.toISOString().
-  replace(/T/, ' ').      // replace T with a space
+                    조회수 : <%=results[i]._doc.views%> 추천수 :<%=results[i]._doc.star%>     <%=results[i]._doc.created_at.toISOString().replace(/T/, ' ').      // replace T with a space
   replace(/\..+/, '')  %>
+                    작성자 : <%= results[i]._doc.writer%>
                 </li>
                 <%}%>
         </ul>

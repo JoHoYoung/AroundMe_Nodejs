@@ -69,18 +69,35 @@
     <body>
     <h1>글 쓰기</h1>
         <br>
-        <form method="post" action="/process/post/update/<%= results._doc._id%>" enctype="multipart/form-data" >
+        <form method="post" action="/process/post/update/<%= results._doc._id%>" enctype="multipart/form-data" onsubmit="return validation();" >
         <table>
             <%       var curTitle = results._doc.title;
                 var curContent = results._doc.content;
             %>
             <tr>
+                <input type="hidden" id="area" name="area"/>
             <td><label>제목</label></td>
-            <td><input type="text" name="title" value="<%= curTitle%>"/></td>
+            <td><input type="text" name="title" id="title" value="<%= curTitle%>"/></td>
+                <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
+      지역
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <a onclick='area("영등포구")'><li>영등포구</li></a>
+        <a onclick='area("서초구")'><li>서초구</li></a>
+        <a onclick='area("관악구")'><li>관악구</li></a>
+        <a onclick='area("동작구")'><li>동작구</li></a>
+        <a onclick='area("강남구")'><li>강남구</li></a>
+        <a onclick='area("양천구")'><li>양천구</li></a>
+        <a onclick='area("구로구")'><li>구로구</li></a>
+        
+    </ul>
+  </div>
             </tr>
             <tr>
             <td><lable>글내용</lable></td>
-                <td><input type="text" name="content" value="<%= curContent%>"/></td>
+                <td><input type="text" id="content" name="content" value="<%= curContent%>"/></td>
             </tr>
             </table>
            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -114,9 +131,48 @@
     document.getElementById("delimg").value = todelete;     
     });
             </script>
+       <p id="areaerror">
+        </p>
             <input type="hidden" id="delimg" name="todelete" />
             <input type="submit" value="작성" />
         </form>
+         <script>
+                document.getElementById("area").value = "<%= 
+                 results._doc.area %>";
+              document.getElementById("Toggle").innerHTML = "<%= 
+                 results._doc.area %>";
+          function area(text)
+            {
+                console.log(text);
+                document.getElementById("area").value = text;
+                document.getElementById("Toggle").innerHTML = text;
+                document.getElementById("areaerror").innerHTML = '';
+            }
+        function validation()
+            {
+                console.log("유효성 체크!");
+                if(document.getElementById("area").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "지역을 선택해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                if(document.getElementById("title").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "제목을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                if(document.getElementById("content").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "내용을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                
+                return true;
+            }
+        </script>
         <br>
     </body>
 </html>

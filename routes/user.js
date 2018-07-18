@@ -33,10 +33,10 @@ var authUser = function(database, id, password, callback) {
 	});
 	
 }
-var addUser = function(database, id, password, name, callback){
+var addUser = function(database, id, password, name,sex ,birth,phone,callback){
     console.log("회원가입 진행");
     
-    var user = new database.UserModel({"id":id,"password":password,"name":name});
+    var user = new database.UserModel({"id":id,"password":password,"name":name, "sex":sex,"birth":birth, "phone":phone});
     
     user.save(function(err){
         if(err){
@@ -50,10 +50,10 @@ var addUser = function(database, id, password, name, callback){
     
 }
 
-var addpost = function(database, title, content,id,callback){
+var addpost = function(database, title, content,id,area,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"star":15});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"area":area,"star":15});
  
     post.save(function(err){
         if(err){
