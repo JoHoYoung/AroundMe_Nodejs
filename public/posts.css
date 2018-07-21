@@ -1,0 +1,17 @@
+.contain .panel {
+    width: 700px;
+    position: relative;
+    left : 200px;
+    margin-left: 50px;
+}
+.main .panel li.list-group-item{
+    display: block;
+    border: 1px #ddd solid;
+    padding: 10px;
+    min-height: 60px;
+    width: 700px;
+    background-color: white;
+}
+.main .panel li.list-group-item:hover{
+    background-color: #eee;
+}

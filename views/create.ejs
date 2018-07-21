@@ -1,85 +1,97 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="../public/common.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="../public/create.css">
 
 <base href="/">
 <!DOCTYPE html>
 <html>
+
 <head>
+    
+    <% include ../views/header%>
     <meta charset="UTF-8">
     <title>글 작성</title>
     <style>
-    nput[type="file"] {
-  display: block;
-}
-.imageThumb {
-  max-height: 75px;
-  border: 2px solid;
-  padding: 1px;
-  cursor: pointer;
-}
-.pip {
-  display: inline-block;
-  margin: 10px 10px 0 0;
-}
-        .dasds{
-            color : 123121f
+        nput[type="file"] {
+            display: block;
         }
-.remove {
-  display: block;
-  background: #444;
-  border: 1px solid black;
-  color: white;
-  text-align: center;
-  cursor: pointer;
-}
-.remove:hover {
-  background: white;
-  color: black;
-}
+
+        .imageThumb {
+            max-height: 75px;
+            border: 2px solid;
+            padding: 1px;
+            cursor: pointer;
+        }
+
+        .pip {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+        }
+
+        .dasds {
+            color: 123121f
+        }
+
+        .remove {
+            display: block;
+            background: #444;
+            border: 1px solid black;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .remove:hover {
+            background: white;
+            color: black;
+        }
+
     </style>
     <script type="text/javascript">
-        
-    $(document).ready(function() {
-  if (window.File && window.FileList && window.FileReader) {
-    $("#files").on("change", function(e) {
-      var files = e.target.files,
-        filesLength = files.length;
-      for (var i = 0; i < filesLength; i++) {
-        var f = files[i]
-        var fileReader = new FileReader();
-        fileReader.onload = (function(e) {
-          var file = e.target;
-          $("<span class=\"pip\">" +
-            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-            "<br/><span class=\"remove\">Remove image</span>" +
-            "</span>").insertAfter("#files");
-          $(".remove").click(function(){
-            $(this).parent(".pip").remove();
-          });
+        $(document).ready(function() {
+            if (window.File && window.FileList && window.FileReader) {
+                $("#files").on("change", function(e) {
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function(e) {
+                            var file = e.target;
+                            $("<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                                "<br/><span class=\"remove\">Remove image</span>" +
+                                "</span>").insertAfter("#files");
+                            $(".remove").click(function() {
+                                $(this).parent(".pip").remove();
+                            });
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
         });
-        fileReader.readAsDataURL(f);
-      }
-    });
-  } else {
-    alert("Your browser doesn't support to File API")
-  }
-});
-        
+
     </script>
-    </head>
-    <body>
-        
-    <h1>글 쓰기</h1>
-        <br>
-        <form method="post" action="/process/create" enctype="multipart/form-data" onsubmit="return validation();">
-        <table>
-            <tr>
-            <td><label>제목</label></td>
-    <div class="btn-group" role="group">
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <div class="leftside">
+                <h1></h1>
+            </div>
+            <form autocomplete="off" method="post" action="/process/create" enctype="multipart/form-data" onsubmit="return validation();">
+                <table>
+                    <h3>게시물 작성</h3>
+            <br>
+                    <tr id="posttitle">
+                        <input type="hidden" id="area" name="area" />
+                        <td class="box"><input type="text" name="title" placeholder="제목" /></td>
+                    </tr>
+                    <div class="btn-group" role="group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
       지역
       <span class="caret"></span>
@@ -98,20 +110,18 @@
                 <p id="areaerror">
         </p>
                 <input type="hidden" id="area" name="area"/>
-            <td><input type="text" id="title" name="title" placeholder="제목"/></td>
-            </tr>
-            <tr>
-            <td><lable>글내용</lable></td>
-                <td><input type="text" id="content" name="content" placeholder="내용"/></td>
-            </tr>
-            </table>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <input type='file' id='files' name='userimage' multiple='multiple'>
-            <div id='preview'> 
-            </div>
-            <input type="submit" value="작성" />
-        </form>
-        <script>
+                    <tr id="postcontent">
+                        <td class="box"><textarea name="content" placeholder="내용"></textarea></td>
+                    </tr>
+                </table>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <input type='file' id='files' name='userimage' multiple='multiple'>
+                <div id="preview">
+
+                </div>
+                <input type="submit" value="작성" />
+            </form>
+            <script>
             document.getElementById("area").value = '';
             document.getElementById("title").value = '';
             document.getElementById("content").value = '';
@@ -147,6 +157,11 @@
                 return true;
             }
         </script>
-        <br>
-    </body>
+            <br>
+        </div>
+    </div>
+    <% include ../views/rfooter%>
+</body>
+
+
 </html>

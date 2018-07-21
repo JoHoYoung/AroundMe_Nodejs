@@ -1,0 +1,68 @@
+.contain form {
+    display: block;
+    width: 700px;
+    height: 600px;
+    position: relative;
+    left: 200px;
+    margin-left: 50px;
+}
+.contain table {
+    width: 100%;
+    height: 440px;
+    overflow-y: auto;
+}
+
+
+.contain table tr {
+    border: 1px #e3e3e3 solid;
+    display: block;
+    font-size: 17px;
+    line-height: 17px;
+    text-align: left;
+    padding: 10px 10px;
+}
+
+.contain table tr td input {
+    border: 0;
+    width: 100%;
+    outline: none;
+
+}
+
+label {
+    margin: 0;
+    padding: 0 10px 0 0;
+}
+
+#posttitle {
+    height: 20px;
+}
+
+#postcontent {
+    height: 400px;
+}
+
+#postcontent .box {
+    height: 100%;
+}
+
+#postcontent .box textarea {
+    outline: none;
+    height: 100%;
+    width: 100%;
+    resize: none;
+}
+
+.img_wrap {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+}
+
+.img_wrap img {
+    max-width: 100%;
+}
+
+.dropdown-menu{
+    position: absolute;
+}

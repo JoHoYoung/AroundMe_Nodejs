@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "나눔스퀘어";
+    list-style: none;
+}
+.blank{
+    display: block;
+    width: 100%;
+    height: 90px;
+}
+nav1 {
+    z-index: 100;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 90px;
+    border-bottom: 1px #d6d6d6 solid;
+    background-color: white;
+}
+
+nav1.wrap {
+    margin: 0 auto;
+    width: 1180px;
+    height: 100%;
+    display: block;
+}
+
+#logo {
+    float: left;
+    margin-left: 100px;
+    height: 100%;
+}
+
+#logo a {
+    float: left;
+    display: block;
+    margin: 10px 15px 10px 0;
+}
+
+#logo p {
+    float: left;
+}
+
+p {
+    display: block;
+}
+
+#logo p span.name {
+    padding-bottom: 10px;
+    display: block;
+    color: #b5d3f8;
+    font-weight: bold;
+}
+
+#mainname {
+    margin-top: 15px;
+    margin-left: 3px;
+    line-height: 16px;
+    font-size: 16px;
+}
+
+#logo p span.subname {
+
+    display: block;
+    color: #4c4c4c;
+    font-size: 24px;
+    line-height: 24px;
+}
+
+#menu {
+    margin: 0 300px;
+    width: 600px;
+    height: 100%;
+    text-align: center;
+}
+
+#menu li {
+    display: inline-block;
+    margin: 0 15px;
+    height: 76px;
+    line-height: 80px;
+}
+
+#menu li a {
+    font-size: 20px;
+    font-weight: 900;
+    color: #4c4c4c;
+}
