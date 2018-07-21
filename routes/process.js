@@ -30,6 +30,8 @@ var user = require('./user.js');
 
 var popup = require('window-popup').windowPopup;
 
+var nodemailer = require('nodemailer');
+
 router.route('/login').get(function (req, res) {
 
                     res.render('login',{can:0});
@@ -54,7 +56,7 @@ router.route('/process/login').post(function (req, res) {
                 if (docs) {
                     var username = docs[0].name;
                     req.session.user = {   id: paramId,
-                                           name: '소녀시대',
+                                           name: username,
                                            authorized: true};
                     res.render('main', {uid: paramId, uname: username});
                     res.end();
@@ -66,6 +68,8 @@ router.route('/process/login').post(function (req, res) {
 router.route('/adduser').post(function (req, res) {
     console.log("adduser호출 됨");
 
+    let email = req.body.email;
+    
     var database = req.app.get('database');
     var paramId = req.body.id || req.query.id;
     var paramPassword = req.body.password || req.query.password;
@@ -73,9 +77,33 @@ router.route('/adduser').post(function (req, res) {
     var sex = req.body.sex;
     var birth=req.body.year+'.'+req.body.month+'.'+req.body.day;
     var phone=req.body.phonefirst+req.body.phonemiddle+req.body.phonelast;
-    console.log(birth);
+    var tokken=req.body.tokken;
+    let transporter = nodemailer.createTransport(
+    {
+        service: 'gmail',
+        auth : {
+            user: 'whghdud17@gmail.com',
+            pass: '7169asdf'
+        }
+    });
+    
+    let mailOptions = {
+        from: 'whghdud17@gmail.com',
+        to: email,
+        subject: '소소에서 본인 확인인증 메일 보내드립니다',
+        html: '<p>아래의 링크를 클릭해주세요 !</p>' +
+        "<a href='http://localhost:3000/auth/?id="+ paramId +"&token="+ tokken+"'>여기를 눌러 인증해주세요</a>" 
+    };
+    
+    transporter.sendMail(mailOptions, function(err, info){
+        if(err){
+            console.log(err);
+        }else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
     if (database) {
-        user.addUser(database, paramId, paramPassword, paramName,sex,birth,phone,function (err, result) {
+        user.addUser(database, paramId, paramPassword, paramName,sex,birth,phone,tokken,function (err, result) {
 
             if (err) {
                 throw err;
@@ -131,6 +159,28 @@ router.route('/main').get(function (req, res) {
     }
 });
 
+router.route('/auth').get(function (req, res) {
+
+    var database = req.app.get('database');
+    var paramid=req.query.id;
+    var tokken= req.query.token;
+    console.log(paramid);
+    
+     database.UserModel.findOneAndUpdate({
+        "id" : paramid, "tokken" : tokken
+    }, {
+        "auth": 1
+    }, function (err, results) {
+     
+         console.log(results);
+         console.log("업데이트 함");
+         if(err) throw err;
+     }
+    ); 
+    res.redirect('/main');
+    res.end();
+    
+});
 
 router.route('/logout').get(function (req, res) {
 
@@ -140,6 +190,44 @@ router.route('/logout').get(function (req, res) {
             res.render('login', {can: 0,});
         });
     } else {res.render('start', {can: -1,});}
+});
+
+router.route('/posts/search/all/:str/:idx').get(function (req, res){
+
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;;
+    var skip = path.parse(req.params.idx).base;
+    var Postnum;
+    database.PostModel.find({content:{$regex:searchstr}}).count({}, function (err, count) {
+        Postnum = count;
+    });
+    if (database.db) {
+        database.PostModel.find({content:{$regex:searchstr}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+            if (err) {return;}
+            if (results) {
+                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall"});
+            }
+        });
+    }
+});
+
+router.route('/hotposts/search/:str/:idx').get(function (req, res){
+
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;;
+    var skip = path.parse(req.params.idx).base;
+    var Postnum;
+    database.PostModel.find({content:{$regex:searchstr},star:{$gt:10}}).count({}, function (err, count) {
+        Postnum = count;
+    });
+    if (database.db) {
+        database.PostModel.find({content:{$regex:searchstr},star:{$gt:10}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+            if (err) {return;}
+            if (results) {
+                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch"});
+            }
+        });
+    }
 });
 
 router.route('/posts/:num').get(function (req, res) {
@@ -154,7 +242,7 @@ router.route('/posts/:num').get(function (req, res) {
         database.PostModel.find().sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum});
+                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all"});
             }
         });
     }
@@ -327,11 +415,41 @@ router.route('/hotposts/:num').get(function (req, res) {
         database.PostModel.find({star:{$gt:10}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('hotposts', {results: results,num: skip,req: req,PostNum: Postnum});
+                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts"});
             }
         });
     }
 });
+
+router.route("/nodemailerTest").post(function(req,res){
+    let email = req.body.email;
+    
+    let transporter = nodemailer.createTransport(
+    {
+        service: 'gmail',
+        auth : {
+            user: 'whghdud17@gmail.com',
+            pass: '7169asdf'
+        }
+    });
+    
+    let mailOptions = {
+        from: 'whghdud17@gmail.com',
+        to: email,
+        subject: '소소에서 본인 확인인증 메일 보내드립니다',
+        text: '테스트입니다'
+    };
+    
+    transporter.sendMail(mailOptions, function(err, info){
+        if(err){
+            console.log(err);
+        }else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    
+    res.redirect("/");
+})
 
 router.route('/').get(function (req, res) {
 

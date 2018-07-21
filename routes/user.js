@@ -2,7 +2,7 @@ var authUser = function(database, id, password, callback) {
 	console.log('authUser 호출됨 : ' + id + ', ' + password);
 	
     // 1. 아이디를 이용해 검색
-	database.UserModel.find({"id":id}, function(err, results) {
+	database.UserModel.find({"id":id,"auth":{$ne: 0}}, function(err, results) {
 		if (err) {
 			callback(err, null);
 			return;
@@ -33,10 +33,10 @@ var authUser = function(database, id, password, callback) {
 	});
 	
 }
-var addUser = function(database, id, password, name,sex ,birth,phone,callback){
+var addUser = function(database, id, password, name,sex ,birth,phone,tokken,callback){
     console.log("회원가입 진행");
     
-    var user = new database.UserModel({"id":id,"password":password,"name":name, "sex":sex,"birth":birth, "phone":phone});
+    var user = new database.UserModel({"id":id,"password":password,"name":name, "sex":sex,"birth":birth, "phone":phone, "tokken":tokken});
     
     user.save(function(err){
         if(err){

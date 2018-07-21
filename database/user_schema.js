@@ -16,7 +16,9 @@ Schema.createSchema = function(mongoose)
 	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
         sex : {type:String, 'default':"남"},
         birth : {type:String, 'default':'0'},
-        phone : {type:String, 'default':'0'}
+        phone : {type:String, 'default':'0'},
+        tokken : {type:String, 'defulat':'0'},
+        auth : {type:String, 'default':'0'}
      });
     
     UserSchema
