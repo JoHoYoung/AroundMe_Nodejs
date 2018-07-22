@@ -15,9 +15,14 @@
     </div>
     <ul id="menu">
         <li><a href='/posts/1'>게시판</a></li>
-        <li><a href="/">올빼미</a></li>
+        <li><a href='/hotposts/1'>핫 게시판</a></li>
         <li><a href="/">누룽지</a></li>
         <li><a href="/">삼겹살</a></li>
+        <% if(islogin==0){%>
+        <li><a href='/login'>로그인</a></li>
+        <%}else{%>
+        <li><a href='/logout'>로그아웃</a></li>    
+        <%}%>
     </ul>
 </nav1>
 <div class="blank">

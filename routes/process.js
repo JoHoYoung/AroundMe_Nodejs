@@ -58,7 +58,7 @@ router.route('/process/login').post(function (req, res) {
                     req.session.user = {   id: paramId,
                                            name: username,
                                            authorized: true};
-                    res.render('main', {uid: paramId, uname: username});
+                    res.render('main', {uid: paramId, uname: username, islogin:1});
                     res.end();
                 } else {res.render('login', {can: -1});}});
         } else {res.end();}
@@ -150,12 +150,12 @@ router.route('/main').get(function (req, res) {
 
     if (req.session.user) {
         res.render('main', {
-            can: 0,
-        });;
+            can: 0, islogin:1
+        });
     } else {
-        res.render('login', {
-            can: 0,
-        });;
+        res.render('main', {
+            can: 0,islogin:0
+        });
     }
 });
 
@@ -187,9 +187,10 @@ router.route('/logout').get(function (req, res) {
     if (req.session.user) {
         req.session.destroy(function (err) {
             if (err) {throw err;    }
-            res.render('login', {can: 0,});
+            res.render('main', {can: 0,islogin:0});
         });
     } else {res.render('start', {can: -1,});}
+
 });
 
 router.route('/posts/search/all/:str/:idx').get(function (req, res){
@@ -205,7 +206,11 @@ router.route('/posts/search/all/:str/:idx').get(function (req, res){
         database.PostModel.find({content:{$regex:searchstr}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall"});
+                if(req.session.user)
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:1});}
+                else{
+                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:0});
+                }
             }
         });
     }
@@ -224,7 +229,10 @@ router.route('/hotposts/search/:str/:idx').get(function (req, res){
         database.PostModel.find({content:{$regex:searchstr},star:{$gt:10}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch"});
+                if(req.session.user)
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:1});}
+                else {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:0});
+                }
             }
         });
     }
@@ -242,7 +250,11 @@ router.route('/posts/:num').get(function (req, res) {
         database.PostModel.find().sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all"});
+                if(req.session.user)
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:1});}
+                else{
+                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:0});
+                }
             }
         });
     }
@@ -322,10 +334,11 @@ router.route('/post/:ObjectId').get(function (req, res) {
             results.save(function (err) {
                 if (err) throw err;
             });
-            res.render('post', {
-                results: results,
-                req: req
-            });
+            if(req.session.user)
+            {res.render('post', { results: results,req: req,islogin : 1});}
+            else{
+            res.render('post', { results: results,req: req,islogin : 0});
+            }
         }
     });
 });
@@ -415,7 +428,10 @@ router.route('/hotposts/:num').get(function (req, res) {
         database.PostModel.find({star:{$gt:10}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
-                res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts"});
+                if(req.session.user)
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts",islogin:1});}
+                else {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts",islogin:0});
+                }
             }
         });
     }
@@ -456,10 +472,12 @@ router.route('/').get(function (req, res) {
     console.log('로그아웃 시도');
     if (req.session.user) {
         res.render('main', {
-            can: 0,
-        });;
+            islogin: 1,
+        });
     } else {
-        res.render('start');
+        res.render('main', {
+            islogin: 0,
+        });
     }
 });
 
