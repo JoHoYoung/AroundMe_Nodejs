@@ -38,6 +38,19 @@ router.route('/login').get(function (req, res) {
                     res.end();        
 });
 
+router.route('/process/facebook/login').get(function(req,res){
+    
+    var database = req.app.get('database');
+    console.log("로그!");
+    console.log(req.user);
+    req.session.user = {   id: req.user.id,
+                            nickname:req.user.nickname,
+                           name: req.user.username,
+                          authorized: true};
+                    res.render('main', {islogin:1,info:req.session.user.nickname});
+                    res.end();
+    
+});
 
 router.route('/process/login').post(function (req, res) {
 
@@ -56,11 +69,14 @@ router.route('/process/login').post(function (req, res) {
                 if (docs) {
                     var username = docs[0].name;
                     req.session.user = {   id: paramId,
+                                           nickname:docs[0].nickname,
                                            name: username,
                                            authorized: true};
-                    res.render('main', {uid: paramId, uname: username, islogin:1});
+                    res.render('main', {info:req.session.user.nickname, islogin:1});
                     res.end();
-                } else {res.render('login', {can: -1});}});
+                } else {res.render('login', {can: -1});
+                       }
+            });
         } else {res.end();}
     }
 });
@@ -78,6 +94,7 @@ router.route('/adduser').post(function (req, res) {
     var birth=req.body.year+'.'+req.body.month+'.'+req.body.day;
     var phone=req.body.phonefirst+req.body.phonemiddle+req.body.phonelast;
     var tokken=req.body.tokken;
+    var nickname=req.body.nickname;
     let transporter = nodemailer.createTransport(
     {
         service: 'gmail',
@@ -103,7 +120,7 @@ router.route('/adduser').post(function (req, res) {
         }
     });
     if (database) {
-        user.addUser(database, paramId, paramPassword, paramName,sex,birth,phone,tokken,function (err, result) {
+        user.addUser(database, paramId, paramPassword, paramName,sex,birth,phone,tokken,nickname,function (err, result) {
 
             if (err) {
                 throw err;
@@ -129,6 +146,31 @@ router.route('/adduser').post(function (req, res) {
     }
 });
 
+router.route('/facebook/adduser').post(function (req, res) {
+    console.log("adduser호출 됨");
+
+    var database = req.app.get('database');
+    var paramId = req.body.id || req.query.id;
+    var paramNickname = req.body.nickname || req.query.password;
+    var paramName = req.body.name || req.query.name;
+    
+    
+    user.facebookaddUser(database, paramId, paramName, paramNickname,function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+                console.log(result);
+                res.render('main', {info:req.session.user.nickname, islogin:1});
+                res.end();
+
+            } else {
+                res.write('<h2>사용자 추가 실패</h2>');
+                res.redirect('/public/signin.html');
+                res.end();
+            }
+        });
+});
 
 router.route('/post/updating/:postroot').get(function (req, res) {
 
@@ -145,16 +187,31 @@ router.route('/post/updating/:postroot').get(function (req, res) {
 
 });
 
+router.route('/areapost/updating/:postroot').get(function (req, res) {
+
+    var database = req.app.get('database');
+    var filterd = path.parse(req.params.postroot).base;
+    if (database.db) {
+        database.PostModel.findOne({"_id":filterd},function(err,results){
+        if(results)
+        {        res.render('areapostupdate',{results:results});
+                res.end();
+        }
+        });     
+    }  
+
+});
+
 
 router.route('/main').get(function (req, res) {
 
     if (req.session.user) {
         res.render('main', {
-            can: 0, islogin:1
+            info:req.session.user.nickname, islogin:1
         });
     } else {
         res.render('main', {
-            can: 0,islogin:0
+            info:req.session.user.nickname, islogin:0
         });
     }
 });
@@ -187,9 +244,9 @@ router.route('/logout').get(function (req, res) {
     if (req.session.user) {
         req.session.destroy(function (err) {
             if (err) {throw err;    }
-            res.render('main', {can: 0,islogin:0});
+            res.render('main', {islogin:0});
         });
-    } else {res.render('start', {can: -1,});}
+    } else {res.render('main', {islogin:0});}
 
 });
 
@@ -207,9 +264,9 @@ router.route('/posts/search/all/:str/:idx').get(function (req, res){
             if (err) {return;}
             if (results) {
                 if(req.session.user)
-                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:1});}
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:1,info:req.session.user.nickname});}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:0});
+                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:0,info:req.session.user.nickname,type:"all"});
                 }
             }
         });
@@ -219,7 +276,7 @@ router.route('/posts/search/all/:str/:idx').get(function (req, res){
 router.route('/hotposts/search/:str/:idx').get(function (req, res){
 
     var database = req.app.get('database');
-    var searchstr = path.parse(req.params.str).base;;
+    var searchstr = path.parse(req.params.str).base;
     var skip = path.parse(req.params.idx).base;
     var Postnum;
     database.PostModel.find({content:{$regex:searchstr},star:{$gt:10}}).count({}, function (err, count) {
@@ -230,30 +287,41 @@ router.route('/hotposts/search/:str/:idx').get(function (req, res){
             if (err) {return;}
             if (results) {
                 if(req.session.user)
-                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:1});}
-                else {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:0});
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:1,info:req.session.user.nickname});}
+                else {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "hotpostssearch",islogin:0,info:req.session.user.nickname});
                 }
             }
         });
     }
 });
-
-router.route('/posts/:num').get(function (req, res) {
+//1부터 7까지 지역 구분
+router.route('/areaposts/:page/:group').get(function (req, res) {
 
     var database = req.app.get('database');
-    var skip = path.parse(req.params.num).base;
+    console.log(req.params);
+    var skip = path.parse(req.params.page).base;
+    var areagroup = path.parse(req.params.group).base;
+    
+    console.log("스킵");
+    console.log(skip);
+    console.log("그룹");
+    console.log(areagroup);
     var Postnum;
-    database.PostModel.count({}, function (err, count) {
+    
+    database.PostModel.count({"areagroup":areagroup}, function (err, count) {
         Postnum = count;
     });
     if (database.db) {
-        database.PostModel.find().sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+        database.PostModel.find({"areagroup":areagroup}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results) {
                 if(req.session.user)
-                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:1});}
+                {res.render('areaposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:1,info:req.session.user.nickname,areagroup:areagroup});
+                res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:0});
+                    console.log("시발");
+                    res.render('areaposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:0,areagroup:0});
+                    res.end();
                 }
             }
         });
@@ -284,11 +352,11 @@ router.route('/post/comment/create/:ObjectId').post(function (req, res) {
     }
 });
 
-router.route('/post/create').get(function (req, res) {
+router.route('/areapost/create').get(function (req, res) {
     
     console.log('크리에이트!');
     if(req.session.user)
-    {res.render('create',{can : 1});
+    {res.render('areacreate',{islogin:1,info:req.session.user.nickname});
     }else {
         res.render('login', {can: 0});
     }
@@ -335,7 +403,7 @@ router.route('/post/:ObjectId').get(function (req, res) {
                 if (err) throw err;
             });
             if(req.session.user)
-            {res.render('post', { results: results,req: req,islogin : 1});}
+            {res.render('post', { results: results,req: req,islogin : 1,info:req.session.user.nickname});}
             else{
             res.render('post', { results: results,req: req,islogin : 0});
             }
@@ -368,7 +436,7 @@ router.route('/post/destroy').post(function (req, res) {
     }
 });
 
-router.route('/post/update').post(function(req, res) {
+router.route('/areapost/update').post(function(req, res) {
 
     var database = req.app.get('database');
     var filterd = req.body.postid;
@@ -377,7 +445,7 @@ router.route('/post/update').post(function(req, res) {
         "_id": filterd
     }, function (err, results) {
 
-        if (results) {  res.render('postupdate', {results: results,req: req});
+        if (results) {  res.render('areapostupdate', {results: results,req: req});
         }
     });
 });
@@ -429,7 +497,7 @@ router.route('/hotposts/:num').get(function (req, res) {
             if (err) {return;}
             if (results) {
                 if(req.session.user)
-                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts",islogin:1});}
+                {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts",islogin:1,info:req.session.user.nickname});}
                 else {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,specific:"hotposts",islogin:0});
                 }
             }
@@ -472,11 +540,11 @@ router.route('/').get(function (req, res) {
     console.log('로그아웃 시도');
     if (req.session.user) {
         res.render('main', {
-            islogin: 1,
+            islogin: 1,info:req.session.user.nickname
         });
     } else {
         res.render('main', {
-            islogin: 0,
+            islogin: 0
         });
     }
 });

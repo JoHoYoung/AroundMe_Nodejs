@@ -7,9 +7,9 @@ Schema.createSchema = function(mongoose)
     
     var UserSchema = mongoose.Schema(
     {
-        id : {type: String, required : true, unique: true, 'default':''},
-        hashed_password : {type: String, required: true, 'default':''},
-        salt: {type:String, required:true},
+        id : {type: String,unique: true, 'default':''},
+        hashed_password : {type: String, 'default':''},
+        salt: {type:String},
         name: {type:String, index:'hashed','default': ''},
         age : {type:Number, 'default':-1},
         created_at: {type: Date, index: {unique: false}, 'default': Date.now},
@@ -18,7 +18,9 @@ Schema.createSchema = function(mongoose)
         birth : {type:String, 'default':'0'},
         phone : {type:String, 'default':'0'},
         tokken : {type:String, 'defulat':'0'},
-        auth : {type:String, 'default':'0'}
+        auth : {type:String, 'default':'0'},
+        provider : { type:String, 'default':"soso"},
+        nickname: {type:String}
      });
     
     UserSchema
@@ -56,18 +58,18 @@ Schema.createSchema = function(mongoose)
 		return value && value.length;
 	};
     
-    UserSchema.path('id').validate(function (id) {
-		return id.length;
-	}, 'id 칼럼의 값이 없습니다.');
-	
-	UserSchema.path('name').validate(function (name) {
-		return name.length;
-	}, 'name 칼럼의 값이 없습니다.');
-	
-	UserSchema.path('hashed_password').validate(function (hashed_password) {
-		return hashed_password.length;
-	}, 'hashed_password 칼럼의 값이 없습니다.');
-	
+//    UserSchema.path('id').validate(function (id) {
+//		return id.length;
+//	}, 'id 칼럼의 값이 없습니다.');
+//	
+//	UserSchema.path('name').validate(function (name) {
+//		return name.length;
+//	}, 'name 칼럼의 값이 없습니다.');
+//	
+//	UserSchema.path('hashed_password').validate(function (hashed_password) {
+//		return hashed_password.length;
+//	}, 'hashed_password 칼럼의 값이 없습니다.');
+//	
 	   
 	// 스키마에 static 메소드 추가
 	UserSchema.static('findById', function(id, callback) {

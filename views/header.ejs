@@ -3,27 +3,31 @@
     <div class="wrap">
         <div id="logo">
             <a href='/main'>
-                    <img src="../public/tmp2.png" width="60px" height="60px">
-                </a>
+                
             <p>
                 <span class="name" id="mainname">
-                    동네방네</span>
-                <span class="subname">
-                    서울시 동작구</span>
+                    AROUND ME</span>
             </p>
+                </a>
         </div>
     </div>
     <ul id="menu">
-        <li><a href='/posts/1'>게시판</a></li>
+        <li><a href="/areaposts/1/0">자유 게시판</a></li>
         <li><a href='/hotposts/1'>핫 게시판</a></li>
+        <li><a href="/areaposts/1/0">지역별 게시판</a></li>
         <li><a href="/">누룽지</a></li>
         <li><a href="/">삼겹살</a></li>
+        <div class="alog">
         <% if(islogin==0){%>
-        <li><a href='/login'>로그인</a></li>
+        <li><a id="logout" href='/login'>Login</a></li>
         <%}else{%>
-        <li><a href='/logout'>로그아웃</a></li>    
+        <li>
+              <li><h5 class="idshow"><%= info %></h5><br><a id="logout" href='/logout'>Logout</a></li>
         <%}%>
+        </div>
     </ul>
 </nav1>
+ <div class="blank">
+    </div>
 <div class="blank">
 </div>

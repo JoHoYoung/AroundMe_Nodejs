@@ -63,6 +63,11 @@
                                     <a href='/posts/<%= Previous %>' aria-label="Previous">
         <span aria-hidden="true">&lang;</span>
       </a>
+                            <%} else if(specific=="area"){%>
+                                        <a href='/areaposts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true">&lang;</span>
+      </a>
+ 
                                     <%} else if(specific=="searchall"){%>
                                         <a href='/posts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
         <span aria-hidden="true">&lang;</span>
@@ -95,7 +100,7 @@
                             <%if(Math.ceil(PostNum/10)>=pivot+q){%>
                                 <li class="<%= c[q] %>">
                                     <% if(specific=="all"){%>
-                                        <a href="/posts/<%= pivot+q%>">
+                                        <a href="/areaposts/<%= pivot+q%>">
                                             <%= pivot+q %>
                                         </a>
                                         <%} else if(specific=="searchall"){%>

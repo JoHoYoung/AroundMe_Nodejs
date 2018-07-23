@@ -23,6 +23,42 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var static = require('serve-static');
 var errorHandler = require('errorhandler');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
+
+passport.serializeUser(function(user,done){
+    
+    console.log('serilaize');
+    done(null,user);
+});
+
+passport.deserializeUser(function(user,done){
+    console.log('deserialize');
+    done(null,user)
+});
+
+passport.use(new FacebookStrategy({    
+    clientID:'982849978562138',
+    clientSecret: '669c4090e46462b987db27c1153d81b8',
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
+function(accessToken,refreshToken,profile,done){
+    console.log(profile);
+    done(null,profile);
+}
+));
+
+function ensureAuthenticated(req, res, next) {
+
+    // 로그인이 되어 있으면, 다음 파이프라인으로 진행
+
+    if (req.isAuthenticated()) { return next(); }
+
+    // 로그인이 안되어 있으면, login 페이지로 진행
+
+    res.redirect('/');
+
+}
 
 // 오류 핸들러
 var expressErrorHandler = require('express-error-handler');
@@ -62,8 +98,49 @@ app.use(expressSession({
 
 app.use('/', router);
 
+app.use(passport.initialize());
+
+app.use(passport.session());
+
+
 app.set('view engine', 'ejs');
 app.set('views', './views')
+//----------------------------------------------------//
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',passport.authenticate('facebook', { successRedirect: '/login_success',
+
+        failureRedirect: '/login_fail' }));
+
+app.get('/login_success', ensureAuthenticated, function(req, res){
+
+ var database = req.app.get('database');
+    //res.render('main', {islogin:1});
+    database.UserModel.findOne({"id":req.user.id,"provider":"facebook"},function(err,results){
+        if(results)
+        {       req.session.user = {   id: req.user.id,
+                                name: results.name,
+                                nickname:results.nickname,
+                                authorized: true};
+                    res.render('main', {islogin:1,info:req.session.user.nickname});
+
+        }else{
+            console.log("결과없음");
+        res.render('facebooksignup', {id:req.user.id, name:req.user.username});
+    }
+    });
+
+});
+
+app.get('/logout', function(req, res){
+
+    req.logout();
+
+    res.redirect('/');
+
+});
+
+
 //-----------------------------------------------------//
 app.get('/upload', function (req, res) {
     res.render('uploadform');
@@ -73,16 +150,18 @@ app.post('/upload', upload.array('userfile', 12), function (req, res) {
     res.send('uploaded : ' + req.file);
 });
 
-app.post('/process/create', upload.array('userimage', 12), function (req, res) {
+app.post('/process/areacreate', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
     var paramuser = req.session.user.id;
     var area = req.body.area;
+    var areagroup=req.body.areagroup;
+    area.splice(1,1);
     console.log("지역은!?");
     console.log(area);
     if (database) {
-        user.addPost(database, paramtitle, paramcontent, req.session.user.id,area,function (err, result) {
+        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.id,area,areagroup,function (err, result) {
 
             if (err) {
                 throw err;
@@ -97,7 +176,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect('/posts/1')
+                res.redirect(`/areaposts/1/${areagroup}`);
                 res.end();
             } else {
                 res.write('<h2>사용자 추가 실패</h2>');
@@ -115,7 +194,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     }
 });
 
-app.post('/process/post/update/:postroot',upload.array('userimage',12),function (req, res) {
+app.post('/process/areapost/update/:postroot',upload.array('userimage',12),function (req, res) {
     var database = req.app.get('database');
     var postroot = path.parse(req.params.postroot).base;
     var paramtitle = req.body.title || req.query.title;
