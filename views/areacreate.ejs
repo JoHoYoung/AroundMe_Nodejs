@@ -90,13 +90,13 @@
             <div class="leftside">
                 <h1></h1>
             </div>
-            <form autocomplete="off" method="post" action="/process/create" enctype="multipart/form-data" onsubmit="return validation();">
+            <form autocomplete="off" method="post" action="/process/areacreate" enctype="multipart/form-data" onsubmit="return validation();">
                 <table>
                     <h3>게시물 작성</h3>
             <br>
                     <tr id="posttitle">
                         <input type="hidden" id="area" name="area" />
-                        <td class="box"><input type="text" name="title" placeholder="제목" /></td>
+                        <td class="box"><input type="text" name="title" id ="title" placeholder="제목" /></td>
                     </tr>
                     <div class="btn-group" role="group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
@@ -118,10 +118,11 @@
         </p>
                 <input type="hidden" id="area" name="area"/>
                     <tr id="postcontent">
-                        <td class="box"><textarea name="content" placeholder="내용"></textarea></td>
+                        <td class="box"><textarea name="content" id="content" placeholder="내용"></textarea></td>
                     </tr>
                 </table>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <input type='hidden' id='areagroup' name='areagroup'>
                 <input type='file' id='files' name='userimage' multiple='multiple'>
                 <div id="preview">
 
@@ -129,15 +130,18 @@
                 <input type="submit" value="작성" />
             </form>
             <script>
-            document.getElementById("area").value = '';
+            
             document.getElementById("title").value = '';
             document.getElementById("content").value = '';
         function area(text)
             {
-                console.log(text);
+                document.getElementById("area").value = '';
+                document.getElementById("areagroup").value=0;
                 document.getElementById("area").value = text;
                 document.getElementById("Toggle").innerHTML = text;
                 document.getElementById("areaerror").innerHTML = '';
+                console.log("이거맞냐?");
+                console.log(document.getElementById("area").value);
             }
         function validation()
             {

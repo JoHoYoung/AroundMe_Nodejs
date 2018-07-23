@@ -1,0 +1,170 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/create.css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<base href="/">
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>로그인 테스트</title>
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <div class="leftside">
+                <h1></h1>
+            </div>
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                                <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
+        <% if(areagroup==0){%>
+        도심(종로, 중구, 용산)
+        <%}else if(areagroup==1){%>
+        강북(도봉, 강북, 성북, 노원)
+        <%}else if(areagroup==2){%>
+        동서울(동대문, 중랑, 성동, 광진)
+        <%}else if(areagroup==3){%>
+        동남(강동, 송파)
+        <%}else if(areagroup==4){%>
+        강남(서초, 강남)
+        <%}else if(areagroup==5){%>
+        남서울(동작, 관악, 금천)
+        <%}else if(areagroup==6){%>
+        서남(강서, 양천, 영등포, 구로)
+        <%}else if(areagroup==7){%>
+        서서울(은평, 마포, 서대문)
+        <%}%>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <a href='/areaposts/1/0'><li>도심(종로, 중구, 용산)</li></a>
+        <a href='/areaposts/1/1'><li>강북(도봉, 강북, 성북, 노원)</li></a>
+        <a href='/areaposts/1/2'><li>동서울(동대문, 중랑, 성동, 광진)</li></a>
+        <a href='/areaposts/1/3'><li>동남(강동, 송파)</li></a>
+        <a href='/areaposts/1/4'><li>강남(서초, 강남)</li></a>
+        <a href='/areaposts/1/5'><li>남서울(동작, 관악, 금천)</li></a>
+        <a href='/areaposts/1/6'><li>서남(강서, 양천, 영등포, 구로)</li></a>
+        <a href='/areaposts/1/7'><li>서서울(은평, 마포, 서대문)</li></a></ul>
+  </div>
+                
+                <div class="panel-heading">게시판</div>
+                <li role="presentation"><a href='/main'>Home</a></li>
+                <ul class="list-group">
+                    <% for(var i = 0 ;i <results.length ; i++)
+            {
+                var curTitle = results[i]._doc.title;
+                var curContent = results[i]._doc.content;%>
+                        <a href="/post/<%= results[i]._doc._id%>">
+                            <li class="list-group-item">
+                                <h4 id="content-title">
+                                    <%= curTitle%>
+                                </h4>
+                                <h5 id="content-preview">
+                                    <%= curContent%>
+                                </h5>
+                                <h4 id="content-info" class="small">
+                                    <%=results[i]._doc.views%> :
+                                        <%=results[i]._doc.star%>
+                                            <%=results[i]._doc.created_at.toISOString().
+  replace(/T/, ' ').      // replace T with a space
+                        replace(/\..+/, '')  %>
+                                                <%= results[i]._doc.writer%>
+                                </h4>
+                            </li>
+                        </a>
+                        <%}%>
+                </ul>
+                <nav>
+                    <ul class="pagination">
+                        <li>
+                            <a href="/posts/1" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+                        </li>
+                        <li>
+                            <% var Previous;
+        if((num-1)<1)
+         {Previous = 1;}else{Previous = num-1;} %>
+                 <a href='/areaposts/<%= Previous %>/<%= areagroup %>' aria-label="Previous">
+        <span aria-hidden="true">&lang;</span>
+      </a>
+                        </li>
+                        <% var temppivot = {};
+      temppivot = Math.floor((num-1)/5);
+      var pivot = (temppivot)*5+1;
+      var btnNum = PostNum/10;
+      var de = num%5+1;
+      var c = [{},{},{},{},{}];
+      for(var i=0; i<5;i++)
+          {
+              if((i+2)==de)
+              {c[i]="active";
+              }else
+               { c[i]="";
+          }
+          } 
+      for(var q=0; q<5; q++){%>
+                            <%if(Math.ceil(PostNum/10)>=pivot+q){%>
+                                <li class="<%= c[q] %>">
+                                        <a href="/areaposts/<%= pivot+q%>/<%= areagroup%>">
+                                            <%= pivot+q %>
+                                        </a>
+                                </li>
+                                <%}%>
+                                    <%}%>
+                                        <li>
+                                            <% var Next;
+                        if((num+1)<=Math.ceil(PostNum/10)){
+                        Next = num+1;}else{Next = Math.ceil(PostNum/10);}%>
+                                                    <a href="/areaposts/<%= Next %>/<%= areagroup %>" aria-label="Next">
+                            <span aria-hidden="true">&rang;</span>
+                            </a>
+                                        </li>
+                                        <li>
+                                                <a href="/areaposts/<%= Math.ceil(PostNum/10) %>/<%= areagroup %>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                                        </li>
+                    </ul>
+                </nav>
+                <form method="get" action="/" id="search" onsubmit="return setAction();">
+                    <input type="text" id="searchstring">
+                    <input type="submit" value="작성" />
+                </form>
+                <h3><a href='/areapost/create'>글 쓰기</a></h3>
+                <script>
+                    
+                    function setAction() {
+                        var ac = document.getElementById("searchstring").value;
+                        console.log(ac);
+                        <% if(specific=="hotposts"||specific=="hotpostssearch"){%>
+                        document.getElementById("search").action = "/hotposts/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+
+                        <% if(specific=="searchall"||specific=="all"){%>
+                        document.getElementById("search").action = "/posts/search/all/" + ac + "/1";
+                        return true;
+                        <%}%>
+                    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+    <% include ../views/rfooter%>
+</body>
+
+</html>
