@@ -154,7 +154,7 @@ app.post('/process/areacreate', upload.array('userimage', 12), function (req, re
     var database = req.app.get('database');
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
-    var paramuser = req.session.user.id;
+    var paramuser = req.session.user.nickname;
     var area = req.body.area;
     var areagroup=req.body.areagroup;
     area.splice(1,1);
@@ -226,6 +226,82 @@ app.post('/process/areapost/update/:postroot',upload.array('userimage',12),funct
                 results.images.splice(todelete[i],1);
     
             }
+        for (var i = 0; i < req.files.length; i++) {
+                    results.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                results.save(function (err) {
+                    if (err) throw err;
+                });
+                
+    });
+    res.redirect(`/post/${postroot}`);
+});
+
+app.post('/process/create', upload.array('userimage', 12), function (req, res) {
+    var database = req.app.get('database');
+    var paramtitle = req.body.title || req.query.title;
+    var paramcontent = req.body.content || req.query.content;
+    var paramuser = req.session.user.id;
+    if (database) {
+        user.addPost(database, paramtitle, paramcontent, req.session.user.id,function (err, result) {
+
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/areaposts/1/${areagroup}`);
+                res.end();
+            } else {
+                res.write('<h2>사용자 추가 실패</h2>');
+                res.redirect('/public/signin.html');
+                res.end();
+            }
+        });
+
+    } else {
+        res.writeHead('200', {
+            'Content-Type': 'text/html;charset=utf8'
+        });
+        res.write('<h2>데이터 베이스 연결 실패</h2>');
+        res.end();
+    }
+});
+
+app.post('/process/post/update/:postroot',upload.array('userimage',12),function (req, res) {
+    var database = req.app.get('database');
+    var postroot = path.parse(req.params.postroot).base;
+    var paramtitle = req.body.title || req.query.title;
+    var paramcontent = req.body.content || req.query.content;
+    var todelete= req.body.todelete;
+    database.PostModel.findOneAndUpdate({
+        "_id": postroot
+    }, {
+        "title": paramtitle,
+        "content": paramcontent,
+    }, function (err, results) {
+        if (err) throw err;
+        todelete = todelete.split(',');
+        todelete = todelete.sort().reverse();
+        
+        for(var i=0;i<todelete.length;i++)
+            {
+   if(todelete[i]!='') {fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
+                         if(err){throw err;}});
+                       }
+                results.images.splice(todelete[i],1);
+    
+            }
       // var idx=results.images.length; results.images.splice(0,idx);
         for (var i = 0; i < req.files.length; i++) {
                     results.images.push({
@@ -237,8 +313,9 @@ app.post('/process/areapost/update/:postroot',upload.array('userimage',12),funct
                 });
                 
     });
-    res.redirect('/posts/1');
+    res.redirect(`/post/${postroot}`);
 });
+
 
 //--------------DB연결---------------------//
 var MongoClient = require('mongodb').MongoClient;

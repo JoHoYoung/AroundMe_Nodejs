@@ -51,6 +51,10 @@ function viewImage(img){
             {%>
                 <img src="../uploads/<%= results._doc.images[i].images%>" width="100" onclick="doImgPop('../uploads/<%= results._doc.images[i].images%>')">
             <%}%>
+        <% if(type=="area"){%>
+          <a href  = "/areaposts/1/<%= areagroup %>">목록으로</a>
+               <%}
+               else{%><a href  = "/posts/1/<%= areagroup %>">목록으로</a><%}%>
         <a href  = "/posts/1">목록으로</a>
         <form method="post" action="/post/recommend">
                 <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
@@ -119,7 +123,10 @@ function viewImage(img){
         게시글을 수정 하시겠습니까?
       </div>
       <div class="modal-footer">
-           <form method="post" action="/post/update">
+          <% if(type=="area"){%>
+           <form method="post" action="/areapost/update">
+               <%}
+               else{%><form method="post" action="/post/update"><%}%>
                 <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
             <input type="submit" value="수정" />
         </form>

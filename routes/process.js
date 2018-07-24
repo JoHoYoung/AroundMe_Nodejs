@@ -155,7 +155,7 @@ router.route('/facebook/adduser').post(function (req, res) {
     var paramName = req.body.name || req.query.name;
     
     
-    user.facebookaddUser(database, paramId, paramName, paramNickname,function (err, result) {
+    user.facebookaddUser(database, paramId, paramName, paramNickname,function (err, result){
             if (err) {
                 throw err;
             }
@@ -262,7 +262,7 @@ router.route('/posts/search/all/:str/:idx').get(function (req, res){
     if (database.db) {
         database.PostModel.find({content:{$regex:searchstr}}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
-            if (results) {
+            if (results){
                 if(req.session.user)
                 {res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum,searchstr: searchstr,specific: "searchall",islogin:1,info:req.session.user.nickname});}
                 else{
@@ -301,11 +301,6 @@ router.route('/areaposts/:page/:group').get(function (req, res) {
     console.log(req.params);
     var skip = path.parse(req.params.page).base;
     var areagroup = path.parse(req.params.group).base;
-    
-    console.log("스킵");
-    console.log(skip);
-    console.log("그룹");
-    console.log(areagroup);
     var Postnum;
     
     database.PostModel.count({"areagroup":areagroup}, function (err, count) {
@@ -314,7 +309,7 @@ router.route('/areaposts/:page/:group').get(function (req, res) {
     if (database.db) {
         database.PostModel.find({"areagroup":areagroup}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
-            if (results) {
+            if (results){
                 if(req.session.user)
                 {res.render('areaposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:1,info:req.session.user.nickname,areagroup:areagroup});
                 res.end();}
@@ -327,6 +322,34 @@ router.route('/areaposts/:page/:group').get(function (req, res) {
         });
     }
 });
+
+router.route('/posts/:num').get(function (req, res) {
+
+    var database = req.app.get('database');
+    console.log(req.params);
+    var skip = path.parse(req.params.num).base;
+    var Postnum;
+    
+    database.PostModel.count({"area":''}, function (err, count) {
+        Postnum = count;
+    });
+    if (database.db) {
+        database.PostModel.find({"area":''}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+            if (err) {return;}
+            if (results){
+                if(req.session.user)
+                {res.render('areaposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:1,info:req.session.user.nickname});
+                res.end();}
+                else{
+                    console.log("시발");
+                    res.render('areaposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"all",islogin:0});
+                    res.end();
+                }
+            }
+        });
+    }
+});
+
 
 router.route('/post/comment/create/:ObjectId').post(function (req, res) {
     var database = req.app.get('database')
@@ -357,6 +380,16 @@ router.route('/areapost/create').get(function (req, res) {
     console.log('크리에이트!');
     if(req.session.user)
     {res.render('areacreate',{islogin:1,info:req.session.user.nickname});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/post/create').get(function (req, res) {
+    
+    console.log('크리에이트!');
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname});
     }else {
         res.render('login', {can: 0});
     }
@@ -402,10 +435,16 @@ router.route('/post/:ObjectId').get(function (req, res) {
             results.save(function (err) {
                 if (err) throw err;
             });
+            var type;
+            if(results.area=='')
+                type="notarea";
+            else type="area";
+            
             if(req.session.user)
-            {res.render('post', { results: results,req: req,islogin : 1,info:req.session.user.nickname});}
+            {console.log(type);
+                res.render('post', { results: results,req: req,islogin : 1,info:req.session.user.nickname, type:type, areagroup:results.areagroup});}
             else{
-            res.render('post', { results: results,req: req,islogin : 0});
+            res.render('post', { results: results,req: req,islogin : 0,type:type});
             }
         }
     });
@@ -446,6 +485,20 @@ router.route('/areapost/update').post(function(req, res) {
     }, function (err, results) {
 
         if (results) {  res.render('areapostupdate', {results: results,req: req});
+        }
+    });
+});
+
+router.route('/post/update').post(function(req, res) {
+
+    var database = req.app.get('database');
+    var filterd = req.body.postid;
+
+    database.PostModel.findOne({
+        "_id": filterd
+    }, function (err, results) {
+
+        if (results) {  res.render('postupdate', {results: results,req: req});
         }
     });
 });
