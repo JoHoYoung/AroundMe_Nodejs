@@ -33,10 +33,10 @@ var authUser = function(database, id, password, callback) {
 	});	
 }
 
-var addUser = function(database, id, password, name,sex ,birth,phone,tokken,nickname,callback){
+var addUser = function(database, id, password, name,sex ,birth,phone,tokken,nickname,email,callback){
     console.log("회원가입 진행");
     
-    var user = new database.UserModel({"id":id,"password":password,"name":name, "sex":sex,"birth":birth, "phone":phone, "tokken":tokken,"nickname":nickname});
+    var user = new database.UserModel({"id":id,"password":password,"name":name, "sex":sex,"birth":birth, "phone":phone, "tokken":tokken,"nickname":nickname,"email":email});
     
     user.save(function(err){
         if(err){
@@ -101,8 +101,42 @@ var addAreapost = function(database, title, content,id,area,areagroup,callback){
     
 }
 
+var addResolvepost = function(database, title, content,id,callback){
+    console.log("왜 안돼");
+    
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":100,"star":0});
+ 
+    post.save(function(err){
+        if(err){
+            callback(err,null);
+            return;
+        }
+        console.log('데이터 추가 함');
+        callback(null,post);
+    });
+    
+}
+
+var addReportpost = function(database, title, content,id,callback){
+    console.log("왜 안돼");
+    
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+ 
+    post.save(function(err){
+        if(err){
+            callback(err,null);
+            return;
+        }
+        console.log('데이터 추가 함');
+        callback(null,post);
+    });
+    
+}
+
 module.exports.authUser=authUser;
 module.exports.addUser=addUser;
 module.exports.addPost=addpost;
 module.exports.addAreaPost=addAreapost;
+module.exports.addResolvePost=addResolvepost;
+module.exports.addReportPost=addReportpost;
 module.exports.facebookaddUser=facebookaddUser;

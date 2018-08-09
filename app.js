@@ -122,8 +122,7 @@ app.get('/login_success', ensureAuthenticated, function(req, res){
                                 name: results.name,
                                 nickname:results.nickname,
                                 authorized: true};
-                    res.render('main', {islogin:1,info:req.session.user.nickname});
-
+                                res.redirect('/');
         }else{
             console.log("결과없음");
         res.render('facebooksignup', {id:req.user.id, name:req.user.username});
@@ -244,10 +243,50 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
     var paramuser = req.session.user.id;
-    if (database) {
-        user.addPost(database, paramtitle, paramcontent, req.session.user.id,function (err, result) {
+    var type=req.body.type;
+  
+    if(type=="resolve"){
+        
+        user.addResolvePost(database, paramtitle, paramcontent, req.session.user.nickname, function(err,result){
+            if(err){ throw err;}
+            if (result) {
 
-            if (err) {
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/resolveposts/1`);
+                res.end();
+            }   
+        });
+    }
+    else if(type=="report"){
+        
+        user.addReportPost(database, paramtitle, paramcontent, req.session.user.nickname, function(err,result){
+            if(err){ throw err;}
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/reportposts/1`);
+                res.end();
+            }   
+        });
+    }
+    else
+        {
+            user.addPost(database, paramtitle, paramcontent, req.session.user.nickname,function (err, result) {
+          if (err) {
                 throw err;
             }
             if (result) {
@@ -260,22 +299,11 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/areaposts/1/${areagroup}`);
-                res.end();
-            } else {
-                res.write('<h2>사용자 추가 실패</h2>');
-                res.redirect('/public/signin.html');
+                res.redirect(`/posts/1`);
                 res.end();
             }
         });
-
-    } else {
-        res.writeHead('200', {
-            'Content-Type': 'text/html;charset=utf8'
-        });
-        res.write('<h2>데이터 베이스 연결 실패</h2>');
-        res.end();
-    }
+    }    
 });
 
 app.post('/process/post/update/:postroot',upload.array('userimage',12),function (req, res) {

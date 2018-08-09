@@ -1,17 +1,111 @@
 .contain .panel {
-    width: 700px;
-    position: relative;
-    left : 200px;
-    margin-left: 50px;
+  position: relative;
+  margin: 0 auto;
+  width: 700px;
+  display: table-cell;
 }
-.main .panel li.list-group-item{
-    display: block;
-    border: 1px #ddd solid;
-    padding: 10px;
-    min-height: 60px;
-    width: 700px;
-    background-color: white;
+
+.main .panel li.list-group-item {
+  display: block;
+  border: 1px #ddd solid;
+  padding: 10px;
+  min-height: 60px;
+  width: 550px;
+  background-color: white;
 }
-.main .panel li.list-group-item:hover{
-    background-color: #eee;
+
+.main .panel li.list-group-item:hover {
+  background-color: #eee;
+}
+
+.panel-heading {
+  font-size: 20px;
+  padding: 10px 0;
+  width: 200px;
+}
+
+
+#align-center {
+    align-content: center;
+    text-align: center;
+}
+
+.circle_left {
+    background: url(../public/page_prev.png) center center no-repeat;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    float: left;
+}
+
+.circle_leftleft {
+    background: url(../public/page_first.png) center center no-repeat;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    float: left;
+}
+
+.circle_rightright {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+
+    background: url(../public/page_last.png) center center no-repeat;
+    float: left;
+}
+
+.circle_right {
+    background: url(../public/page_next.png) center center no-repeat;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    float: left;
+
+}
+
+.number:hover {
+    background: #eee;
+
+}
+
+.number {
+    color:gray;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+    float: left;
+
+}
+
+.pagination > span {
+    float: left;
+}
+li.active {
+    color:black;
+}
+
+.temp {
+  float: left;
+}
+
+.comt {
+  float: left;
+}
+
+.info {
+  float: left;
+}
+
+.hit {
+  float: left;
+}
+
+.recom {
+  float: left;
 }

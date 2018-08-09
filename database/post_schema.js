@@ -16,10 +16,11 @@ Schema.createSchema = function(mongoose)
             writer : {type : String , 'default' : ''},
             created_at : {type : Date, 'default' : Date.now}
         }],
+        commentcount:{type: Number, 'default':0},
         views : {type : Number, 'default':0},
         recommender : [{ recommender :{type : String}}],
         area : {type : String,'default' : ''},
-        areagroup:{type:Number, 'default':0},
+        areagroup:{type:Number, 'default':-1},
         images : [{images : {type :String}}]
   });
     //console.dir(PostSchema);

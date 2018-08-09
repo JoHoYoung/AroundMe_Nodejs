@@ -20,6 +20,7 @@ Schema.createSchema = function(mongoose)
         tokken : {type:String, 'defulat':'0'},
         auth : {type:String, 'default':'0'},
         provider : { type:String, 'default':"soso"},
+        email : {type:String, 'default':''},
         nickname: {type:String}
      });
     

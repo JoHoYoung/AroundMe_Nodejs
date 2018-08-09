@@ -1,0 +1,153 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<base href="/">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>글 작성</title>
+    <style>
+    nput[type="file"] {
+  display: block;
+}
+.imageThumb {
+  max-height: 75px;
+  border: 2px solid;
+  padding: 1px;
+  cursor: pointer;
+}
+.pip {
+  display: inline-block;
+  margin: 10px 10px 0 0;
+}
+.remove {
+  display: block;
+  background: #444;
+  border: 1px solid black;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+.remove:hover {
+  background: white;
+  color: black;
+}
+    </style>
+    <% var temp=results._doc.images %>
+    <script type="text/javascript">
+    $(document).ready(function() {
+  if (window.File && window.FileList && window.FileReader) {
+    $("#files").on("change", function(e) {
+      var files = e.target.files,
+        filesLength = files.length;
+      for (var i = 0; i < filesLength; i++) {
+        var f = files[i]
+        var fileReader = new FileReader();
+        fileReader.onload = (function(e) {
+          var file = e.target;
+          $("<span class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+            "<br/><span class=\"remove\">Remove image</span>" +
+            "</span>").insertAfter("#files");
+          $(".remove").click(function(){
+            $(this).parent(".pip").remove();
+          });
+        });
+        fileReader.readAsDataURL(f);
+      }
+    });
+  } else {
+    alert("Your browser doesn't support to File API")
+  }
+});
+    </script>
+    </head>
+    <body>
+    <h1>글 쓰기</h1>
+        <br>
+        <form method="post" action="/process/post/update/<%= results._doc._id%>" enctype="multipart/form-data" onsubmit="return validation();" >
+        <table>
+            <%       var curTitle = results._doc.title;
+                var curContent = results._doc.content;
+            %>
+            <tr>
+            <td><label>제목</label></td>
+            <td><input type="text" name="title" id="title" value="<%= curTitle%>"/></td>
+                <div class="btn-group" role="group">
+  </div>
+            </tr>
+            <tr>
+            <td><lable>글내용</lable></td>
+                <td><input type="text" id="content" name="content" value="<%= curContent%>"/></td>
+            </tr>
+            </table>
+           <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <input type='file' id='files' name='userimage' multiple='multiple'>
+            <div id='preview'> 
+            </div>
+          <p id="firstP"></p>
+<script>
+              var p = document.getElementById("firstP");
+                   var images = [];
+                   var todelete = [];         
+    <% var q=0; %>
+    <% for(var i=0;i< temp.length;i++)
+        {%>
+            var str = "<%= temp[i].images %>";
+            images.push(str);
+        <%}%>
+	           for(var i=0;i<images.length;i++)
+               {
+                   $("<span class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"../uploads/" + images[i] + "\" id=\"" + i + "\"/>" +
+            "<br/><span class=\"remove\" id=\"" + i + "\">Remove image</span>" +
+            "</span>").insertAfter("#files");
+               }
+    $(".remove").click(function(){
+              todelete.push((this).id);
+              console.log((this).id);
+              console.log("투딜맅");
+              console.log(todelete);
+            $(this).parent(".pip").remove();
+    document.getElementById("delimg").value = todelete;     
+    });
+            </script>
+       <p id="areaerror">
+        </p>
+            <input type="hidden" id="delimg" name="todelete" />
+            <input type="submit" value="작성" />
+        </form>
+         <script>
+             
+          function area(text)
+            {
+                console.log(text);
+                document.getElementById("Toggle").innerHTML = text;
+                document.getElementById("areaerror").innerHTML = '';
+            }
+        function validation()
+            {
+                console.log("유효성 체크!");
+                if(document.getElementById("title").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "제목을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                if(document.getElementById("content").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "내용을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                
+                return true;
+            }
+        </script>
+        <br>
+    </body>
+</html>

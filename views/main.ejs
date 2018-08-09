@@ -1,35 +1,91 @@
-<!-- 합쳐지고 최소화된 최신 CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-
-<!-- 부가적인 테마 -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-
-<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+<link rel="stylesheet" type="text/css" href="../public/main.css">
 <base href='/'>
 <!DOCTYPE html>
 <html>
 <head>
-    <% include ./header%>
-    </head>
-    <body>
-    <h3>상품 정보 페이지</h3><br>
-        <p>로그인 후 볼 수 있는 페이지 입니다. 컨텐츠 구상후 디자인 예정이고, <br>로그인 딱 완료화면 이 화면으로 넘어온다고 보면 됨</p>
-        <br><br>
-        <form method="get" action="/" id="search" onsubmit ="return setAction();">
-            <input type="text" id="searchstring">
-        <input type="submit" value="작성" />
-        </form>
-        <script>
-        function setAction()
-            {
-                var ac = document.getElementById("searchstring").value;
-                console.log(ac);
-                document.getElementById("search").action = "/posts/search/all/"+ac+"/1";
-                return true;
-                
-            }
-        </script>
-    </body>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>What We Do</title>
+</head>
+<body>
+        <div class="contain">
+            <div id="slide">
+            <input type="radio" name="pos" id="pos1">
+            <input type="radio" name="pos" id="pos2">
+            <input type="radio" name="pos" id="pos3">
+            <input type="radio" name="pos" id="pos4">
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <p class="pos">
+                <label for="pos1" onclick="changeidx(1)"></label>
+                <label for="pos2" onclick="changeidx(2)"></label>
+                <label for="pos3" onclick="changeidx(3)"></label>
+                <label for="pos4" onclick="changeidx(4)"></label>
+            </p>
+        </div>
+            <div class="main">
+                    <!--안쓰는클래스 지우기-->
+                    <div id="meducate" class="meducate">
+                        <div class="hgroup">
+                            <h2 class="tit">제보로 바꾼 AROUND</h2>
+                            <ul class="tab">
+                                <li class="slick-active">
+                                    <a href="/resolveposts/1">8월 2주차 special pick!</a></li>
+                                <li><a href="/resolveposts/1">모든 게시물 보기</a></li>
+                                <li><a href="/resolveposts/1">제보로 바꾼 AROUND란?</a></li>
+                            </ul>
+                        </div>
+                        <div class="content">
+                            <ul class="slick-wrap slick-initialized slick-slider">
+                                
+                                      <%for(var q=0;q<resolve.length&&q<4;q++){
+                                                if(resolve[q].images.length>=1){%>
+                                            <li class="what_we_do">
+                                                <a href='/post/<%= resolve[q]._id%>/resolveposts' class="sbox">
+                                                    <div class="imgs video">
+                                                        <img src="../uploads/<%= resolve[q].images[0].images %>" max-width="270px" >
+                                                        <p class="cate">태그</p>
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="tit">
+                                                        </div>
+                                                        <div class="txt">
+                                                        </div>
+                                                        <div class="like">
+                                                            <span class="val"></span>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </a>
+                                            </li>
+                                                <%}}%>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <script>
+        document.getElementById('pos1').checked = true;
+var i = 0;
+setInterval(function(){
+  if(i%4 == 0){
+    i = 0;
+  }
+  i++;
+  document.getElementById('pos'+i).checked = true;
+}, 2000);
+        
+        function changeidx(idx)
+        {
+            document.getElementById('pos'+idx).checked = true;
+            i=idx
+            
+        }
+    </script>
+</body>
 </html>

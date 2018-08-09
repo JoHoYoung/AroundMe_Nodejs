@@ -3,8 +3,6 @@
     width: 700px;
     height: 600px;
     position: relative;
-    left: 200px;
-    margin-left: 50px;
 }
 .contain table {
     width: 100%;
@@ -63,6 +61,27 @@ label {
     max-width: 100%;
 }
 
+.btn-group{
+    display: block;
+    background-color:white;
+    color: black;
+    font-size: 16px;
+}
+
 .dropdown-menu{
+    display: none;
     position: absolute;
+    background-color: lightgray;
+    min-width: 160px;
+}
+.dropdown-menu a{
+    color: black;
+    display: block;
+}
+.dropdown-menu a:hover{
+    background: #f1f1f1;
+    display: block;
+}
+.show{
+    display: block;
 }

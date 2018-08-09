@@ -1,0 +1,137 @@
+:root {
+    --mouse-x: 0;
+    --mouse-y: 0;
+}
+
+.mapbox {
+    width: 100%;
+    height: 100%;
+    padding-top:60px;
+    text-align: center;
+}
+
+#tmp {
+    display: inline-block;
+    color: white;
+    font-size: 30px;
+    font-weight: 400;
+    align-items: center;
+    top: 120px;
+    left: 480px;
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.mapbg {
+
+    width: 340px;
+    height: 270px;
+
+}
+
+path {
+    fill:#c7c7c7;
+}
+
+path:hover {
+    fill: #eee;
+    cursor: pointer;
+}
+
+.map_path1 {
+    width: 61px;
+    height: 121px;
+    transform: translate(145px, 71px);
+}
+
+.map_path2 {
+    width: 108px;
+    height: 121px;
+    transform: translate(170px, 0px);
+}
+
+.map_path3 {
+    width: 86px;
+    height: 96px;
+    transform: translate(197px, 80px);
+}
+
+.map_path4 {
+    width: 90px;
+    height: 111px;
+    transform: translate(244px, 121px);
+}
+
+.map_path5 {
+    width: 114px;
+    height: 107px;
+    transform: translate(170px, 163px);
+}
+
+.map_path6 {
+    width: 91px;
+    height: 80px;
+    transform: translate(84px, 183px);
+}
+
+.map_path7 {
+    width: 144px;
+    height: 131px;
+    transform: translate(0px, 93px);
+}
+
+.map_path8 {
+    width: 93px;
+    height: 125px;
+    transform: translate(70px, 41px);
+}
+
+.text_bubble {
+    
+      position: fixed;
+    z-index: 1000;
+    opacity: 0;
+    transform: translate(var(--mouse-x), var(--mouse-y));
+    transition: opacity 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.text_bubblebg {
+    background-color: rgba(0, 0, 0, 0.6);
+    height: 55px;
+    width: 130px;
+    border-radius: 10px;
+    position: fixed;
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    padding-top: 15px;
+}
+
+.text_bubblebg > p {
+    padding-top: 7px;
+    font-size: 12px;
+    color: white;
+}
+.text_bubblebg > p > span{
+    font-size: 13px;
+    color: white;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+#triangle {
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.6);
+    transform: translate(61px, 70px);
+}

@@ -1,0 +1,32 @@
+<base href="/">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>개인 정보</title>
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <% include ../views/header%>
+    <% if(results.provider=="soso")
+        {%>
+        아이디 : <%= results.id %>
+        이름 : <%= results.name %>
+        닉네임 : <%= results.nickname %>
+        생년월일 : <%= results.birth %>
+        휴대폰 번호 : <%= results.phone %>
+        이메일 : <%= results.email %>
+        <%}else{%>
+    <p>FaceBook회원<br>
+    닉네임 : <%= results.nickname %></p>            
+            <%}%>
+    
+    <a href='/profile/update'>정보 수정</a>
+    <% include ../views/rfooter%>
+</body>
+</html>

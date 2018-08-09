@@ -1,87 +1,225 @@
-
 <base href="/">
 <link rel="stylesheet" type="text/css" href="../public/common.css">
 
 <link rel="stylesheet" type="text/css" href="../public/posts.css">
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <base href='/'>
 <!DOCTYPE html>
 <html>
+
 <head>
     <% include ../views/header%>
         <meta charset="UTF-8">
         <title>로그인 테스트</title>
+        <style>
+
+
+        </style>
 </head>
 
 <body>
     <div class="contain">
         <div class="main">
-            <div class="leftside">
-                <h1></h1>
-            </div>
-            <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading">게시판</div>
-                <li role="presentation"><a href='/main'>Home</a></li>
-                <ul class="list-group">
-                    <% for(var i = 0 ;i <results.length ; i++)
-            {
-                var curTitle = results[i]._doc.title;
-                var curContent = results[i]._doc.content;%>
-                        <a href="/post/<%= results[i]._doc._id%>">
-                            <li class="list-group-item">
-                                <h4 id="content-title">
-                                    <%= curTitle%>
-                                </h4>
-                                <h5 id="content-preview">
-                                    <%= curContent%>
-                                </h5>
-                                <h4 id="content-info" class="small">
-                                    <%=results[i]._doc.views%> :
-                                        <%=results[i]._doc.star%>
-                                            <%=results[i]._doc.created_at.toISOString().
-  replace(/T/, ' ').      // replace T with a space
-                        replace(/\..+/, '')  %>
-                                                <%= results[i]._doc.writer%>
-                                </h4>
-                            </li>
-                        </a>
+            <% include ../views/leftside%>
+                <div id="contents">
+                    <% if(specific=="all"){%>
+                        <div class="time_hot">
+                            <div class="conhead">
+                                <h3 class="loc_title">자유게시판</h3>
+                                <div class="location">
+                                    <strong class="this"> 자유게시판</strong>
+                                </div>
+                            </div>
+                            <div class="h4group">
+                                <h4 class="tit">이번 주 자유게시판 베스트 글!</h4>
+                                <div class="period">2018.07.27~2018.08.02</div>
+                            </div>
+                            <div class="rank_board">
+                                <div class="lbox">
+                                    <dl>
+                                        <dt>이번 주 추천이 가장 많은 게시글 </dt>
+                                        <dd>
+                                            <ol>
+                                                <li>
+                                                    <div class="rank">1</div>
+                                                    <a href="/hotposts/1" class="tit">
+                        첫번째 추천게시글</a>
+                                                    <div class="recom">37</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">2</div>
+                                                    <a href="/hotposts/1" class="tit">
+                          두번째 추천게시글</a>
+                                                    <div class="recom">30</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">3</div>
+                                                    <a href="/hotposts/1" class="tit">
+                            첫번째 추천게시글</a>
+                                                    <div class="recom">29</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">4</div>
+                                                    <a href="/hotposts/1" class="tit">
+                              첫번째 추천게시글</a>
+                                                    <div class="recom">25</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">5</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                첫번째 추천게시글</a>
+                                                    <div class="recom">20</div>
+                                                </li>
+                                            </ol>
+                                        </dd>
+                                    </dl>
+                                </div>
+
+                                <div class="rbox">
+                                    <dl>
+                                        <dt>이번 주 댓글이 가장 많은 게시글 </dt>
+                                        <dd>
+                                            <ol>
+                                                <li>
+                                                    <div class="rank">1</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                  첫번째 추천게시글</a>
+                                                    <div class="comt">37</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">2</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                    두번째 추천게시글</a>
+                                                    <div class="comt">30</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">3</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                      첫번째 추천게시글</a>
+                                                    <div class="comt">29</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">4</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                        첫번째 추천게시글</a>
+                                                    <div class="comt">25</div>
+                                                </li>
+                                                <li>
+                                                    <div class="rank">5</div>
+                                                    <a href="/hotposts/1" class="tit">
+                                          첫번째 추천게시글</a>
+                                                    <div class="comt">20</div>
+                                                </li>
+                                            </ol>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
                         <%}%>
-                </ul>
-                <nav>
-                    <ul class="pagination">
-                        <li>
-                            <a href="/posts/1" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
+                    <% if(specific=="hotposts"){%>
+                        <div class="time_hot">
+                            <div class="conhead">
+                                <h3 class="loc_title">핫게시판</h3>
+                                <div class="location">
+                                    <strong class="this"> 핫게시판</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <%}%>
+                    
+                            <div class="all_post_list">
+                                <div class="h4group">
+                                    <h4 class="tit">전체글 보기</h4>
+                                </div>
+                                <div class="table_list">
+                                    <table>
+                                        <colgroup>
+                                            <col style="width: 58px;">
+
+                                            <col style="width: auto;">
+
+                                            <col style="width: 172px;">
+                                        </colgroup>
+                                        <tbody>
+                                            <%for(var i=0;i<results.length;i++){%>
+                                                <tr class="dex">
+                                                    <td>
+                                                        <%=i %>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/post/<%= results[i]._doc._id%>/<%= Upper%>">
+                                                            <div class="tbox">
+                                                                <div class="tit">
+                                                                    <%= results[i]._doc.title %>
+                                                                </div>
+                                                            </div>
+                                                            <div class="util">
+                                                                <div class="hit">조회수 :
+                                                                    <%= results[i]._doc.views%>
+                                                                        <span class="val">32</span>
+                                                                </div>
+                                                                <div class="recom">추천수 :
+                                                                    <%= results[i]._doc.star %>
+                                                                        <span class="val">3</span>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td class="etc">
+                                                        <div class="nick">
+                                                            <%= results[i]._doc.writer%>
+                                                        </div>
+                                                        <div class="date">
+                                                            <%var date= results[i]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%><%= date.toString().replace(/,/g,'')%>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                    <div class="contents_table_footer">
+                                        
+
+
+
+                                            <div class="pagination">
+                                                <div class="paging">
+                                                    <li>
+                                                        <a href="/posts/1" aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
       </a>
-                        </li>
-                        <li>
-                            <% var Previous;
+                                                    </li>
+                                                    <li>
+                                                        <% var Previous;
         if((num-1)<1)
          {Previous = 1;}else{Previous = num-1;} %>
-                                <% if(specific=="all"){ %>
-                                    <a href='/posts/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true">&lang;</span>
+                                                            <% if(specific=="all"){ %>
+                                                                <a href='/posts/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
-                            <%} else if(specific=="area"){%>
-                                        <a href='/areaposts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true">&lang;</span>
+                                                                <%} else if(specific=="area"){%>
+                                                                    <a href='/areaposts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
- 
-                                    <%} else if(specific=="searchall"){%>
-                                        <a href='/posts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true">&lang;</span>
+
+                                                                    <%} else if(specific=="searchall"){%>
+                                                                        <a href='/posts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
-                                        <%} else if(specific=="hotposts"){%>
-                                            <a href='/hotposts/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true">&lang;</span>
+                                                                        <%} else if(specific=="hotposts"){%>
+                                                                            <a href='/hotposts/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
-                                            <%} else if(specific=="hotpostssearch"){%>
-                                                <a href='/hotposts/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true">&lang;</span>
+                                                                            <%} else if(specific=="hotpostssearch"){%>
+                                                                                <a href='/hotposts/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
-                                                <%}%>
-                        </li>
+                                                                                <%}%>
+                                                    </li>
+                                                    <span>
                         <% var temppivot = {};
       temppivot = Math.floor((num-1)/5);
       var pivot = (temppivot)*5+1;
@@ -95,98 +233,92 @@
               }else
                { c[i]="";
           }
-          } 
+          }
       for(var q=0; q<5; q++){%>
                             <%if(Math.ceil(PostNum/10)>=pivot+q){%>
                                 <li class="<%= c[q] %>">
                                     <% if(specific=="all"){%>
                                         <a href="/areaposts/<%= pivot+q%>">
-                                            <%= pivot+q %>
+                                            <div class="number"><%=q+1%></div>
                                         </a>
                                         <%} else if(specific=="searchall"){%>
                                             <a href="/posts/search/all/<%= searchstr%>/<%= pivot+q%>">
-                                                <%= pivot+q %>
+                                                <div class="number"><%=q+1%></div>
                                             </a>
                                             <%} else if(specific=="hotposts"){%>
                                                 <a href="/hotposts/<%= pivot+q%>">
-                                                    <%= pivot+q %>
+                                                    <div class="number"><%=q+1%></div>
                                                 </a>
                                                 <%} else if(specific=="hotpostssearch"){%>
                                                     <a href="/hotposts/search/<%= pivot+q%>">
-                                                        <%= pivot+q %>
+                                                        <div class="number"><%=q+1%></div>
                                                     </a>
                                                     <%}%>
                                 </li>
                                 <%}%>
                                     <%}%>
-                                        <li>
-                                            <% var Next;
+                            </span>
+                                                    <li>
+                                                        <% var Next;
                         if((num+1)<=Math.ceil(PostNum/10)){
                         Next = num+1;}else{Next = Math.ceil(PostNum/10);}%>
-                                                <% if(specific=="all"){%>
-                                                    <a href="/posts/<%= Next %>" aria-label="Next">
-                            <span aria-hidden="true">&rang;</span>
+                                                            <% if(specific=="all"){%>
+                                                                <a href="/posts/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
                             </a>
-                                                    <%} else if(specific=="searchall"){%>
-                                                        <a href="/posts/search/all/<%= searchstr%>/<%= Next %>" aria-label="Next">
-                            <span aria-hidden="true">&rang;</span>
+                                                                <%} else if(specific=="searchall"){%>
+                                                                    <a href="/posts/search/all/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
                             </a>
-                                                        <%} else if(specific=="hotposts"){%>
-                                                            <a href="/hotposts/<%= Next %>" aria-label="Next">
-                            <span aria-hidden="true">&rang;</span>
+                                                                    <%} else if(specific=="hotposts"){%>
+                                                                        <a href="/hotposts/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
                             </a>
-                                                            <%} else if(specific=="hotpostssearch"){%>
-                                                                <a href="/hotposts/search/<%= Next %>" aria-label="Next">
-                            <span aria-hidden="true">&rang;</span>
+                                                                        <%} else if(specific=="hotpostssearch"){%>
+                                                                            <a href="/hotposts/search/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
                             </a>
-                                                                <%}%>
-                                        </li>
-                                        <li>
-                                            <% if(specific=="all"){%>
-                                                <a href="/posts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                                                            <%}%>
+                                                    </li>
+                                                    <li>
+                                                        <% if(specific=="all"){%>
+                                                            <a href="/posts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
                                 </a>
-                                                <%} else if(specific=="searchall"){%>
-                                                    <a href="/posts/search/all/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                                            <%} else if(specific=="searchall"){%>
+                                                                <a href="/posts/search/all/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
                                 </a>
-                                                    <%} else if(specific=="hotposts"){%>
-                                                        <a href="/hotposts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                                                <%} else if(specific=="hotposts"){%>
+                                                                    <a href="/hotposts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
                                 </a>
-                                                        <%} else if(specific=="hotpostssearch"){%>
-                                                            <a href="/hotposts/search/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                                                    <%} else if(specific=="hotpostssearch"){%>
+                                                                        <a href="/hotposts/search/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
                                 </a>
-                                                            <%}%>
-                                        </li>
-                    </ul>
-                </nav>
-                <form method="get" action="/" id="search" onsubmit="return setAction();">
-                    <input type="text" id="searchstring">
-                    <input type="submit" value="작성" />
-                </form>
-                <script>
-                    function setAction() {
-                        var ac = document.getElementById("searchstring").value;
-                        console.log(ac);
-                        <% if(specific=="hotposts"||specific=="hotpostssearch"){%>
-                        document.getElementById("search").action = "/hotposts/search/" + ac + "/1";
-                        return true;
-                        <%}%>
+                                                                        <%}%>
+                                                    </li>
+                                                </div>
+                                            </div>
 
-                        <% if(specific=="searchall"||specific=="all"){%>
-                        document.getElementById("search").action = "/posts/search/all/" + ac + "/1";
-                        return true;
-                        <%}%>
-                    }
+                                        <form method="get" action="/" id="search" onsubmit="return setAction();">
+                                            <input type="text" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                           <input type="submit" id="searchbtn" value="검색" />
+                                        </form>
+                                        
+                                        <div class="createpost">
+                                            <h3><a href='/post/create'>글 쓰기</a></h3>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                </div>
 
-                </script>
-                <h3><a href='/post/create'>글 쓰기</a></h3>
-            </div>
         </div>
+
+        <% include ../views/rfooter%>
     </div>
-    <% include ../views/rfooter%>
 </body>
 
 </html>
