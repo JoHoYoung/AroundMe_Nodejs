@@ -1,7 +1,9 @@
 <base href="/">
 <link rel="stylesheet" type="text/css" href="../public/common.css">
-<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="../public/Signin.css">
 
+
+<!DOCTYPE html>
 <html>
 <% if(can == -1){%>
     <script>
@@ -15,7 +17,7 @@
         <head>
             <meta charset="UTF-8">
             <title>AROUNDME 로그인</title>
-            <link rel="stylesheet" type="text/css" href="../public/Signup.css">
+            
             <style>
             #container .loginform .facebook_login a {
                 display: block;
@@ -37,9 +39,12 @@
                 background: gray;
             }
             </style>
+            
+            
         </head>
        <!--원래 쓰인 하늘색 #b5d3f8-->
         <body>
+            
                 <form method="post" action="/process/login" id="container" class="login">
                     <h1 class="logo">
                         <a href="/"></a>
@@ -58,7 +63,7 @@
                             <input type="submit" value="LOGIN" class="text">
                         </div>
                         <div class="submit">
-                            <a href='/signup'>SIGN UP</a>
+                            <a href='/policies'>SIGN UP</a>
                         </div>
 
                         <br>

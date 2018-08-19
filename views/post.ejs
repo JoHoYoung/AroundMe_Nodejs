@@ -14,7 +14,12 @@
     <title>글</title>
 </head>
 <script>
-
+    var images=[];
+    <% if(results._doc.images.length>0){
+    for(var z=0;z<results._doc.images.length;z++){%>
+        images.push('<%= results._doc.images[z].images%>');
+    <%}}%>
+    var imgdex;
     function modal_del() {
         var modal = document.getElementById("Delmodal");
         modal.style.display = "block";
@@ -49,7 +54,8 @@
         targetdiv.innerHTML = ("");
     }
 
-    function doImgPop(img) {
+    function doImgPop(img,idx) {
+        imgdex=idx;
         img1 = new Image();
         img1.src = (img);
         imgControll(img);
@@ -63,14 +69,42 @@
             intervalID = setTimeout(controller, 20);
         }
     }
+    
+    function previousimg()
+    {
+        if(imgdex!=0)
+            {
+                imgdex-=1;
+                var string=images[imgdex];
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML="";
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<img src='../uploads/" + string + "'" + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+            }
+    }
+    
+    function nextimg()
+    {
+        if(imgdex!=(images.length-1))
+            {
+                imgdex+=1;
+                var string=images[imgdex];
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML="";
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<img src='../uploads/" + string + "'" + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+            }
+        
+    }
 
     function viewImage(img) {
         modal_img();
         var targetdiv = document.getElementById("imgmodal_content");
-
-        targetdiv.innerHTML += ("<div class='leftarrow'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
         targetdiv.innerHTML += ("<img src=" + img + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
-        targetdiv.innerHTML += ("<div class='rightarrow'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
     }
 
 </script>
@@ -109,8 +143,8 @@
                                 <br>
                                 <% var images=results._doc.images;
     for(var i=0;i<images.length;i++)
-    {%>
-                                    <img src="../uploads/<%= results._doc.images[i].images%>" width="100" onclick="doImgPop('../uploads/<%= results._doc.images[i].images%>')">
+    {%>                                     
+                                    <img src="../uploads/<%= results._doc.images[i].images%>" width="100" onclick="doImgPop('../uploads/<%= results._doc.images[i].images%>',<%= i%>)">
                                     <%}
     %>
                                         <div class="post_btngroup">
@@ -118,12 +152,12 @@
 
                                                 <form method="post" action="/post/recommend/<%= Upper%>" id="recomform">
                                                     <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
-                                                    <input type="submit" value="추천" />
+                                                    <input type="submit" value="" />
                                                 </form>
                                                 <button type="submit" onclick="recommfunc()" class="btnpost" form="recomform"><span class="material-icons">thumb_up</span>
                                                 </button>
                                                 <% if(Upper=="areaposts"){%>
-                                                <a href="/areaposts/1/0"><%}else{%>
+                                                <a href="/areaposts/1/<%= areagroup%>"><%}else{%>
                                                 <a href="/<%= Upper%>/1"><%}%><button type="button" class="btnpost"><span class="material-icons">list</span></button>
                                                     </a>
                                                 <%
@@ -217,7 +251,7 @@
                             <form method="post" action="/post/comment/update/<%= results._doc._id%>/<%= Upper%>">
                                         <td><input type="text" id="paramcontent" name="paramcontent" /></td>
                                         <td><input type="hidden" id="commtoupdate" name="commentid" value="" /></td>
-                                        <input type="submit" value="삭제" />
+                                        <input type="submit" value="수정" />
                                     </form>
                             <button type="button" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>

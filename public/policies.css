@@ -1,0 +1,120 @@
+.cont_login {
+    background-color: #f9f9f9
+}
+
+.btn_set {
+    display: block;
+    width: 540px;
+    height: 60px;
+    font-size: 15px;
+    color: #333;
+    background-color: #e6e6e6
+}
+
+.btn_set.btn_disabled {
+    color: #aaa
+}
+
+/* 2016-12-12 추가 */
+
+.btn_follow {
+    display: block;
+    width: 620px;
+    height: 63px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 67px;
+    color: #333;
+    background-color: #e6e6e6
+}
+
+.btn_follow.btn_disabled {
+    color: #aaa
+}
+
+/* 2016-12-12 추가 */
+
+.btn_follow2 {
+    display: inline-block;
+    width: 190px;
+    height: 60px;
+    margin: 0 3px;
+    border: 1px solid #d4d4d4;
+    line-height: 61px;
+    background-color: transparent
+}
+
+.btn_follow2.btn_on {
+    border-color: #c8e8ff;
+    background-color: #c8e8ff;
+}
+
+.btn_on {
+    color: #000;
+    border-color: #c8e8ff;
+    background-color: #c8e8ff;
+}
+
+.wrap_register .box_register {
+    overflow: hidden;
+    width: 540px;
+    padding: 0 39px 49px;
+    margin: 0 auto 20px;
+    border: 1px solid #e6e6e6;
+    background-color: #fff
+}
+
+.box_register .tit_register {
+    padding-top: 44px;
+    font-weight: normal;
+    font-size: 24px;
+    color: #1e1e1e
+}
+
+.box_register .list_guide {
+    padding-top: 3px;
+    font-size: 15px;
+    color: #333;
+    font-family: 'Kakao Light', '맑은 고딕', 'Malgun Gothic', 'Apple SD Gothic Neo', '돋움', dotum, sans-serif
+}
+
+.box_register .list_guide li {
+    overflow: hidden;
+    position: relative;
+    padding: 5px 0 3px 11px
+}
+
+.box_register .list_guide li:before {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 2px;
+    height: 2px;
+    background-color: #666;
+    content: ''
+}
+
+.box_register .txt_guide {
+    display: block;
+    padding-top: 10px;
+    font-size: 15px;
+    font-family: 'Kakao Light', '맑은 고딕', 'Malgun Gothic', 'Apple SD Gothic Neo', '돋움', dotum, sans-serif;
+    line-height: 27px;
+    color: #333
+}
+
+.box_register .tit_policy {
+    display: block;
+    padding-top: 54px;
+    font-weight: normal;
+    font-size: 18px;
+    color: #000
+}
+
+.box_register .tit_find {
+    padding-top: 44px;
+    font-weight: normal;
+    font-size: 24px;
+    color: #1e1e1e
+}
+

@@ -6,7 +6,6 @@
 .mapbox {
     width: 100%;
     height: 100%;
-    padding-top:60px;
     text-align: center;
 }
 
@@ -30,7 +29,7 @@
 }
 
 .mapbg {
-
+    transform: scale(0.9);
     width: 340px;
     height: 270px;
 

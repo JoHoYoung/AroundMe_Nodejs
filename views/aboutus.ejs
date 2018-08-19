@@ -1,0 +1,412 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/posts.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<base href='/'>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>로그인 테스트</title>
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+            html,
+            body {
+                background: #333 url("https://codepen.io/images/classy_fabric.png");
+            }
+
+            .contain {
+                box-sizing: content-box;
+                width: 100%;
+                padding-top: 91px;
+                background: white;
+            }
+
+            .slides {
+                padding: 0;
+                width: 100%;
+                height: 800px;
+                display: block;
+                margin: 0 auto;
+                position: relative;
+            }
+            .slides * {
+                user-select: none;
+                -ms-user-select: none;
+                -moz-user-select: none;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+            }
+
+            .slides input {
+                display: none;
+            }
+
+            .slide-container {
+                display: block;
+            }
+
+            .slide {
+                top: 0;
+                opacity: 0;
+                width: 609px;
+                height: 420px;
+                display: block;
+                position: absolute;
+
+                transform: scale(0);
+
+                transition: all .7s ease-in-out;
+            }
+
+            .slide img {
+                height: 800px;
+                min-width: 2300px;
+            }
+
+            .nav label {
+                width: 200px;
+                height: 100%;
+                display: none;
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                transition: opacity .2s;
+                color: #FFF;
+                font-size: 130pt;
+                text-align: center;
+                line-height: 800px;
+                font-family: "Varela Round", sans-serif;
+                background-color: rgba(255, 255, 255, .3);
+                text-shadow: 0px 0px 15px rgb(119, 119, 119);
+            }
+
+            .slide:hover+.nav label {
+                opacity: 0.5;
+            }
+
+            .nav label:hover {
+                opacity: 1;
+            }
+
+            .nav .next {
+                right: 0;
+            }
+
+            input:checked+.slide-container .slide {
+                opacity: 1;
+
+                transform: scale(1);
+
+                transition: opacity 1s ease-in-out;
+            }
+
+            input:checked+.slide-container .nav label {
+                display: block;
+            }
+
+            .nav-dots {
+                width: 100%;
+                bottom: 9px;
+                height: 11px;
+                display: block;
+                position: absolute;
+                text-align: center;
+            }
+
+            .nav-dots .nav-dot {
+                top: -5px;
+                width: 11px;
+                height: 11px;
+                margin: 0 4px;
+                position: relative;
+                border-radius: 100%;
+                display: inline-block;
+                background-color: rgba(255, 255, 255, 0.5);
+            }
+
+            .nav-dots .nav-dot:hover {
+                cursor: pointer;
+                background-color: rgba(255, 255, 255, 0.9);
+            }
+
+            input#img-1:checked~.nav-dots label#img-dot-1,
+            input#img-2:checked~.nav-dots label#img-dot-2,
+            input#img-3:checked~.nav-dots label#img-dot-3,
+            input#img-4:checked~.nav-dots label#img-dot-4,
+            input#img-5:checked~.nav-dots label#img-dot-5,
+            input#img-6:checked~.nav-dots label#img-dot-6 {
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+            .list_intro {
+                overflow: hidden;
+                width: 100%;
+            }
+
+            #pic1 .list_intro li {
+                float: left;
+                width: 33.33%;
+                background: white;
+            }
+
+            #pic2 .list_intro li {
+                float: left;
+                width: 33.33%;
+
+                background: skyblue;
+                ;
+            }
+
+            #pic3 .list_intro li {
+                float: left;
+                width: 33.33%;
+                background: pink;
+            }
+
+            @media (max-width: 1200px) .list_intro .link_intro {
+                height: 319px;
+            }
+
+            .list_intro li {
+                float: left;
+                width: 33.33%;
+                height: 400px;
+                background: white;
+            }
+
+            .list_intro .link_inside {
+                text-align: center;
+            }
+
+            .list_intro .link_inside {
+                text-align: center;
+            }
+
+            a {
+                color: #333;
+                text-decoration: none;
+            }
+
+            .list_intro .tit_intro {
+                position: relative;
+                left: 19px;
+                top: 40px;
+                font-size: 15px;
+                font-family: 'Kakao Light', '맑은 고딕', 'Malgun Gothic', 'Apple SD Gothic Neo', '돋움', dotum, sans-serif;
+                color: black;
+            }
+
+            user agent stylesheet strong,
+            b {
+                font-weight: bold;
+            }
+
+            .list_intro .link_inside {
+                text-align: center;
+            }
+
+            @media (max-width: 1200px) .list_intro .img_inside,
+            .list_intro .img_ai {
+                width: 320px;
+                height: 319px;
+            }
+
+            .list_intro .desc_system {
+                left: 0;
+                display: block;
+                top: 0;
+                height: 100%;
+                color: #1e1e1e;
+                text-align: center;
+                background: white;
+                padding-top: 100px;
+            }
+
+            .list_intro .desc_system1 {
+                left: 0;
+                display: block;
+                top: 0;
+                height: 100%;
+                color: #1e1e1e;
+                text-align: center;
+                background: white;
+                padding-top: 150px;
+            }
+
+            .list_intro .desc_system2 {
+                left: 0;
+                display: block;
+                top: 0;
+                height: 100%;
+                color: #1e1e1e;
+                text-align: center;
+                background: skyblue;
+                 padding-top: 150px;
+            }
+
+            .list_intro .desc_system3 {
+                left: 0;
+                display: block;
+                top: 0;
+                height: 100%;
+                color: #1e1e1e;
+                text-align: center;
+                background: pink;
+                 padding-top: 150px;
+            }
+
+            .list_intro .desc_system1 .txt_system {
+                height: 319px;
+                background: none;
+                font-size: 30px;
+                line-height: 47px;
+                vertical-align: middle;
+            }
+
+            .list_intro .desc_system2 .txt_system {
+                height: 319px;
+                background: none;
+                font-size: 30px;
+                line-height: 47px;
+                vertical-align: middle;
+            }
+
+            .list_intro .desc_system3 .txt_system {
+                height: 319px;
+                background: none;
+                font-size: 30px;
+                line-height: 47px;
+                vertical-align: middle;
+            }
+
+            @media (max-width: 1200px) .list_intro .img_inside,
+            .list_intro .img_ai {
+                width: 320px;
+                height: 319px;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+        </div>
+        <ul class="slides">
+            <input type="radio" name="radio-btn" id="img-1" checked />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_1.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-6" class="prev">&#x2039;</label>
+                    <label for="img-2" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <input type="radio" name="radio-btn" id="img-2" />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_2.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-1" class="prev">&#x2039;</label>
+                    <label for="img-3" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <input type="radio" name="radio-btn" id="img-3" />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_3.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-2" class="prev">&#x2039;</label>
+                    <label for="img-4" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <input type="radio" name="radio-btn" id="img-4" />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_4.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-3" class="prev">&#x2039;</label>
+                    <label for="img-5" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <input type="radio" name="radio-btn" id="img-5" />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_5.jpg" width:100% />
+                    <img src="../public/about_5.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-4" class="prev">&#x2039;</label>
+                    <label for="img-6" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <input type="radio" name="radio-btn" id="img-6" />
+            <li class="slide-container">
+                <div class="slide">
+                    <img src="../public/about_6.jpg" width:100% />
+                </div>
+                <div class="nav">
+                    <label for="img-5" class="prev">&#x2039;</label>
+                    <label for="img-1" class="next">&#x203a;</label>
+                </div>
+            </li>
+
+            <li class="nav-dots">
+                <label for="img-1" class="nav-dot" id="img-dot-1"></label>
+                <label for="img-2" class="nav-dot" id="img-dot-2"></label>
+                <label for="img-3" class="nav-dot" id="img-dot-3"></label>
+                <label for="img-4" class="nav-dot" id="img-dot-4"></label>
+                <label for="img-5" class="nav-dot" id="img-dot-5"></label>
+                <label for="img-6" class="nav-dot" id="img-dot-6"></label>
+            </li>
+        </ul>
+    </div>
+    <div id="mArticle">
+        <ul class="list_intro">
+            <div id="pic1">
+                <li>
+
+                    <strong class="tit_intro">인사이드 소소</strong>
+                    <span class="desc_system1">
+                <span id="working_style_text" class="txt_system">회의를<br>잘합니다</span></span>
+                </li>
+            </div>
+
+            <div id="pic2">
+                <li>
+
+                    <strong class="tit_intro">인사이드 소소</strong>
+                    <span class="desc_system2">
+                <span id="working_style_text" class="txt_system">회의를<br>잘합니다</span></span>
+
+                </li>
+            </div>
+            <div id="pic3">
+                <li>
+
+                    <strong class="tit_intro">인사이드 소소</strong>
+                    <span class="desc_system3">
+                <span id="working_style_text" class="txt_system">회의를<br>잘합니다</span></span>
+
+                </li>
+            </div>
+        </ul>
+    </div>
+    <% include ../views/rfooter%>
+</body>
+
+</html>

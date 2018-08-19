@@ -84,14 +84,31 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <a onclick='area("영등포구")'><li>영등포구</li></a>
-        <a onclick='area("서초구")'><li>서초구</li></a>
-        <a onclick='area("관악구")'><li>관악구</li></a>
-        <a onclick='area("동작구")'><li>동작구</li></a>
-        <a onclick='area("강남구")'><li>강남구</li></a>
-        <a onclick='area("양천구")'><li>양천구</li></a>
-        <a onclick='area("구로구")'><li>구로구</li></a>
-        
+      <a onclick='area("종로",0)'><li>종로</li></a>
+        <a onclick='area("중구",0)'><li>중구</li></a>
+        <a onclick='area("용산",0)'><li>용산</li></a>
+        <a onclick='area("은평",1)'><li>은평</li></a>
+        <a onclick='area("마포",1)'><li>마포</li></a>
+        <a onclick='area("서대문",1)'><li>서대문</li></a>
+        <a onclick='area("강서",2)'><li>강서</li></a>
+        <a onclick='area("양천",2)'><li>양천</li></a>
+        <a onclick='area("영등포",2)'><li>영등포</li></a>
+        <a onclick='area("구로",2)'><li>구로</li></a>
+        <a onclick='area("동작",3)'><li>동작</li></a>
+        <a onclick='area("관악",3)'><li>관악</li></a>
+        <a onclick='area("금천",3)'><li>금천</li></a>
+        <a onclick='area("서초",4)'><li>서초</li></a>
+        <a onclick='area("강남",4)'><li>강남</li></a>
+        <a onclick='area("강동",5)'><li>강동</li></a>
+        <a onclick='area("송파",5)'><li>송파</li></a>
+        <a onclick='area("동대문",6)'><li>동대문</li></a>
+        <a onclick='area("중랑",6)'><li>중랑</li></a>
+        <a onclick='area("성동",6)'><li>성동</li></a>
+        <a onclick='area("광진",6)'><li>광진</li></a>
+        <a onclick='area("도봉",7)'><li>도봉</li></a>
+        <a onclick='area("강북",7)'><li>강북</li></a>
+        <a onclick='area("성북",7)'><li>성북</li></a>
+        <a onclick='area("노원",7)'><li>노원</li></a>
     </ul>
   </div>
             </tr>
@@ -101,6 +118,7 @@
             </tr>
             </table>
            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <input type='hidden' id='areagroup' name='areagroup'>
             <input type='file' id='files' name='userimage' multiple='multiple'>
             <div id='preview'> 
             </div>
@@ -141,12 +159,16 @@
                  results._doc.area %>";
               document.getElementById("Toggle").innerHTML = "<%= 
                  results._doc.area %>";
-          function area(text)
+          function area(text,num)
             {
-                console.log(text);
+                document.getElementById("area").value = '';
+                document.getElementById("areagroup").value=num;
                 document.getElementById("area").value = text;
                 document.getElementById("Toggle").innerHTML = text;
                 document.getElementById("areaerror").innerHTML = '';
+                console.log("이거맞냐?");
+                console.log(document.getElementById("area").value);
+                console.log(document.getElementById("areagroup").value);
             }
         function validation()
             {

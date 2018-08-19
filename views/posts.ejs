@@ -12,15 +12,57 @@
         <meta charset="UTF-8">
         <title>로그인 테스트</title>
         <style>
+            #h4group2 .h4group {
+                overflow: hidden;
+                margin: -30px -30px 0;
+                padding: 40px 30px 12px;
+                border-bottom: 1px solid #0000;
+            }
 
+            #rank_board2 .rank_board .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+            .rank_board .lbox {
+    width: 100%;
+    float: left;
+    position: relative;
+    border-top: 3px solid gray;
+    border-bottom: 3px solid #f1f1f2;
+}
+            .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
 
+            .rank_board dl dd ol li .subtitle {
+                display: inline-block;
+                overflow: hidden;
+                max-width: 100%;
+                font-size: 13px;
+                line-height: 39px;
+                color: #666666;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                word-break: break-all;
+                float: right;
+            }
         </style>
 </head>
 
 <body>
     <div class="contain">
         <div class="main">
+            <% if(specific=="all")
+                {%>
             <% include ../views/leftside%>
+            <%}else {%>
+            <% include ../views/hotleftside%>
+            <%}%>
                 <div id="contents">
                     <% if(specific=="all"){%>
                         <div class="time_hot">
@@ -40,148 +82,147 @@
                                         <dt>이번 주 추천이 가장 많은 게시글 </dt>
                                         <dd>
                                             <ol>
+                                                <% for(var k=0;k<hot.length;k++){%>
+                                                            <%var date= hot[k]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                
+                                                            <li>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/post/<%= hot[k]._id%>/posts" class="tit">
+                          <%= hot[k].title%></a> <a href="/post/<%= hot[k]._id%>/posts" class="subtitle">
+                        <%= date.toString().replace(/,/g,'')%></a>
+                                                                <div class="recom"><%= hot[k].star%></div>
+                                                            </li>
+                                                            <%}%>
+                                                <% for(var q=hot.length;q<5;q++){%>
                                                 <li>
-                                                    <div class="rank">1</div>
-                                                    <a href="/hotposts/1" class="tit">
-                        첫번째 추천게시글</a>
-                                                    <div class="recom">37</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">2</div>
-                                                    <a href="/hotposts/1" class="tit">
-                          두번째 추천게시글</a>
-                                                    <div class="recom">30</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">3</div>
-                                                    <a href="/hotposts/1" class="tit">
-                            첫번째 추천게시글</a>
-                                                    <div class="recom">29</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">4</div>
-                                                    <a href="/hotposts/1" class="tit">
-                              첫번째 추천게시글</a>
-                                                    <div class="recom">25</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">5</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                첫번째 추천게시글</a>
-                                                    <div class="recom">20</div>
-                                                </li>
-                                            </ol>
-                                        </dd>
-                                    </dl>
-                                </div>
-
-                                <div class="rbox">
-                                    <dl>
-                                        <dt>이번 주 댓글이 가장 많은 게시글 </dt>
-                                        <dd>
-                                            <ol>
-                                                <li>
-                                                    <div class="rank">1</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                  첫번째 추천게시글</a>
-                                                    <div class="comt">37</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">2</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                    두번째 추천게시글</a>
-                                                    <div class="comt">30</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">3</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                      첫번째 추천게시글</a>
-                                                    <div class="comt">29</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">4</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                        첫번째 추천게시글</a>
-                                                    <div class="comt">25</div>
-                                                </li>
-                                                <li>
-                                                    <div class="rank">5</div>
-                                                    <a href="/hotposts/1" class="tit">
-                                          첫번째 추천게시글</a>
-                                                    <div class="comt">20</div>
-                                                </li>
-                                            </ol>
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <%}%>
-                    <% if(specific=="hotposts"){%>
-                        <div class="time_hot">
-                            <div class="conhead">
-                                <h3 class="loc_title">핫게시판</h3>
-                                <div class="location">
-                                    <strong class="this"> 핫게시판</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <%}%>
-                    
-                            <div class="all_post_list">
-                                <div class="h4group">
-                                    <h4 class="tit">전체글 보기</h4>
-                                </div>
-                                <div class="table_list">
-                                    <table>
-                                        <colgroup>
-                                            <col style="width: 58px;">
-
-                                            <col style="width: auto;">
-
-                                            <col style="width: 172px;">
-                                        </colgroup>
-                                        <tbody>
-                                            <%for(var i=0;i<results.length;i++){%>
-                                                <tr class="dex">
-                                                    <td>
-                                                        <%=i %>
-                                                    </td>
-                                                    <td>
-                                                        <a href="/post/<%= results[i]._doc._id%>/<%= Upper%>">
-                                                            <div class="tbox">
-                                                                <div class="tit">
-                                                                    <%= results[i]._doc.title %>
-                                                                </div>
-                                                            </div>
-                                                            <div class="util">
-                                                                <div class="hit">조회수 :
-                                                                    <%= results[i]._doc.views%>
-                                                                        <span class="val">32</span>
-                                                                </div>
-                                                                <div class="recom">추천수 :
-                                                                    <%= results[i]._doc.star %>
-                                                                        <span class="val">3</span>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </td>
-                                                    <td class="etc">
-                                                        <div class="nick">
-                                                            <%= results[i]._doc.writer%>
-                                                        </div>
-                                                        <div class="date">
-                                                            <%var date= results[i]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
-                                                    date.splice(date.length-3,3);%><%= date.toString().replace(/,/g,'')%>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/hotposts/1" class="tit">
+                            핫 게시물의 주인공이 되어보세요!</a> <a href="/hotposts/1" class="subtitle">
+                        0000.00.00</a>
+                                                                <div class="recom">0</div>
+                                                            </li>
                                                 <%}%>
-                                        </tbody>
-                                    </table>
+                                            </ol>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <%}%>
+                            <% if(specific=="hotposts"){%>
+                                <div class="time_hot">
+                                    <div class="conhead">
+                                        <h3 class="loc_title">핫게시판</h3>
+                                        <div class="location">
+                                            <strong class="this"> 핫게시판</strong>
+                                        </div>
                                     </div>
-                                    <div class="contents_table_footer">
-                                        
+                                    <div id="rank_board2">
+                                        <div id="h4group2">
+                                            <div class="h4group">
+
+                                                <h4 class="tit">AROUND ME에서 가장 핫한 게시글은?</h4>
+                                                <div class="period">전체 게시물 대상</div>
+                                            </div>
+                                        </div>
+                                        <div class="rank_board">
+                                            <div class="lbox">
+                                                <dl>
+                                                    <dt>이번 주 추천이 가장 많은 게시글 </dt>
+                                                    <dd>
+                                                        <ol>
+                                                            <% for(var k=0;k<hot.length;k++){%>
+                                                            <%var date= hot[k]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                
+                                                            <li>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/post/<%=hot[k]._id%>/hotposts" class="tit">
+                          <%= hot[k].title%></a> <a href="/post/<%=hot[k]._id%>/hotposts" class="subtitle">
+                        <%= date.toString().replace(/,/g,'')%></a>
+                                                                <div class="recom"><%= hot[k].star%></div>
+                                                            </li>
+                                                            <%}%>
+                                                            <% for(var q=hot.length;q<5;q++){%>
+                                                <li>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/hotposts/1" class="tit">
+                            핫게시판의 주인공이 되어보세요!</a> <a href="/hotposts/1" class="subtitle">
+                        0000.00.00</a>
+                                                                <div class="recom">0</div>
+                                                            </li>
+                                                <%}%>
+                                                        </ol>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%}%>
+                                    <div class="all_post_list">
+                                        <div class="h4group">
+                                            <%if(specific=="searchall"){%>
+                                            <h4 class="tit">'<%= searchstr%>' (으)로 검색결과</h4>
+                                            <%}else if(specific=="hotpostssearch"){%>
+                                            <h4 class="tit">'<%= searchstr%>' (으)로 검색결과</h4>
+                                            <%}else{%>
+                                            <h4 class="tit">전체글 보기</h4>
+                                            <%}%>
+                                            
+                                        </div>
+                                        <div class="table_list">
+                                            <table>
+                                                <colgroup>
+                                                    <col style="width: 58px;">
+
+                                                    <col style="width: auto;">
+
+                                                    <col style="width: 172px;">
+                                                </colgroup>
+                                                <tbody>
+                                                    <%for(var i=0;i<results.length;i++){%>
+                                                        <tr class="dex">
+                                                            <td>
+                                                                <%=(num-1)*10+i+1 %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/post/<%= results[i]._doc._id%>/<%= Upper%>">
+                                                                    <div class="tbox">
+                                                                        <div class="tit">
+                                                                            <%= results[i]._doc.title %>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="util">
+                                                                        <div class="hit">조회수 :
+                                                                            <%= results[i]._doc.views%>
+                                                                                <span class="val">32</span>
+                                                                        </div>
+                                                                        <div class="recom">추천수 :
+                                                                            <%= results[i]._doc.star %>
+                                                                                <span class="val">3</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </td>
+                                                            <td class="etc">
+                                                                <div class="nick">
+                                                                    <%= results[i]._doc.writer%>
+                                                                </div>
+                                                                <div class="date">
+                                                                    <%var date= results[i]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                        <%= date.toString().replace(/,/g,'')%>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <%}%>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="contents_table_footer">
+
 
 
 
@@ -197,14 +238,9 @@
         if((num-1)<1)
          {Previous = 1;}else{Previous = num-1;} %>
                                                             <% if(specific=="all"){ %>
-                                                                <a href='/posts/<%= Previous %>' aria-label="Previous">
+                                                                <a href='/posts/<%= Previous%>' aria-label="Previous">
         <span aria-hidden="true"><div class="circle_left"></div></span>
       </a>
-                                                                <%} else if(specific=="area"){%>
-                                                                    <a href='/areaposts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
-        <span aria-hidden="true"><div class="circle_left"></div></span>
-      </a>
-
                                                                     <%} else if(specific=="searchall"){%>
                                                                         <a href='/posts/search/all/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
         <span aria-hidden="true"><div class="circle_left"></div></span>
@@ -238,7 +274,7 @@
                             <%if(Math.ceil(PostNum/10)>=pivot+q){%>
                                 <li class="<%= c[q] %>">
                                     <% if(specific=="all"){%>
-                                        <a href="/areaposts/<%= pivot+q%>">
+                                        <a href="/posts/<%= pivot+q%>">
                                             <div class="number"><%=q+1%></div>
                                         </a>
                                         <%} else if(specific=="searchall"){%>
@@ -302,21 +338,37 @@
                                                 </div>
                                             </div>
 
-                                        <form method="get" action="/" id="search" onsubmit="return setAction();">
-                                            <input type="text" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
-                                           <input type="submit" id="searchbtn" value="검색" />
-                                        </form>
-                                        
-                                        <div class="createpost">
-                                            <h3><a href='/post/create'>글 쓰기</a></h3>
+                                            <form method="get" action="/" id="search" onsubmit="return setAction();">
+                                                <input type="text" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                                <input type="submit" id="searchbtn" value="검색" />
+                                            </form>
+
+                                            <% if(specific=="all"){%>
+                                            <div class="createpost">
+                                                <h3><a href='/post/create'>글 쓰기</a></h3>
+                                            </div>
+                                            <%}%>
                                         </div>
+
                                     </div>
-                                
-                            </div>
                 </div>
 
         </div>
+        <script>
+                    function setAction() {
+                        var ac = document.getElementById("searchstring").value;
+                        console.log(ac);
+                        <% if(specific=="hotposts"||specific=="hotpostssearch"){%>
+                        document.getElementById("search").action = "/hotposts/search/" + ac + "/1";
+                        return true;
+                        <%}%>
 
+                        <% if(specific=="searchall"||specific=="all"){%>
+                        document.getElementById("search").action = "/posts/search/all/" + ac + "/1";
+                        return true;
+                        <%}%>
+                    }
+                </script>
         <% include ../views/rfooter%>
     </div>
 </body>

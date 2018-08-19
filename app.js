@@ -24,7 +24,52 @@ var cookieParser = require('cookie-parser');
 var static = require('serve-static');
 var errorHandler = require('errorhandler');
 var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+
+passport.use(new LocalStrategy({
+    
+    usernameField:'id',
+    passwordField:'password',
+    passReqToCallback: true
+},function(req, id,password,callback){
+    var database = req.app.get('database');
+    database.UserModel.find({"id":id,"auth":{$ne: 0}}, function(err, results) {
+		if (err) {
+			callback(err, null);
+			return;
+		}
+		
+		console.log('아이디 [%s]로 사용자 검색결과', id);
+		console.dir(results);
+		
+		if (results.length > 0) {
+			console.log('아이디와 일치하는 사용자 찾음.');
+			
+			// 2. 패스워드 확인 : 모델 인스턴스를 객체를 만들고 authenticate() 메소드 호출
+            var user = new database.UserModel({id:id});
+            console.log(results[0]._doc);
+			var authenticated = user.authenticate(password, results[0]._doc.salt, results[0]._doc.hashed_password);
+			if (authenticated) {
+                req.session.user = {   id: results[0]._doc.id,
+                                           nickname:results[0]._doc.nickname,
+                                           name: results[0]._doc.name,
+                                           authorized: true};
+                console.log('비밀번호 일치함');
+                console.log(req.session.user);
+				callback(null, results);
+			} else {
+				console.log('비밀번호 일치하지 않음');
+				callback(null, null);
+			}
+			
+		} else {
+	    	console.log("아이디와 일치하는 사용자를 찾지 못함.");
+	    	callback(null, null);
+	    }
+		
+	});    
+}));
 
 passport.serializeUser(function(user,done){
     
@@ -122,20 +167,18 @@ app.get('/login_success', ensureAuthenticated, function(req, res){
                                 name: results.name,
                                 nickname:results.nickname,
                                 authorized: true};
-                                res.redirect('/');
+                                if(req.session.returnTo)
+                        {
+                    res.redirect(req.session.returnTo);
+                    res.end();}else{
+                        res.redirect('/');
+                    res.end();
+                    }
         }else{
             console.log("결과없음");
         res.render('facebooksignup', {id:req.user.id, name:req.user.username});
     }
     });
-
-});
-
-app.get('/logout', function(req, res){
-
-    req.logout();
-
-    res.redirect('/');
 
 });
 
@@ -160,7 +203,7 @@ app.post('/process/areacreate', upload.array('userimage', 12), function (req, re
     console.log("지역은!?");
     console.log(area);
     if (database) {
-        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.id,area,areagroup,function (err, result) {
+        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.nickname,area,areagroup,function (err, result) {
 
             if (err) {
                 throw err;
@@ -212,10 +255,7 @@ app.post('/process/areapost/update/:postroot',upload.array('userimage',12),funct
        console.log(todelete);
         todelete = todelete.split(',');
         todelete = todelete.sort().reverse();
-        console.log("투딜릿");
-        console.log(todelete);
-        console.log(todelete.length);
-        
+       
         for(var i=0;i<todelete.length;i++)
             {
                 console.log("지울것은1?");
@@ -242,7 +282,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
-    var paramuser = req.session.user.id;
+    var paramuser = req.session.user.nickname;
     var type=req.body.type;
   
     if(type=="resolve"){
@@ -259,13 +299,12 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/resolveposts/1`);
+                res.redirect(`/post/${rsesult._id}/resolveposts`);
                 res.end();
             }   
         });
     }
     else if(type=="report"){
-        
         user.addReportPost(database, paramtitle, paramcontent, req.session.user.nickname, function(err,result){
             if(err){ throw err;}
             if (result) {
@@ -278,7 +317,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/reportposts/1`);
+                res.redirect(`/post/${result._id}/reportposts`);
                 res.end();
             }   
         });
@@ -299,7 +338,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/posts/1`);
+                res.redirect(`/post/${result._id}/posts`);
                 res.end();
             }
         });
@@ -330,7 +369,7 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
                 results.images.splice(todelete[i],1);
     
             }
-      // var idx=results.images.length; results.images.splice(0,idx);
+     
         for (var i = 0; i < req.files.length; i++) {
                     results.images.push({
                         images: req.files[i].filename
@@ -341,9 +380,26 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
                 });
                 
     });
-    res.redirect(`/post/${postroot}`);
+    res.redirect(req.session.returnTo);
 });
 
+app.post('/process/login',passport.authenticate('local',{failureRedirect:'/loginfail',                                            successRedirect:'/loginsuccess'}),(req,res)=>{
+
+    console.log("응답값은?");
+    //console.log(res);
+    var database = req.app.get('database');
+    var paramId = req.body.id || req.query.id;
+    var paramPassword = req.body.password || req.query.password;
+    console.log(req.session.returnTo);
+
+                if(req.session.returnTo)
+                        {
+                    res.redirect(req.session.returnTo);
+                    res.end();}else{
+                        res.redirect('/');
+                    res.end();
+                    }
+});
 
 //--------------DB연결---------------------//
 var MongoClient = require('mongodb').MongoClient;

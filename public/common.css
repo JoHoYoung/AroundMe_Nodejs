@@ -14,6 +14,7 @@ button {
 }
 
 .contain {
+    display: block;
     box-sizing: content-box;
     width: 100%;
     background: #f6f6f9;
@@ -23,7 +24,7 @@ button {
 .main {
     height: 100%;
     width: 700px;
-    min-height: 1000px;
+    min-height: 800px;
     position: relative;
     display: table;
     margin: 0 auto;
@@ -306,7 +307,8 @@ nav#lnb {
 }
 
 #aside ul > li.on > a {
-    color: blue;
+    color: black;
+    background: white;
 }
 
 #aside ul > li > a {
@@ -317,6 +319,9 @@ nav#lnb {
     font-weight: 700;
     font-size: 16px;
     line-height: 26px;
+     background: linear-gradient(to bottom, #f4f4f4 10%, white);
+    color: gray;
+
 }
 
 #aside ul > li {
@@ -536,16 +541,13 @@ table {
     line-height: 18px;
 }
 
-.tbl_list table tbody tr td.obj .tbox {
-    display: flex;
-}
 
-.tbl_list table tbody tr td.obj .tbox .tit {
+.info .tit {
     overflow: hidden;
     flex: 0 1 auto;
 }
 
-.tbl_list table tbody tr td.obj .tbox .tit a {
+.info .tit a {
     display: block;
     font-weight: 700;
     font-size: 16px;
@@ -554,12 +556,6 @@ table {
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: break-all;
-}
-
-.tbl_list table tbody tr td.obj .tbox .info {
-    margin: 0 0 0 6px;
-    white-space: nowrap;
-    flex: 0 1 auto;
 }
 
 .tbl_list table tbody tr td.obj .util {
@@ -572,7 +568,7 @@ table {
     margin: 0;
 }
 
-.tbl_list table tbody tr td.obj .util div .val {
+.info .like .val {
     font-weight: 700;
     color: #ff4057;
 }
@@ -586,15 +582,6 @@ table {
     color: #777777;
 }
 
-.tbl_list table tbody tr td.obj .util div .val {
-    font-weight: 700;
-    color: #ff4057;
-}
-
-.tbl_list table tbody tr td.etc {
-    text-align: right;
-    vertical-align: bottom;
-}
 
 .tbl_list table tbody tr td.etc .nick {
     font-size: 14px;
@@ -609,7 +596,7 @@ table {
     color: #777777;
 }
 
-.tbl_list table tbody tr td.obj .tbox .info .comt {
+.info .comt {
     margin: 0 10px 0 0;
     font-weight: 700;
     font-size: 16px;
@@ -617,7 +604,7 @@ table {
     color: #ff4057;
 }
 
-.tbl_list table tbody tr td.obj .tbox .info .new {
+.info .new {
     position: relative;
     top: 3px;
     box-sizing: border-box;
@@ -632,11 +619,11 @@ table {
     text-align: center;
 }
 
-.tbl_list table tbody tr td.obj .tbox .info > div {
+info > div {
     display: inline-block;
 }
 
-.tbl_list table tbody tr td.obj .tbox .info > div:last-child {
+.info > div:last-child {
     margin: 0 !important;
 }
 
@@ -732,6 +719,5 @@ form#search {
     color: dimgray;
     letter-spacing: -1px;
 }
-
 
 

@@ -1,0 +1,88 @@
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+<link rel="stylesheet" type="text/css" href="../public/policies.css">
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>사용자추가 테스트</title>
+
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <div class="wrap_register">
+                <div class="box_register box_policy">
+                    <h3 class="tit_register"><b>[필수]</b> 개인정보 수집 및 이용 동의</h3>
+                    <p class="txt_guide">(주)카카오는 아래의 목적으로 개인정보를 수집 및 이용하며, 회원의 개인정보를 안전하게 취급하는데 최선을 다합니다.</p>
+                    <h4 class="tit_policy">개인정보 수집 및 이용에 대한 안내</h4>
+                    <div class="box_privacy">
+                        <div class="wrap_privacy mCustomScrollbar _mCS_1 mCS_no_scrollbar" id="content-1">
+                            <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
+                                <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+                                    <p class="info_privacy">
+                                        1. 목적 : 지원자 개인 식별, 지원의사 확인, 입사전형의 진행, 고지사항 전달, 입사 지원자와의 원활한 의사소통, 지원이력 확인 및 면접 불합격자 재지원 제한<br> 2. 항목 : 아이디(이메일주소), 비밀번호, 이름, 생년월일, 휴대폰번호<br>
+                                        <span class="strike">
+                                    3. 보유기간 : 회원 탈퇴 시까지 보유 (단, 지원이력 정보는 일방향 암호화하여 탈퇴일로부터 1년간 보관 후 파기합니다.)
+                                </span>
+                                        <br>
+                                    </p>
+                                    <span class="screen_out">하단 링크 2개는 커스텀 스크롤바 위,아래 버튼입니다. 버튼 클릭하면 스크롤바가 움직이지 않습니다. 마우스로 클릭 또는 마우스 휠, 키보드 상,하 버튼 클릭 시 커스텀 스크롤바가 움직입니다.</span>
+                                </div>
+                                <div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;"><a href="#" class="mCSB_buttonUp"></a>
+                                    <div class="mCSB_draggerContainer">
+                                        <div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; height: 0px; top: 0px;">
+                                            <div class="mCSB_dragger_bar" style="line-height: 30px;"></div>
+                                        </div>
+                                        <div class="mCSB_draggerRail"></div>
+                                    </div><a href="#" class="mCSB_buttonDown"></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btnAgree1" type="button" class="btn_set">동의</button>
+                    <br><br>
+                    <p class="txt_guide">
+                        위 개인정보 수집에 대한 동의를 거부할 권리가 있으며, 동의 거부 시에는 지원자 등록이 제한될 수 있습니다.<br> 더 자세한 내용에 대해서는 <a href="https://www.kakaocorp.com/policy/privacyPolicy/corporateSitePrivacyPolicy" class="link_decoration" target="_blank">[카카오 기업사이트 개인정보처리방침]</a>을 참고하시길 바랍니다.
+                    </p>
+                </div>
+                <button id="btnSubmit" type="submit" class="btn_follow btn_disabled">다음</button>
+            </div>
+        </div>
+    </div>
+
+    <% include ../views/rfooter%>
+</body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+
+
+        </script>    
+<script type="text/javascript">
+    $(function() {
+        $(".btn_set").click(function() {
+            $(this).toggleClass("btn_on");
+            if ($(".btn_set").eq(0).is(".btn_on")) {
+                $('#btnSubmit').addClass("btn_on").removeClass("btn_disabled");
+            } else {
+                $('#btnSubmit').removeClass("btn_on").addClass("btn_disabled");
+            }
+        });
+
+        $("#btnSubmit").click(function() {
+            if (!$('#btnAgree1').is(".btn_on")) {
+                Dialog.alert({
+                    subject: "",
+                    contents: "개인정보 수집 및 이용에 동의해주세요.",
+                    approve: "확인"
+                });
+
+                $('#btnAgree1').focus();
+                return;
+            }
+            location.href = "/signup";
+        });
+    });
+
+</script>
+
+</html>

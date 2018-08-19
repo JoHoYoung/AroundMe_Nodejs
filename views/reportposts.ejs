@@ -16,16 +16,19 @@
             text-align:center;
         }
 #leftbtn {
+    color:black;
+    background-color: white;
     float: left;
     text-align: right;
-    padding-right: 90px;
-    color: lightblue;
+    padding-right: 180px;
+    margin-bottom:10px;
 }
 #rightbtn {
+    background-color: white;
     text-align: left;
     padding-left: 90px;
     float: right;
-     color: lightblue;
+    margin-bottom:10px;
 }
         img {
     margin: 3px -27px -50px;
@@ -41,18 +44,24 @@
         button:focus {outline:0;}
         
 .hotbox {
-    background-color: ghostwhite;
+    border:2px solid gray;
+    border-radius:10px;
+    background-color: white;
     margin-top: 20px;
-    height: 170px;
+    height: 270px;
     margin-bottom: 10px;
 }
     .hotslider{
         height:100%;
         display:inline-block;
         position:relative;
+        background : 
     }
   .hottitle {
-    border-bottom: 3px solid white;
+      border-top-left-radius:10px;
+      border-top-right-radius:10px;
+    padding-left : 40px;
+    border-bottom: 3px solid lightgray;
     box-sizing: border-box;
     width: 100%;
     height: 55px;
@@ -60,22 +69,29 @@
     display: inline-block;
     font: bold;
     font-size: 17pt;
-    color: white;
+    color: black;
     position: relative;
-    text-align: center;
-    background-color: lightblue;
+    text-align: left;
+    background-color: white;
+    font-weight:normal;
 }
    .hotcontent {
+       line-height:30px;
     display: inline-block;
     overflow: hidden;
-    color: gray;
-    height: 50px;
-    font-size: 20px;
+    color: black;
+    height: 180px;
+    font-size: 15px;
     margin-top: 22px;
+    padding-left:30px;
+    padding-right:30px;   
+    text-align:left;
+    font-weight:normal;
 }
 .hotetc {
+    background-color: white;
     font-size: 10pt;
-    color: gray;
+    color: black;
     position: absolute;
     float: right;
     margin-left: 355px;
@@ -117,8 +133,51 @@ button {
         
         .banner_show {
     display: block;
-    text-align: center;
+    text-align: left;
 }
+        .bannertitle{
+            width:98%;
+            display:inline-block;
+            padding-left:15px;
+            padding-top:10px;
+            padding-bottom:1px;
+            color:gray;
+            font-size:13px;
+            border-bottom:solid 2px ghostwhite;
+        }
+        .recombox
+        {
+            line-height:30px;
+            vertical-align:middle;
+            height:80%;
+            background-color:ghostwhite;
+            margin-right:10px;
+            padding-right:10px;
+            font-size:20px;
+            float:right;
+            display:inline-block;
+            border-radius:3px;
+        }
+          .material-icons
+        {
+            vertical-align:middle;
+            position:relative;
+            color:#ff83c8;
+            padding-top:5px;
+            display:inline-block;
+            font-size:20px;
+            height:100%;
+        }
+        .recommtext
+        {
+            font-size:13pt;
+            font-weight:bold;
+            vertical-align:middle;
+            position:relative;
+            display:inline-block;
+            height:100%;
+        }
+        
     </style>
    
 </head>
@@ -132,37 +191,19 @@ button {
     <div class="contain">
         <div class="main">
             
-            
-           <% include ../views/leftside%>
                 <div id="contents">
-                <div class="time_hot">
-                            <div class="conhead">
-                                <h3 class="loc_title">제보 게시판</h3>
-                                <div class="location">
-                                    <strong class="this">제보 게시판</strong>
-                                </div>
-                            </div>
-                    <img src="../public/report_2.png">
-                    
-                        </div>
-                
-                <div class="all_post_list">
-                                <div class="h4group">
-                                    <h4 class="tit">전체글 보기</h4>
-                                </div>
-                     <ul class="list-group">
-            <div class="hotbox">
-                    <% for(var j=0;j<hot.length ;j++){
+                    <div class="hotbox">
+                        <div class="bannertitle">많은 공감을 얻은 불편사항</div>
+                        <% for(var j=0;j<hot.length ;j++){
                     var date= hot[j]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
                     date.splice(date.length-3,3);
                     
                     %>
                 
-                <span class="hotslider"><a class="banner_show" href="/post/<%= hot[j]._doc._id%>">
-                <span class="hottitle"><%= hot[j]._doc.title %></span><br>
+                <span class="hotslider"><a class="banner_show" href="/post/<%= hot[j]._doc._id%>/reportposts">
+                <span class="hottitle"><%= hot[j]._doc.title %><span class="recombox" ><span class="material-icons">star</span><span class="recommtext"><%=hot[j]._doc.star%></span></span></span><br>
                 <span class="hotcontent"><%= hot[j]._doc.content %></span>
-                     <span class="hotetc"><%= date.toString().replace(/,/g,'')%>  <%= hot[j]._doc.writer%>  <%= hot[j]._doc.star%></span><br>
-                     <span class="hotetc"><%= date.toString().replace(/,/g,'')%>  <%= hot[j]._doc.writer%>  <%= hot[j]._doc.star%></span>
+                     <span class="hotetc"><%= date.toString().replace(/,/g,'')%>  <%= hot[j]._doc.writer%></span><br>
                 </a>
                 <button id="leftbtn" onclick="ChangeSlider(-1)">&#10094;</button>
                 <button id="rightbtn" onclick="ChangeSlider(1)">&#10095;</button>
@@ -170,6 +211,12 @@ button {
                 </span>
                 <%}%>
             </div>
+                <div class="all_post_list">
+                                <div class="h4group">
+                                    <h4 class="tit">전체글 보기</h4>
+                                </div>
+                     <ul class="list-group">
+            
 
                 </ul>
                                 <div class="table_list">
@@ -188,7 +235,7 @@ button {
                                                         <%=i %>
                                                     </td>
                                                     <td>
-                                                        <a href="/post/<%= results[i]._doc._id%>">
+                                                        <a href="/post/<%= results[i]._doc._id%>/reportposts">
                                                             <div class="tbox">
                                                                 <div class="tit">
                                                                     <%= results[i]._doc.title %>
@@ -359,6 +406,14 @@ button {
                 </div>
           
             <script>
+                
+                function setAction() {
+                        var ac = document.getElementById("searchstring").value;
+                        console.log(ac);
+                        document.getElementById("search").action = "/reportposts/search/" + ac + "/1";
+                        return true;
+                    }
+                
     var sliderdex=0;
     var x=document.getElementsByClassName("hotslider");
     autoslider();

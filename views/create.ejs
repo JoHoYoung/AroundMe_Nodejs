@@ -12,41 +12,24 @@
     <meta charset="UTF-8">
     <title>글 작성</title>
     <style>
-        nput[type="file"] {
+        input[type="file"] {
             display: block;
         }
 
         .imageThumb {
-            max-height: 75px;
-            border: 2px solid;
-            padding: 1px;
-            cursor: pointer;
+            max-height: 100px;
+            
         }
 
         .pip {
             display: inline-block;
-            margin: 10px 10px 0 0;
         }
-
-        .dasds {
-            color: 123121f
-        }
-
-        .remove {
-            display: block;
-            background: #444;
-            border: 1px solid black;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .remove:hover {
-            background: white;
-            color: black;
-        }
-
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+
+
+        </script>
+    
     <script type="text/javascript">
         $(document).ready(function() {
             if (window.File && window.FileList && window.FileReader) {
@@ -58,12 +41,11 @@
                         var fileReader = new FileReader();
                         fileReader.onload = (function(e) {
                             var file = e.target;
-                            $("<span class=\"pip\">" +
-                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-                                "<br/><span class=\"remove\">Remove image</span>" +
-                                "</span>").insertAfter("#files");
-                            $(".remove").click(function() {
-                                $(this).parent(".pip").remove();
+                            $("<div id=\"preview\">"+"<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + "목록에서 제거" + "\"/>" +
+                                "</span>"+"<span class=\"cover\">"+"</span>"+"</div>").insertAfter("#uptarget");
+                            $("#preview").click(function() {
+                                $(this).remove();
                             });
                         });
                         fileReader.readAsDataURL(f);
@@ -83,12 +65,13 @@
             <% include ../views/leftside%>
             <div id="contents">
                 <div class="conwrap">
+                    <div class="conhead">
+                        <h3 class=loc_title>게시글 작성</h3>
+                    </div>
             <p id="areaerror">
             </p>
             <form autocomplete="off" method="post" action="/process/create" enctype="multipart/form-data" onsubmit="return validation();">
                 <table>
-                    <h3>게시물 작성</h3>
-            <br>
                     <tr id="posttitle">
                         <td class="box"><input type="text" name="title" id ="title" placeholder="제목" /></td>
                     </tr>
@@ -98,9 +81,14 @@
                     </tr>
                 </table>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                <input type='file' id='files' name='userimage' multiple='multiple'>
-                <div id="preview">
+                <div class="uploadform">
+                    <input class="upload" type='file' id='files' name='userimage' multiple='multiple'>
+                    <div class="uploadimg" id="uptarget"><img src="../public/upload.png" width="25px" height="25px"></div>
                 </div>
+                
+                
+                
+                
                 <% if(type=="resolve"){%>
                 <input type="hidden" name="type" value="resolve">
                 <%}else if(type=='report'){%>
@@ -108,7 +96,9 @@
                 <%}else{%>
                 <input type="hidden" name="type" value="">
                 <%}%>
-                <input type="submit" value="작성" />
+                <div class="submit">
+                            <input type="submit" value="글 작성하기" class="text">
+                        </div>
                 
             </form>
         <script>

@@ -12,8 +12,8 @@ Schema.createSchema = function(mongoose)
         salt: {type:String},
         name: {type:String, index:'hashed','default': ''},
         age : {type:Number, 'default':-1},
-        created_at: {type: Date, index: {unique: false}, 'default': Date.now},
-	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
+        created_at: {type: Date, index: {unique: false}, 'default': new Date().getTime() + 1000 * 60 * 60 * 9},
+	    updated_at: {type: Date, index: {unique: false}, 'default': new Date().getTime() + 1000 * 60 * 60 * 9},
         sex : {type:String, 'default':"남"},
         birth : {type:String, 'default':'0'},
         phone : {type:String, 'default':'0'},
@@ -21,7 +21,8 @@ Schema.createSchema = function(mongoose)
         auth : {type:String, 'default':'0'},
         provider : { type:String, 'default':"soso"},
         email : {type:String, 'default':''},
-        nickname: {type:String}
+        nickname: {type:String},
+        point : {type:Number, 'default':0}
      });
     
     UserSchema

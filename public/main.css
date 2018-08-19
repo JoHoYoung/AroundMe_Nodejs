@@ -101,9 +101,10 @@ li {
 }
 
 .meducate {
+    margin-top:30px;
     width: 1113px;
     position: relative;
-    background-color: #f3f3f3;
+    background-color: white;
 }
 .meducate .hgroup {
     overflow: hidden;
@@ -175,10 +176,6 @@ li {
 }
 
 
-
-.meducate .content .slick-wrap {
-    height: 550px;
-}
 
 .slick-slider {
     padding: 10px;
@@ -276,11 +273,6 @@ img {
     background: rgba(0, 0, 0, 0.6);
 }
 
-.meducate .content .slick-item .sbox .info {
-    box-sizing: border-box;
-    height: 274px;
-    padding: 33px 29px 0;
-}
 
 .meducate .content .slick-item .sbox .info .tit {
     overflow: hidden;
@@ -289,7 +281,7 @@ img {
     font-weight: 700;
     font-size: 18px;
     line-height: 28px;
-    color: #2d2d2d;
+    color: white;
     text-overflow: ellipsis;
     display: -webkit-box;
     word-wrap: break-word;
@@ -301,7 +293,7 @@ img {
     margin: 0 0 38px;
     font-size: 14px;
     line-height: 24px;
-    color: #777777;
+    color: white;
     text-overflow: ellipsis;
     display: -webkit-box;
     word-wrap: break-word;
@@ -319,9 +311,20 @@ img {
 }
 
 .info {
-    width: 270px;
-    height: 270px;
-    background: white;
+    position: absolute;
+    width: 240px;
+    transition: opacity 0.2s;
+    padding: 10px 15px;
+    color: white;
+    background-color: rgba(0,0,0,0.3);
+    bottom: 15px;
+    opacity: 0;
+}
+.info:hover{
+    opacity: 1;
+}
+.imgs.video:hover + .info{
+    opacity: 1;
 }
 
 a.sbox {
@@ -334,6 +337,8 @@ a:link {
     color: inherit;
 }
 
+
+
 .imgs.video {
     height: 270px;
     overflow: hidden;
@@ -342,9 +347,8 @@ a:link {
     display: flex;
 }
 .imgs.video>img{
-    border: none;
-    height: 270px;
-    width: auto;
+    width:270px;
+    height: auto;
 }
 .what_we_do{
     display: inline-block;

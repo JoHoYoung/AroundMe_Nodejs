@@ -1,7 +1,67 @@
-.contain form {
+input[type="file"] {
+    opacity: 0; 
+    left: 0;
+    background: black;
+    position: absolute;
+    width: 50px;
+    height: 100px;
+    z-index: 100;
+    cursor: pointer;
+}
+input[type="file"]:hover + .uploadimg{
+     background: #959595;
+}
+#preview {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    background: white;
+    border: 1px solid lightgray;
+    opacity: 1;
+    overflow: hidden;
+    cursor: pointer;
+}
+#preview:hover >.cover{
+    opacity: 1;
+}
+.cover {
+    width: 100px;
     display: block;
-    width: 700px;
-    height: 600px;
+    background: url(../public/pngclear.png);
+    height: 100px;
+    transform: translate(0px,-100px);
+    opacity:0;
+}
+
+.uploadform{
+    width:100%;
+    height: 100px;
+    background-color: #fcfcfc;
+    margin: 10px 0 30px 0;
+    
+}
+.uploadimg {
+    position: relative;
+    width: 50px;
+    float: left;
+    height: 100px;
+    background: #656565;
+    text-align: center;
+}
+.uploadimg>img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+
+.contain form {
+    margin-top: 30px;
+    display: block;
+    width: 100%;
+    height: 700px;
     position: relative;
 }
 .contain table {
@@ -12,19 +72,23 @@
 
 
 .contain table tr {
-    border: 1px #e3e3e3 solid;
+    border: 0.1px #f1f1f1 solid;
     display: block;
     font-size: 17px;
     line-height: 17px;
     text-align: left;
-    padding: 10px 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: white;
 }
 
 .contain table tr td input {
+    background: transparent;
+    font-size: 20px;
     border: 0;
+    color: #191919;
     width: 100%;
     outline: none;
-
 }
 
 label {
@@ -32,9 +96,6 @@ label {
     padding: 0 10px 0 0;
 }
 
-#posttitle {
-    height: 20px;
-}
 
 #postcontent {
     height: 400px;
@@ -46,11 +107,11 @@ label {
 
 #postcontent .box textarea {
     outline: none;
+    font-size: 20px;
     height: 100%;
     width: 100%;
     resize: none;
 }
-
 .img_wrap {
     width: 50px;
     height: 50px;
@@ -84,4 +145,25 @@ label {
 }
 .show{
     display: block;
+}
+
+table td {
+    padding: 0;
+    border-bottom: 0;
+}
+
+.submit>input{
+    cursor: pointer;
+    background: #656565;
+    font-size: 20px;
+    width: 258px;
+    height: 50px;
+    display: block;
+    padding: 5px 10px;
+    color: white;
+    margin: 0 auto;
+}
+.submit>input:hover{
+    background: #858585;
+    
 }
