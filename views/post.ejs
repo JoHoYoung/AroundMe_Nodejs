@@ -131,7 +131,12 @@
                                             <%= curTitle%>
                                         </h4>
                                         <h5>
-                                            <%= results._doc.writer%> | <%var date= results._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                            <% if(Upper=="anonymous"){%>
+                                            익명
+                                            <%}else{%>
+                                            <%= results._doc.writer%>
+                                            <%}%>
+                                             | <%var date= results._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
                                                     date.splice(date.length-3,3);%><%= date.toString().replace(/,/g,'')%> | 조회:<%= results._doc.views%> | 추천:<%=results._doc.star%>
                                         </h5>
                                     </div>
@@ -299,7 +304,7 @@
                             <% if(type=="area"){%>
                                 <form method="post" action="/areapost/update">
                                     <%}
-               else{%>
+                                    else{%>
                                         <form method="post" action="/post/update">
                                             <%}%>
                                                 <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
@@ -311,6 +316,48 @@
                 </div>
             </div>
                 <script>
+                    var str="<%= Upper%>";
+                    var innerstr;
+                    if(str=="worryposts")
+                    {
+                            innerstr="고민상담";
+                    }else if(str=="accident")
+                        {
+                            innerstr="사건사고";
+                        }else if(str=="notice")
+                        {
+                            innerstr="공지사항";
+                        }else if(str=="anonymous")
+                        {
+                            innerstr="익명 게시판";
+                        }else if(str=="club")
+                        {
+                            innerstr="동호회";
+                        }else if(str=="festival")
+                        {
+                            innerstr="축제정보";
+                        }else if(str=="picture")
+                        {
+                            innerstr="사진 자랑";
+                            
+                        }else if(str=="promotion")
+                        {
+                            innerstr="홍보 게시판";
+                        }
+                        else if(str=="posts")
+                            {
+                                innerstr="자유 게시판";
+                            }
+                    else if(str=="hotposts")
+                        {
+                            innerstr="핫 게시판";
+                        }
+                    
+                    var x=document.getElementsByClassName("loc_title");
+                    var x1=document.getElementsByClassName("location");
+                    x[0].innerHTML=innerstr;
+                    x1[0].innerHTML=innerstr;
+                    
                     var recommended=-1;
                     <%
                     console.log(results._doc.recommender.length);
@@ -333,6 +380,7 @@
                     document.getElementById("recomform").submit();
                 } 
                 }
+                    
                     function commdelfunc(idx)
                     {
                         var todel="postdestroyform"+idx;

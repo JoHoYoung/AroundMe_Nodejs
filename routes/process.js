@@ -49,7 +49,7 @@ router.route('/signup').get(function(req,res){
     
     database.UserModel.find({},function(err,results)
                            {
-            res.render('signup',{results:results}); 
+            res.render('signup',{xresults:results}); 
         
     });
     
@@ -340,7 +340,7 @@ router.route('/reportposts/search/:str/:idx').get(function(req,res){
     var Postnum;
     database.PostModel.find({areagroup:10,star:{$gt:10}}).sort('-star').exec(function(err, results){
         
-        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],star:{$gt:10}}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:10}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
             if(req.session.user)
             {res.render('reportposts',{results:result,hot:results,islogin:1,num: skip,PostNum:Postnum,specific:"reportsearch",searchstr:searchstr,Upper:"reportposts"});
             }else{
@@ -349,9 +349,148 @@ router.route('/reportposts/search/:str/:idx').get(function(req,res){
         });
         
     });
-    
-    
 })
+
+// 추가 게시글 검색 //
+
+router.route('/worryposts/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:-2}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"worrypostssearch",searchstr:searchstr,Upper:"worryposts"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"reportsearch",searchstr:searchstr,Upper:"worryposts"});
+            }
+        });     
+});
+
+router.route('/accident/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:-4}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"accidentsearch",searchstr:searchstr,Upper:"accident"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"accidentsearch",searchstr:searchstr,Upper:"accident"});
+            }
+        });     
+});
+
+router.route('/notice/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:-5}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"noticesearch",searchstr:searchstr,Upper:"notice"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"noticesearch",searchstr:searchstr,Upper:"notice"});
+            }
+        });     
+});
+
+router.route('/club/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:11}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"clubsearch",searchstr:searchstr,Upper:"club"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"clubsearch",searchstr:searchstr,Upper:"club"});
+            }
+        });     
+});
+
+router.route('/festival/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:12}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"festivalsearch",searchstr:searchstr,Upper:"festival"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"festivalsearch",searchstr:searchstr,Upper:"festival"});
+            }
+        });     
+});
+
+router.route('/promotion/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:14}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"promotionsearch",searchstr:searchstr,Upper:"promotion"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"promotionsearch",searchstr:searchstr,Upper:"promotion"});
+            }
+        });     
+});
+
+router.route('/oneline/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({title:{$regex:searchstr},areagroup:-3}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('onelineposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"onelinesearch",searchstr:searchstr,Upper:"oneline"});
+            }else{
+                res.render('onelineposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"onelinesearch",searchstr:searchstr,Upper:"oneline"});
+            }
+        });     
+});
+
+router.route('/picture/search/:str/:idx').get(function(req,res){
+    
+    var database = req.app.get('database');
+    var searchstr = path.parse(req.params.str).base;
+    var skip = path.parse(req.params.idx).base;
+    req.session.returnTo=req.path;
+    var Postnum;
+    
+        database.PostModel.find({$or:[{content:{$regex:searchstr}},{title:{$regex:searchstr}}],areagroup:13}).sort('-created_at').skip((skip-1)).limit(10).exec(function (err,result){
+            if(req.session.user)
+            {res.render('additionalposts',{results:result,islogin:1,num: skip,PostNum:Postnum,specific:"promotionsearch",searchstr:searchstr,Upper:"promotion"});
+            }else{
+                res.render('additionalposts',{results:result,islogin:0,num: skip,PostNum:Postnum,specific:"promotionsearch",searchstr:searchstr,Upper:"promotion"});
+            }
+        });     
+});
+
+//추가 게시물 검색
+
 //1부터 7까지 지역 구분
 router.route('/areaposts/:page/:group').get(function (req, res) {
 
@@ -526,6 +665,78 @@ router.route('/reportpost/create').get(function (req, res) {
     }
 });
 
+router.route('/worryposts/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"worryposts"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/accident/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"accident"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/notice/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"notice"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/club/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"club"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/festival/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"festival"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/picture/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"picture"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/promotion/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"promotion"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
+router.route('/anonymous/create').get(function (req, res) {
+    
+    if(req.session.user)
+    {res.render('create',{islogin:1,info:req.session.user.nickname,type:"anonymous"});
+    }else {
+        res.render('login', {can: 0});
+    }
+});
+
 router.route('/post/create').get(function (req, res) {
     
     if(req.session.user)
@@ -605,7 +816,6 @@ router.route('/post/:ObjectId/:Upper').get(function (req, res) {
     
     var areagroup;
     var type;
-    req.session.returnTo=req.path;
                 
     database.PostModel.findOne({
         "_id": filterd
@@ -660,7 +870,7 @@ router.route('/post/destroy').post(function (req, res) {
             "_id": filterd
         }, function (err, results) {
 
-            res.redirect('/posts/1');
+            res.redirect(req.session.returnTo);
         });
     }
 });
@@ -720,7 +930,7 @@ router.route('/post/recommend/:Upper').post(function (req, res) {
             results.save(function (err) {
                 if (err) throw err;
             });
-            res.redirect(`/post/${filterd}/${Upper}`);
+            res.redirect(req.session.returnTo);
         }
     });
     }else{
@@ -794,7 +1004,7 @@ router.route("/AboutUs").get(function(req,res){
     res.end();}
 });
 //-------------------------세부 게시판 라우트 ---------------------------
-router.route("/worryposts/:num").get(function(reqmres){
+router.route("/worryposts/:num").get(function(req,res){
     
     var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -811,10 +1021,10 @@ router.route("/worryposts/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"worry",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"posts",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"worryposts",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"posts",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"worry",islogin:0,areagroup:areagroup,Upper:"worryposts",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"worryposts",islogin:0,areagroup:areagroup,Upper:"worryposts",hot:hot});
                     res.end();
                 }
             }
@@ -823,7 +1033,7 @@ router.route("/worryposts/:num").get(function(reqmres){
     
 });
 
-router.route("/oneline/:num").get(function(reqmres){
+router.route("/oneline/:num").get(function(req,res){
     
    var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -840,10 +1050,10 @@ router.route("/oneline/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"oneline",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"oneline",hot:hot});
+                {res.render('onelineposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"oneline",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"oneline",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"oneline",islogin:0,areagroup:areagroup,Upper:"oneline",hot:hot});
+                    res.render('onelineposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"oneline",islogin:0,areagroup:areagroup,Upper:"oneline",hot:hot});
                     res.end();
                 }
             }
@@ -852,7 +1062,7 @@ router.route("/oneline/:num").get(function(reqmres){
       
 });
 
-router.route("/accident/:num").get(function(reqmres){
+router.route("/accident/:num").get(function(req,res){
     
    var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -869,10 +1079,10 @@ router.route("/accident/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"accident",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"accident",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"accident",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"accident",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"accident",islogin:0,areagroup:areagroup,Upper:"accident",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"accident",islogin:0,areagroup:areagroup,Upper:"accident",hot:hot});
                     res.end();
                 }
             }
@@ -881,7 +1091,7 @@ router.route("/accident/:num").get(function(reqmres){
     
 });
 
-router.route("/notice/:num").get(function(reqmres){
+router.route("/notice/:num").get(function(req,res){
     
     var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -898,10 +1108,10 @@ router.route("/notice/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"notice",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"notice",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"notice",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"notice",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"notice",islogin:0,areagroup:areagroup,Upper:"notice",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"notice",islogin:0,areagroup:areagroup,Upper:"notice",hot:hot});
                     res.end();
                 }
             }
@@ -909,7 +1119,7 @@ router.route("/notice/:num").get(function(reqmres){
     });
 });
 
-router.route("/club/:num").get(function(reqmres){
+router.route("/club/:num").get(function(req,res){
     
   var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -926,10 +1136,10 @@ router.route("/club/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"club",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"club",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"club",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"club",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"club",islogin:0,areagroup:areagroup,Upper:"club",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"club",islogin:0,areagroup:areagroup,Upper:"club",hot:hot});
                     res.end();
                 }
             }
@@ -937,7 +1147,7 @@ router.route("/club/:num").get(function(reqmres){
     });
 });
 
-router.route("/festival/:num").get(function(reqmres){
+router.route("/festival/:num").get(function(req,res){
     
     var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -954,10 +1164,10 @@ router.route("/festival/:num").get(function(reqmres){
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"festival",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"festival",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"festival",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"festival",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"festival",islogin:0,areagroup:areagroup,Upper:"festival",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"festival",islogin:0,areagroup:areagroup,Upper:"festival",hot:hot});
                     res.end();
                 }
             }
@@ -965,7 +1175,7 @@ router.route("/festival/:num").get(function(reqmres){
     });
 });
 
-router.route("/picture/:num").get(function(reqmres){
+router.route("/picture/:num").get(function(req,res){
     
     var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -993,7 +1203,7 @@ router.route("/picture/:num").get(function(reqmres){
     });
 });
 
-router.route("/promotion/:num").get(function(reqmres){
+router.route("/promotion/:num").get(function(req,res){
     
    var database = req.app.get('database');
     var skip = path.parse(req.params.num).base;
@@ -1004,16 +1214,44 @@ router.route("/promotion/:num").get(function(reqmres){
     database.PostModel.count({"areagroup":14}, function (err, count) {
         Postnum = count;
     });
-    database.PostModel.find({"areagroup":14}).sort('-star').limit(5).exec(function(error,hot){
+    database.PostModel.find({"areagroup":14,star:{$gt:10}}).sort('-star').limit(5).exec(function(error,hot){
         database.PostModel.find({"areagroup":14}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
             if (err) {return;}
             if (results){
                 areagroup = results.areagroup;
                 if(req.session.user)
-                {res.render('worryposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"promotion",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"promotion",hot:hot});
+                {res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"promotion",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"promotion",hot:hot});
                 res.end();}
                 else{
-                    res.render('posts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"promotion",islogin:0,areagroup:areagroup,Upper:"promotion",hot:hot});
+                    res.render('additionalposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"promotion",islogin:0,areagroup:areagroup,Upper:"promotion",hot:hot});
+                    res.end();
+                }
+            }
+        });
+    });
+});
+
+router.route("/anonymous/:num").get(function(req,res){
+    
+   var database = req.app.get('database');
+    var skip = path.parse(req.params.num).base;
+    var Postnum;
+    var areagroup;
+    req.session.returnTo=req.path;
+    var type;
+    database.PostModel.count({"areagroup":-6}, function (err, count) {
+        Postnum = count;
+    });
+    database.PostModel.find({"areagroup":-6,star:{$gt:10}}).sort('-star').limit(5).exec(function(error,hot){
+        database.PostModel.find({"areagroup":-6}).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {
+            if (err) {return;}
+            if (results){
+                areagroup = results.areagroup;
+                if(req.session.user)
+                {res.render('anonymousposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"anonymous",islogin:1,info:req.session.user.nickname,areagroup:areagroup,Upper:"anonymous",hot:hot});
+                res.end();}
+                else{
+                    res.render('anonymousposts', {results: results,num: skip,req: req,PostNum: Postnum, specific:"anonymous",islogin:0,areagroup:areagroup,Upper:"anonymous",hot:hot});
                     res.end();
                 }
             }

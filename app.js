@@ -28,76 +28,87 @@ var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new LocalStrategy({
-    
-    usernameField:'id',
-    passwordField:'password',
+
+    usernameField: 'id',
+    passwordField: 'password',
     passReqToCallback: true
-},function(req, id,password,callback){
+}, function (req, id, password, callback) {
     var database = req.app.get('database');
-    database.UserModel.find({"id":id,"auth":{$ne: 0}}, function(err, results) {
-		if (err) {
-			callback(err, null);
-			return;
-		}
-		
-		console.log('아이디 [%s]로 사용자 검색결과', id);
-		console.dir(results);
-		
-		if (results.length > 0) {
-			console.log('아이디와 일치하는 사용자 찾음.');
-			
-			// 2. 패스워드 확인 : 모델 인스턴스를 객체를 만들고 authenticate() 메소드 호출
-            var user = new database.UserModel({id:id});
+    database.UserModel.find({
+        "id": id,
+        "auth": {
+            $ne: 0
+        }
+    }, function (err, results) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+
+        console.log('아이디 [%s]로 사용자 검색결과', id);
+        console.dir(results);
+
+        if (results.length > 0) {
+            console.log('아이디와 일치하는 사용자 찾음.');
+
+            // 2. 패스워드 확인 : 모델 인스턴스를 객체를 만들고 authenticate() 메소드 호출
+            var user = new database.UserModel({
+                id: id
+            });
             console.log(results[0]._doc);
-			var authenticated = user.authenticate(password, results[0]._doc.salt, results[0]._doc.hashed_password);
-			if (authenticated) {
-                req.session.user = {   id: results[0]._doc.id,
-                                           nickname:results[0]._doc.nickname,
-                                           name: results[0]._doc.name,
-                                           authorized: true};
+            var authenticated = user.authenticate(password, results[0]._doc.salt, results[0]._doc.hashed_password);
+            if (authenticated) {
+                req.session.user = {
+                    id: results[0]._doc.id,
+                    nickname: results[0]._doc.nickname,
+                    name: results[0]._doc.name,
+                    authorized: true
+                };
                 console.log('비밀번호 일치함');
                 console.log(req.session.user);
-				callback(null, results);
-			} else {
-				console.log('비밀번호 일치하지 않음');
-				callback(null, null);
-			}
-			
-		} else {
-	    	console.log("아이디와 일치하는 사용자를 찾지 못함.");
-	    	callback(null, null);
-	    }
-		
-	});    
+                callback(null, results);
+            } else {
+                console.log('비밀번호 일치하지 않음');
+                callback(null, null);
+            }
+
+        } else {
+            console.log("아이디와 일치하는 사용자를 찾지 못함.");
+            callback(null, null);
+        }
+
+    });
 }));
 
-passport.serializeUser(function(user,done){
-    
+passport.serializeUser(function (user, done) {
+
     console.log('serilaize');
-    done(null,user);
+    done(null, user);
 });
 
-passport.deserializeUser(function(user,done){
+passport.deserializeUser(function (user, done) {
     console.log('deserialize');
-    done(null,user)
+    done(null, user)
 });
 
-passport.use(new FacebookStrategy({    
-    clientID:'982849978562138',
-    clientSecret: '669c4090e46462b987db27c1153d81b8',
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
-},
-function(accessToken,refreshToken,profile,done){
-    console.log(profile);
-    done(null,profile);
-}
+passport.use(new FacebookStrategy({
+        clientID: '982849978562138',
+        clientSecret: '669c4090e46462b987db27c1153d81b8',
+        callbackURL: "http://localhost:3000/auth/facebook/callback"
+    },
+    function (accessToken, refreshToken, profile, done) {
+        console.log(profile);
+        done(null, profile);
+    }
 ));
 
 function ensureAuthenticated(req, res, next) {
 
     // 로그인이 되어 있으면, 다음 파이프라인으로 진행
 
-    if (req.isAuthenticated()) { return next(); }
+    if (req.isAuthenticated()) {
+        return next();
+    }
 
     // 로그인이 안되어 있으면, login 페이지로 진행
 
@@ -153,31 +164,41 @@ app.set('views', './views')
 //----------------------------------------------------//
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
-app.get('/auth/facebook/callback',passport.authenticate('facebook', { successRedirect: '/login_success',
+app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/login_success',
 
-        failureRedirect: '/login_fail' }));
+    failureRedirect: '/login_fail'
+}));
 
-app.get('/login_success', ensureAuthenticated, function(req, res){
+app.get('/login_success', ensureAuthenticated, function (req, res) {
 
- var database = req.app.get('database');
+    var database = req.app.get('database');
     //res.render('main', {islogin:1});
-    database.UserModel.findOne({"id":req.user.id,"provider":"facebook"},function(err,results){
-        if(results)
-        {       req.session.user = {   id: req.user.id,
-                                name: results.name,
-                                nickname:results.nickname,
-                                authorized: true};
-                                if(req.session.returnTo)
-                        {
-                    res.redirect(req.session.returnTo);
-                    res.end();}else{
-                        res.redirect('/');
-                    res.end();
-                    }
-        }else{
+    database.UserModel.findOne({
+        "id": req.user.id,
+        "provider": "facebook"
+    }, function (err, results) {
+        if (results) {
+            req.session.user = {
+                id: req.user.id,
+                name: results.name,
+                nickname: results.nickname,
+                authorized: true
+            };
+            if (req.session.returnTo) {
+                res.redirect(req.session.returnTo);
+                res.end();
+            } else {
+                res.redirect('/');
+                res.end();
+            }
+        } else {
             console.log("결과없음");
-        res.render('facebooksignup', {id:req.user.id, name:req.user.username});
-    }
+            res.render('facebooksignup', {
+                id: req.user.id,
+                name: req.user.username
+            });
+        }
     });
 
 });
@@ -198,12 +219,12 @@ app.post('/process/areacreate', upload.array('userimage', 12), function (req, re
     var paramcontent = req.body.content || req.query.content;
     var paramuser = req.session.user.nickname;
     var area = req.body.area;
-    var areagroup=req.body.areagroup;
-    area.splice(1,1);
+    var areagroup = req.body.areagroup;
+    area.splice(1, 1);
     console.log("지역은!?");
     console.log(area);
     if (database) {
-        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.nickname,area,areagroup,function (err, result) {
+        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.nickname, area, areagroup, function (err, result) {
 
             if (err) {
                 throw err;
@@ -236,12 +257,12 @@ app.post('/process/areacreate', upload.array('userimage', 12), function (req, re
     }
 });
 
-app.post('/process/areapost/update/:postroot',upload.array('userimage',12),function (req, res) {
+app.post('/process/areapost/update/:postroot', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
     var postroot = path.parse(req.params.postroot).base;
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
-    var todelete= req.body.todelete;
+    var todelete = req.body.todelete;
     var area = req.body.area;
     console.log(todelete);
     database.PostModel.findOneAndUpdate({
@@ -252,28 +273,31 @@ app.post('/process/areapost/update/:postroot',upload.array('userimage',12),funct
         "area": area
     }, function (err, results) {
         if (err) throw err;
-       console.log(todelete);
+        console.log(todelete);
         todelete = todelete.split(',');
         todelete = todelete.sort().reverse();
-       
-        for(var i=0;i<todelete.length;i++)
-            {
-                console.log("지울것은1?");
-   if(todelete[i]!='') {fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
-                         if(err){throw err;}});
-                       }
-                results.images.splice(todelete[i],1);
-    
-            }
-        for (var i = 0; i < req.files.length; i++) {
-                    results.images.push({
-                        images: req.files[i].filename
-                    });
-                }
-                results.save(function (err) {
-                    if (err) throw err;
+
+        for (var i = 0; i < todelete.length; i++) {
+            console.log("지울것은1?");
+            if (todelete[i] != '') {
+                fs.unlink(`./uploads/${results.images[todelete[i]].images}`, function (err) {
+                    if (err) {
+                        throw err;
+                    }
                 });
-                
+            }
+            results.images.splice(todelete[i], 1);
+
+        }
+        for (var i = 0; i < req.files.length; i++) {
+            results.images.push({
+                images: req.files[i].filename
+            });
+        }
+        results.save(function (err) {
+            if (err) throw err;
+        });
+
     });
     res.redirect(`/post/${postroot}`);
 });
@@ -281,14 +305,19 @@ app.post('/process/areapost/update/:postroot',upload.array('userimage',12),funct
 app.post('/process/create', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
     var paramtitle = req.body.title || req.query.title;
-    var paramcontent = req.body.content || req.query.content;
+
+    if (type != "oneline")
+        var paramcontent = req.body.content || req.query.content;
+
     var paramuser = req.session.user.nickname;
-    var type=req.body.type;
-  
-    if(type=="resolve"){
-        
-        user.addResolvePost(database, paramtitle, paramcontent, req.session.user.nickname, function(err,result){
-            if(err){ throw err;}
+    var type = req.body.type;
+
+    if (type == "resolve") {
+
+        user.addResolvePost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
             if (result) {
 
                 for (var i = 0; i < req.files.length; i++) {
@@ -301,12 +330,13 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 });
                 res.redirect(`/post/${rsesult._id}/resolveposts`);
                 res.end();
-            }   
+            }
         });
-    }
-    else if(type=="report"){
-        user.addReportPost(database, paramtitle, paramcontent, req.session.user.nickname, function(err,result){
-            if(err){ throw err;}
+    } else if (type == "report") {
+        user.addReportPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
             if (result) {
 
                 for (var i = 0; i < req.files.length; i++) {
@@ -319,13 +349,177 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 });
                 res.redirect(`/post/${result._id}/reportposts`);
                 res.end();
-            }   
+            }
         });
-    }
-    else
-        {
-            user.addPost(database, paramtitle, paramcontent, req.session.user.nickname,function (err, result) {
-          if (err) {
+    } else if (type == "worryposts") {
+        user.addWorryPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/worryposts`);
+                res.end();
+            }
+        });
+    } else if (type == "oneline") {
+        user.addOnelinePost(database, paramtitle, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/oneline/1`);
+                res.end();
+            }
+        });
+    } else if (type == "accident") {
+        user.addAccidentPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/accident`);
+                res.end();
+            }
+        });
+    } else if (type == "notice") {
+        user.addNoticePost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/notice`);
+                res.end();
+            }
+        });
+    } else if (type == "club") {
+        user.addClubPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/club`);
+                res.end();
+            }
+        });
+    } else if (type == "festival") {
+        user.addFestivalPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/festival`);
+                res.end();
+            }
+        });
+    } else if (type == "picture") {
+        user.addPicturePost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/reportposts`);
+                res.end();
+            }
+        });
+    } else if (type == "promotion") {
+        user.addPromotionPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/promotion`);
+                res.end();
+            }
+        });
+    } else if (type == "anonymous") {
+        user.addAnonymousPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/anonymous`);
+                res.end();
+            }
+        });
+    } else {
+        user.addPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
                 throw err;
             }
             if (result) {
@@ -342,15 +536,83 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 res.end();
             }
         });
-    }    
+    }
 });
 
-app.post('/process/post/update/:postroot',upload.array('userimage',12),function (req, res) {
+app.post('/process/create', upload.array('userimage', 12), function (req, res) {
+    var database = req.app.get('database');
+    var paramtitle = req.body.title || req.query.title;
+    var paramcontent = req.body.content || req.query.content;
+    var paramuser = req.session.user.nickname;
+    var type = req.body.type;
+
+    if (type == "resolve") {
+
+        user.addResolvePost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${rsesult._id}/resolveposts`);
+                res.end();
+            }
+        });
+    } else if (type == "report") {
+        user.addReportPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/reportposts`);
+                res.end();
+            }
+        });
+    } else {
+        user.addPost(database, paramtitle, paramcontent, req.session.user.nickname, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/post/${result._id}/posts`);
+                res.end();
+            }
+        });
+    }
+});
+
+app.post('/process/post/update/:postroot', upload.array('userimage', 12), function (req, res) {
     var database = req.app.get('database');
     var postroot = path.parse(req.params.postroot).base;
     var paramtitle = req.body.title || req.query.title;
     var paramcontent = req.body.content || req.query.content;
-    var todelete= req.body.todelete;
+    var todelete = req.body.todelete;
     database.PostModel.findOneAndUpdate({
         "_id": postroot
     }, {
@@ -360,30 +622,40 @@ app.post('/process/post/update/:postroot',upload.array('userimage',12),function 
         if (err) throw err;
         todelete = todelete.split(',');
         todelete = todelete.sort().reverse();
-        
-        for(var i=0;i<todelete.length;i++)
-            {
-   if(todelete[i]!='') {fs.unlink(`./uploads/${results.images[todelete[i]].images}`,function(err){
-                         if(err){throw err;}});
-                       }
-                results.images.splice(todelete[i],1);
-    
-            }
-     
-        for (var i = 0; i < req.files.length; i++) {
-                    results.images.push({
-                        images: req.files[i].filename
+        if (todelete != '') {
+            console.log(results);
+            for (var i = 0; i < todelete.length; i++) {
+                console.log(todelete.length);
+                console.log(todelete);
+                if (todelete[i] != '') {
+                    fs.unlink(`./uploads/${results.images[todelete[i]].images}`, function (err) {
+                        if (err) {
+                            throw err;
+                        }
                     });
                 }
-                results.save(function (err) {
-                    if (err) throw err;
+                results.images.splice(todelete[i], 1);
+
+            }
+
+            for (var i = 0; i < req.files.length; i++) {
+                results.images.push({
+                    images: req.files[i].filename
                 });
-                
+            }
+        }
+        results.save(function (err) {
+            if (err) throw err;
+        });
+
     });
     res.redirect(req.session.returnTo);
 });
 
-app.post('/process/login',passport.authenticate('local',{failureRedirect:'/loginfail',                                            successRedirect:'/loginsuccess'}),(req,res)=>{
+app.post('/process/login', passport.authenticate('local', {
+    failureRedirect: '/loginfail',
+    successRedirect: '/loginsuccess'
+}), (req, res) => {
 
     console.log("응답값은?");
     //console.log(res);
@@ -392,13 +664,13 @@ app.post('/process/login',passport.authenticate('local',{failureRedirect:'/login
     var paramPassword = req.body.password || req.query.password;
     console.log(req.session.returnTo);
 
-                if(req.session.returnTo)
-                        {
-                    res.redirect(req.session.returnTo);
-                    res.end();}else{
-                        res.redirect('/');
-                    res.end();
-                    }
+    if (req.session.returnTo) {
+        res.redirect(req.session.returnTo);
+        res.end();
+    } else {
+        res.redirect('/');
+        res.end();
+    }
 });
 
 //--------------DB연결---------------------//

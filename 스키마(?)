@@ -30,9 +30,14 @@
    oneline/1  한줄글     --> -3   -> 제목또는 내용만 있어야하고
    accident/1  사건사고   --> -4
    notice/1  공지사항      -- -5
-
+   anonymous/1 익명 게시판 --> -6
 지역   //지역이 0~7이니까
  - club/1   동호회         ->11
    festival/1  축제정보     ->12
    picure/1   사진          ->13         ->사진이 반드시 들어가야함.
    promotion/1 홍보         ->14
+
+고민, 사건사고, 공지사항, 동호회, 축제, 홍보는 하나로 묶자.
+// additional posts
+// 스크립트에서 HTML변경할 태그 : loc_title, this, tit => 싹다 class
+한줄글 게시판은 제목에만 저장., a태그 없고 제목만 보여주는 식

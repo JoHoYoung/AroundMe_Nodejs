@@ -115,7 +115,7 @@ var addResolvepost = function(database, title, content,id,callback){
         callback(null,post);
     });
     
-});
+};
 
 var addReportpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
@@ -136,7 +136,7 @@ var addReportpost = function(database, title, content,id,callback){
 var addworrypost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":-2,"star":0});
  
     post.save(function(err){
         if(err){
@@ -148,10 +148,10 @@ var addworrypost = function(database, title, content,id,callback){
     });
     
 }
-var addonelinepost = function(database, title, content,id,callback){
+var addonelinepost = function(database, title,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"writer":id,"areagroup":-3,"star":0});
  
     post.save(function(err){
         if(err){
@@ -166,7 +166,7 @@ var addonelinepost = function(database, title, content,id,callback){
 var addaccidentpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":-4,"star":0});
  
     post.save(function(err){
         if(err){
@@ -181,7 +181,7 @@ var addaccidentpost = function(database, title, content,id,callback){
 var addnoticepost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":-5,"star":0});
  
     post.save(function(err){
         if(err){
@@ -196,7 +196,7 @@ var addnoticepost = function(database, title, content,id,callback){
 var addclubpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":11,"star":0});
  
     post.save(function(err){
         if(err){
@@ -211,7 +211,7 @@ var addclubpost = function(database, title, content,id,callback){
 var addfestivalpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":12,"star":0});
  
     post.save(function(err){
         if(err){
@@ -226,7 +226,7 @@ var addfestivalpost = function(database, title, content,id,callback){
 var addpicturepost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":13,"star":0});
  
     post.save(function(err){
         if(err){
@@ -241,7 +241,23 @@ var addpicturepost = function(database, title, content,id,callback){
 var addpromotionpost = function(database, title, content,id,callback){
     console.log("왜 안돼");
     
-    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":10,"star":0});
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":14,"star":0});
+ 
+    post.save(function(err){
+        if(err){
+            callback(err,null);
+            return;
+        }
+        console.log('데이터 추가 함');
+        callback(null,post);
+    });
+    
+}
+
+var addanonymouspost = function(database, title, content,id,callback){
+    console.log("왜 안돼");
+    
+    var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":-6,"star":0});
  
     post.save(function(err){
         if(err){
@@ -270,6 +286,6 @@ module.exports.addClubPost=addclubpost;
 module.exports.addFestivalPost=addfestivalpost;
 module.exports.addPicturePost=addpicturepost;
 module.exports.addPromotionPost=addpromotionpost;
-
+module.exports.addAnonymousPost=addanonymouspost;
 
 module.exports.facebookaddUser=facebookaddUser;

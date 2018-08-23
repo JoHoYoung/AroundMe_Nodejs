@@ -1,0 +1,423 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/posts.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<base href='/'>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>로그인 테스트</title>
+        <style>
+            #h4group2 .h4group {
+                overflow: hidden;
+                margin: -30px -30px 0;
+                padding: 40px 30px 12px;
+                border-bottom: 1px solid #0000;
+            }
+
+            #rank_board2 .rank_board .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+
+            .rank_board .lbox {
+                width: 100%;
+                float: left;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+
+            .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+
+            .rank_board dl dd ol li .subtitle {
+                display: inline-block;
+                overflow: hidden;
+                max-width: 100%;
+                font-size: 13px;
+                line-height: 39px;
+                color: #666666;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                word-break: break-all;
+                float: right;
+            }
+
+        </style>
+</head>
+<script>
+    var recommender = [];
+
+    function modal_del() {
+        var modal = document.getElementById("Delmodal");
+        modal.style.display = "block";
+
+    }
+
+    function modal_close() {
+        var mm = document.getElementsByClassName('modal');
+        i = mm.length;
+        while (i--) {
+            mm[i].style.display = "none";
+        }
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML = ("");
+    }
+
+    function modal_edit() {
+        var modal = document.getElementById("Updatemodal");
+        modal.style.display = "block";
+    }
+
+</script>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <% include ../views/leftside%>
+                <div id="contents">
+                    <div class="time_hot">
+                        <div class="conhead">
+                            <h3 class="loc_title">한줄 글 남기기</h3>
+                            <div class="location">
+                                <strong class="this"> 한줄 글 남기기</strong>
+                            </div>
+                        </div>
+                        <div class="h4group">
+                            <h4 class="tit">이번 주 베스트 한줄</h4>
+                            <div class="period">2018.07.27~2018.08.02</div>
+                        </div>
+                        <div class="rank_board">
+                            <div class="lbox">
+                                <dl>
+                                    <dt>이번 주 추천이 가장 많은 게시글 </dt>
+                                    <dd>
+                                        <ol>
+                                            <% for(var k=0;k<hot.length;k++){%>
+                                                <%var date= hot[k]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+
+                                                    <li>
+                                                        <div class="rank">
+                                                            <%= k+1%>
+                                                        </div>
+                                                        <a href="/post/<%= hot[k]._id%>/posts" class="tit">
+                                                            <%= hot[k].title%>
+                                                        </a>
+                                                        <a href="/post/<%= hot[k]._id%>/posts" class="subtitle">
+                                                            <%= date.toString().replace(/,/g,'')%>
+                                                        </a>
+                                                        <div class="recom">
+                                                            <%= hot[k].star%>
+                                                        </div>
+                                                    </li>
+                                                    <%}%>
+                                                        <% for(var q=hot.length;q<5;q++){%>
+                                                            <li>
+                                                                <div class="rank">
+                                                                    <%= k+1%>
+                                                                </div>
+                                                                <a href="/hotposts/1" class="tit">
+                            핫 게시물의 주인공이 되어보세요!</a> <a href="/hotposts/1" class="subtitle">
+                        0000.00.00</a>
+                                                                <div class="recom">0</div>
+                                                            </li>
+                                                            <%}%>
+                                        </ol>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="all_post_list">
+                        <div class="h4group">
+                            <% if(islogin==1){%>
+                                <form method="post" action="/process/create" id="search">
+                                    <input type="text" name="title" accept="" id="searchstring" placeholder="내용을 입력해 주세요" />
+                                    <input type="submit" id="searchbtn" value="작성" />
+                                    <input type="hidden" name="type" value="oneline">
+                                </form>
+                                <%}else { %>
+                                    <form method="get" action="/login" id="search">
+                                        <input type="text" name="title" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                        <input type="submit" id="searchbtn" value="작성" />
+                                        <input type="hidden" name="type" value="oneline">
+                                    </form>
+                                    <%}%>
+                                        <%if(specific=="searchall"){%>
+                                            <h4 class="tit">'
+                                                <%= searchstr%>' (으)로 검색결과</h4>
+                                            <%}else if(specific=="hotpostssearch"){%>
+                                                <h4 class="tit">'
+                                                    <%= searchstr%>' (으)로 검색결과</h4>
+                                                <%}else{%>
+                                                    <h4 class="tit">전체글 보기</h4>
+                                                    <%}%>
+                        </div>
+                        <div class="table_list">
+                            <table>
+                                <colgroup>
+                                    <col style="width: 58px;">
+
+                                    <col style="width: auto;">
+
+                                    <col style="width: 172px;">
+                                </colgroup>
+                                <tbody>
+
+                                    <%for(var i=0;i<results.length;i++){
+                                        if(islogin)
+                                            {
+                                                for(var q=0;q<results[i].recommender.length;q++)
+                                                    if(results[i].recommender[q].recommender==req.session.user.nickname)
+                                                    {%>
+                                        <script>
+                                            recommender.push(-1);
+
+                                        </script>
+                                        <%
+                                                     break;}
+                                                     
+                                                     if(q==(results[i].recommender.length-1))
+                                                         %>
+                                            <script>
+                                                recommender.push(1);
+
+                                            </script>
+                                            <%}%>
+
+                                                <tr class="dex">
+                                                    <td>
+                                                        <%=(num-1)*10+i+1 %>
+                                                    </td>
+                                                    <td>
+                                                        <div class="tbox">
+                                                            <div class="tit">
+                                                                <%= results[i]._doc.title %>
+                                                            </div>
+                                                        </div>
+                                                        <div class="util">
+                                                            <div class="hit">조회수 :
+                                                                <span class="val"><%= results[i]._doc.views%></span>
+                                                            </div>
+                                                            <div class="recom">추천수 :
+                                                                <span class="val"><%= results[i]._doc.star %></span>
+                                                            </div>
+                                                            <button type="submit" onclick='recommfunc("<%= results[i]._id%>",<%= i%>)' class="btnpost" form="recomform"><span class="material-icons">thumb_up</span>
+                                                </button>
+                                                            <% if(islogin==1)
+                                                        if(results[i]._doc.writer==req.session.user.nickname){%>
+                                                                <button onclick="modal_del(), delfunc('<%= results[i]._id%>')" type="button" class="btnpost" id="Delbtn" data-toggle="modal" data-target="#Delmodal"><span class="material-icons">delete</span>
+                                                </button>
+                                                                <button onclick="modal_edit(), updatefunc('<%= results[i]._id%>')" type="button" class="btnpost" id="UpdateBtn" data-toggle="modal" data-target="#Updatemodal"><span class="material-icons">build</span></button>
+                                                                <%}%>
+                                                        </div>
+                                                    </td>
+                                                    <td class="etc">
+                                                        <div class="nick">
+                                                            <%= results[i]._doc.writer%>
+                                                        </div>
+                                                        <div class="date">
+                                                            <%var date= results[i]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                <%= date.toString().replace(/,/g,'')%>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="contents_table_footer">
+
+
+
+
+                            <div class="pagination">
+                                <div class="paging">
+                                    <li>
+                                        <a href="/posts/1" aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                    </li>
+                                    <li>
+                                        <% var Previous;
+        if((num-1)<1)
+         {Previous = 1;}else{Previous = num-1;} %>
+                                            <a href='/oneline/<%= Previous%>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a></li>
+                                    <span>
+                        <% var temppivot = {};
+      temppivot = Math.floor((num-1)/5);
+      var pivot = (temppivot)*5+1;
+      var btnNum = PostNum/10;
+      var de = num%5+1;
+      var c = [{},{},{},{},{}];
+      for(var i=0; i<5;i++)
+          {
+              if((i+2)==de)
+              {c[i]="active";
+              }else
+               { c[i]="";
+          }
+          }
+      for(var q=0; q<5; q++){%>
+                            <%if(Math.ceil(PostNum/10)>=pivot+q){%>
+                                <li class="<%= c[q] %>">
+                                    <a href="/oneline/<%= pivot+q%>">
+                                            <div class="number"><%=q+1%></div>
+                                        </a>
+                                    
+                                </li>
+                                <%}}%>
+                            </span>
+                                    <li>
+                                        <% var Next;
+                        if((num+1)<=Math.ceil(PostNum/10)){
+                        Next = num+1;}else{Next = Math.ceil(PostNum/10);}%>
+                                            <a href="/oneline/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                    </li>
+                                    <li>
+
+                                        <a href="/oneline/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                    </li>
+                                </div>
+                            </div>
+
+                            <form method="get" action="/" id="search" onsubmit="return setAction();">
+                                <input type="text" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                <input type="submit" id="searchbtn" value="검색" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <div class="modal" id="Delmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" onclick="modal_close()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                    </div>
+                    <div class="modal-body">
+                        게시글을 삭제 하시겠습니까?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="/post/destroy">
+                            <td><input type="hidden" id="todel" name="postid" value='' /></td>
+                            <input type="submit" value="삭제">
+                        </form>
+                        <button type="button" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="Updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" onclick="modal_close()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                    </div>
+                    <div class="modal-body">
+                        수정할 내용을 입력하세요
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" id="updateform" action='' enctype="multipart/form-data" onsubmit="return validation();">
+                            <table>
+                                        <td><label>내용</label></td>
+                                        <input type="text" name="title" id="title" value="" />
+                                <input type="hidden" id="todelete" name="todelete" value=""/>
+                                <input type="hidden" id="content" name="content" value="" />
+                            </table>
+                        <input type="submit" value="작성" />
+                        </form>
+                        <button type="button" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <form method="post" action="/post/recommend/<%= Upper%>" id="recomform">
+            <td><input type="hidden" id="recomm" name="postid" value="" /></td>
+            <input type="submit" value="" />
+        </form>
+
+        <script>
+            var recommended = -1;
+
+            function setAction() {
+                var ac = document.getElementById("searchstring").value;
+                console.log(ac);
+                <% if(specific=="hotposts"||specific=="hotpostssearch"){%>
+                document.getElementById("search").action = "/hotposts/search/" + ac + "/1";
+                return true;
+                <%}%>
+
+                <% if(specific=="searchall"||specific=="all"){%>
+                document.getElementById("search").action = "/posts/search/all/" + ac + "/1";
+                return true;
+                <%}%>
+            }
+
+            function recommfunc(str, idx) {
+                console.log(recommender);
+                console.log(idx);
+                <% if(islogin==1){%>
+
+                if (recommender[idx] == -1) {
+                    recommended = 1;
+                }
+                <%}%>
+
+                recommender[idx]
+                document.getElementById("recomm").value = str;
+                var str;
+                if (recommended == -1)
+                    str = "이 글에 공감 하십니까?";
+                else str = "공감을 취소 하시겠습니까?"
+                if (confirm(str)) {
+                    document.getElementById("recomform").submit();
+                }
+            }
+
+            function delfunc(str) {
+                document.getElementById("todel").value = str;
+
+            }
+            
+            function updatefunc(str){
+                
+                document.getElementById("updateform").action="/process/post/update/"+str;
+            }
+
+        </script>
+        <% include ../views/rfooter%>
+    </div>
+</body>
+
+</html>

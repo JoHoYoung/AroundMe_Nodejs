@@ -12,8 +12,7 @@
         margin-top:5px;
         margin-bottom:5px;
         margin-left:200px;
-    }    
-    
+    }
 </style>
 <head>
     <% include ../views/header%>
@@ -26,8 +25,7 @@
 </head>
 
 <body>
-
-    <div class="contain">
+<div class="contain">
         <div id="slide">
             <input type="radio" name="pos" id="pos1" checked>
             <input type="radio" name="pos" id="pos2">
@@ -135,6 +133,7 @@
             return true;
 
         }
+        
         document.getElementById('pos1').checked = true;
         var i = 0;
         setInterval(function() {
@@ -148,7 +147,6 @@
         function changeidx(idx) {
             document.getElementById('pos' + idx).checked = true;
             i = idx;
-
         }
 
         var position = new naver.maps.LatLng(37.503804, 126.955782);
@@ -183,8 +181,6 @@
             map: map
         });
         
-        
-
         var SoSoString = [
             '<div class="iw_inner">',
             '   <h3>Society Solution</h3>',
@@ -246,7 +242,6 @@
             }
         });
 
-        
         naver.maps.Event.addListener(acid1, "click", function(e) {
             if (acid1window.getMap()) {
                 acid1window.close();
@@ -270,7 +265,6 @@
                 acid3window.open(map, acid3);
             }
         });
-
     </script>
 </body>
 

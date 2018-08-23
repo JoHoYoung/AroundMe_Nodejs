@@ -5,8 +5,8 @@ var Schema = {};
 Schema.createSchema = function(mongoose)
 {
   var PostSchema = mongoose.Schema({
-        title : {type : String, required : true},
-        content : {type : String, required : true},
+        title : {type : String},
+        content : {type : String},
         writer : {type : String, required : true},
         star : {type : Number, require: false, 'default': 0},
         created_at: {type: Date, index: {unique: false}, 'default': new Date().getTime() + 1000 * 60 * 60 * 9},
@@ -23,7 +23,6 @@ Schema.createSchema = function(mongoose)
         areagroup:{type:Number, 'default':-1},
         images : [{images : {type :String}}]
   });
-    //console.dir(PostSchema);
   
     return PostSchema;
 };

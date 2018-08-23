@@ -1,0 +1,554 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/posts.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<base href='/'>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>로그인 테스트</title>
+        <style>
+            #h4group2 .h4group {
+                overflow: hidden;
+                margin: -30px -30px 0;
+                padding: 40px 30px 12px;
+                border-bottom: 1px solid #0000;
+            }
+
+            #rank_board2 .rank_board .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+            .rank_board .lbox {
+    width: 100%;
+    float: left;
+    position: relative;
+    border-top: 3px solid gray;
+    border-bottom: 3px solid #f1f1f2;
+}
+            .lbox {
+                width: 100%;
+                position: relative;
+                border-top: 3px solid gray;
+                border-bottom: 3px solid #f1f1f2;
+            }
+
+            .rank_board dl dd ol li .subtitle {
+                display: inline-block;
+                overflow: hidden;
+                max-width: 100%;
+                font-size: 13px;
+                line-height: 39px;
+                color: #666666;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                word-break: break-all;
+                float: right;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <% if(specific=="worryposts"||specific=="accident"||specific=="notice"){%>
+            <% include ../views/leftside%>
+            <%}else{%> 
+                <% include ../views/arealeftside%>
+              <%}%>
+                <div id="contents">
+                    <% if(specific=="worryposts"||specific=="accident"||specific=="notice"||specific=="club"||specific=="festival"||specific=="promotion"){%>
+                        <div class="time_hot">
+                            <div class="conhead">
+                                <h3 class="loc_title">자유게시판</h3>
+                                <div class="location">
+                                    <strong class="this"> 자유게시판</strong>
+                                </div>
+                            </div>
+                            <div class="h4group">
+                                <h4 class="tit">이번 주 자유게시판 베스트 글!</h4>
+                                <div class="period">2018.07.27~2018.08.02</div>
+                            </div>
+                            <div class="rank_board">
+                                <div class="lbox">
+                                    <dl>
+                                        <dt>이번 주 추천이 가장 많은 게시글 </dt>
+                                        <dd>
+                                            <ol>
+                                                <% for(var k=0;k<hot.length;k++){%>
+                                                            <%var date= hot[k]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                
+                                                            <li>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/post/<%= hot[k]._id%>/<%= Upper%>" class="tit">
+                          <%= hot[k].title%></a> <a href="/post/<%= hot[k]._id%>/posts" class="subtitle">
+                        <%= date.toString().replace(/,/g,'')%></a>
+                                                                <div class="recom"><%= hot[k].star%></div>
+                                                            </li>
+                                                            <%}%>
+                                                <% for(var q=hot.length;q<5;q++){%>
+                                                <li>
+                                                                <div class="rank"><%= k+1%></div>
+                                                                <a href="/hotposts/1" class="tit">
+                            핫 게시물의 주인공이 되어보세요!</a> <a href="/hotposts/1" class="subtitle">
+                        0000.00.00</a>
+                                                                <div class="recom">0</div>
+                                                            </li>
+                                                <%}%>
+                                            </ol>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div><%}%>
+                                    <div class="all_post_list">
+                                        <div class="h4group">
+                                            <%if(specific=="searchall"){%>
+                                            <h4 class="tit">'<%= searchstr%>' (으)로 검색결과</h4>
+                                            <%}else if(specific=="hotpostssearch"){%>
+                                            <h4 class="tit">'<%= searchstr%>' (으)로 검색결과</h4>
+                                            <%}else{%>
+                                            <h4 class="tit">전체글 보기</h4>
+                                            <%}%>
+                                        </div>
+                                        <div class="table_list">
+                                            <table>
+                                                <colgroup>
+                                                    <col style="width: 58px;">
+
+                                                    <col style="width: auto;">
+
+                                                    <col style="width: 172px;">
+                                                </colgroup>
+                                                <tbody>
+                                                    <%for(var i=0;i<results.length;i++){%>
+                                                        <tr class="dex">
+                                                            <td>
+                                                                <%=(num-1)*10+i+1 %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/post/<%= results[i]._doc._id%>/<%= Upper%>">
+                                                                    <div class="tbox">
+                                                                        <div class="tit">
+                                                                            <%= results[i]._doc.title %>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="util">
+                                                                        <div class="hit">조회수 :
+                                                                            <%= results[i]._doc.views%>
+                                                                                <span class="val">32</span>
+                                                                        </div>
+                                                                        <div class="recom">추천수 :
+                                                                            <%= results[i]._doc.star %>
+                                                                                <span class="val">3</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </td>
+                                                            <td class="etc">
+                                                                <div class="nick">
+                                                                    <%= results[i]._doc.writer%>
+                                                                </div>
+                                                                <div class="date">
+                                                                    <%var date= results[i]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%>
+                                                                        <%= date.toString().replace(/,/g,'')%>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <%}%>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="contents_table_footer">
+
+
+
+
+                                            <div class="pagination">
+                                                <div class="paging">
+                                                    <li>
+                                                         <% if(specific=="worryposts"){%>
+                                                                <a href='/worryposts/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                    <%} else if(specific=="accident"){%>
+                                                                        <a href='/accident/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                        <%} else if(specific=="notice"){%>
+                                                                            <a href='/notice/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                            <%} else if(specific=="club"){%>
+                                                                                <a href='/club/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%}else if(specific=="festival"){%>
+                                                                                <a href='/festival/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%} else if(specific=="promotion"){%>
+                                                                                <a href='/promotion/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%}else if(specific=="worrypostssearch"){%>
+                                                                <a href='/worryposts/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                    <%} else if(specific=="accidentsearch"){%>
+                                                                        <a href='/accident/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                        <%} else if(specific=="noticesearch"){%>
+                                                                            <a href='/notice/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                            <%} else if(specific=="clubsearch"){%>
+                                                                                <a href='/club/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%}else if(specific=="festivalsearch"){%>
+                                                                                <a href='/festival/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%} else if(specific=="promotionsearch"){%>
+                                                                                <a href='/promotion/search/<%= searchstr%>/1' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_leftleft"></div></span>
+      </a>
+                                                                                <%}%>
+                                                    </li>
+                                                    <li>
+                                                        <% var Previous;
+        if((num-1)<1)
+         {Previous = 1;}else{Previous = num-1;} %>
+                                                            <% if(specific=="worryposts"){%>
+                                                                <a href='/worryposts/<%= Previous%>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                    <%} else if(specific=="accident"){%>
+                                                                        <a href='/accident/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                        <%} else if(specific=="notice"){%>
+                                                                            <a href='/notice/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                            <%} else if(specific=="club"){%>
+                                                                                <a href='/club/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%}else if(specific=="festival"){%>
+                                                                                <a href='/festival/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%} else if(specific=="promotion"){%>
+                                                                                <a href='/promotion/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%}else if(specific=="worrypostssearch"){%>
+                                                                <a href='/worryposts/search/<%=searchstr%>/<%= Previous%>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                    <%} else if(specific=="accidentsearch"){%>
+                                                                        <a href='/accident/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                        <%} else if(specific=="noticesearch"){%>
+                                                                            <a href='/notice/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                            <%} else if(specific=="clubsearch"){%>
+                                                                                <a href='/club/search/<%=searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%}else if(specific=="festivalsearch"){%>
+                                                                                <a href='/festival/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%} else if(specific=="promotionsearch"){%>
+                                                                                <a href='/promotion/search/<%= searchstr%>/<%= Previous %>' aria-label="Previous">
+        <span aria-hidden="true"><div class="circle_left"></div></span>
+      </a>
+                                                                                <%}%>
+                                                    </li>
+                                                    <span>
+                        <% var temppivot = {};
+      temppivot = Math.floor((num-1)/5);
+      var pivot = (temppivot)*5+1;
+      var btnNum = PostNum/10;
+      var de = num%5+1;
+      var c = [{},{},{},{},{}];
+      for(var i=0; i<5;i++)
+          {
+              if((i+2)==de)
+              {c[i]="active";
+              }else
+               { c[i]="";
+          }
+          }
+      for(var q=0; q<5; q++){%>
+                            <%if(Math.ceil(PostNum/10)>=pivot+q){%>
+                                <li class="<%= c[q] %>">
+                                    <% if(specific=="worryposts"){%>
+                                        <a href="/worryposts/<%= pivot+q%>">
+                                            <div class="number"><%=q+1%></div>
+                                        </a>
+                                        <%} else if(specific=="accident"){%>
+                                            <a href="/accident/<%= pivot+q%>">
+                                                <div class="number"><%=q+1%></div>
+                                            </a>
+                                            <%} else if(specific=="notice"){%>
+                                                <a href="/notice/<%= pivot+q%>">
+                                                    <div class="number"><%=q+1%></div>
+                                                </a>
+                                                <%} else if(specific=="club"){%>
+                                                    <a href="/club/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%}else if(specific=="festival"){%>
+                                                    <a href="/festival/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%}else if(specific=="promotion"){%>
+                                                    <a href="/promotion/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%} else if(specific=="worrypostssearch"){%>
+                                        <a href="/worryposts/search/<%= searchstr%>/<%= pivot+q%>">
+                                            <div class="number"><%=q+1%></div>
+                                        </a>
+                                        <%} else if(specific=="accidentsearch"){%>
+                                            <a href="/accident/search/<%= searchstr%>/<%= pivot+q%>">
+                                                <div class="number"><%=q+1%></div>
+                                            </a>
+                                            <%} else if(specific=="noticesearch"){%>
+                                                <a href="/notice/search/<%= searchstr%>/<%= pivot+q%>">
+                                                    <div class="number"><%=q+1%></div>
+                                                </a>
+                                                <%} else if(specific=="clubsearch"){%>
+                                                    <a href="/club/search/<%= searchstr%>/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%}else if(specific=="festivalsearch"){%>
+                                                    <a href="/festival/search/<%= searchstr%>/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%}else if(specific=="promotionsearch"){%>
+                                                    <a href="/promotion/searchstr/<%= pivot+q%>">
+                                                        <div class="number"><%=q+1%></div>
+                                                    </a>
+                                                    <%}%>
+                                    
+                                </li>
+                                <%}}%>
+                            </span>
+                                                    <li>
+                                                        <% var Next;
+                        if((num+1)<=Math.ceil(PostNum/10)){
+                        Next = num+1;}else{Next = Math.ceil(PostNum/10);}%>
+                                                            <% if(specific=="worryposts"){%>
+                                                                <a href="/worryposts/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                <%} else if(specific=="accident"){%>
+                                                                    <a href="/accident/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                    <%} else if(specific=="club"){%>
+                                                                        <a href="/club/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                        <%} else if(specific=="notice"){%>
+                                                                            <a href="/notice/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%}else if(specific=="festival"){%>
+                                                                            <a href="/festival/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%}else if(specific=="promotion"){%>
+                                                                            <a href="/promotion/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%} else if(specific=="worrypostssearch"){%>
+                                                                <a href="/worryposts/search/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                <%} else if(specific=="accidentsearch"){%>
+                                                                    <a href="/accident/search/<%=searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                    <%} else if(specific=="clubsearch"){%>
+                                                                        <a href="/club/search/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>
+                                                                        <%} else if(specific=="noticesearch"){%>
+                                                                            <a href="/notice/search/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%}else if(specific=="festivalsearch"){%>
+                                                                            <a href="/festival/search/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%}else if(specific=="promotionsearch"){%>
+                                                                            <a href="/promotion/search/<%= searchstr%>/<%= Next %>" aria-label="Next">
+                            <span aria-hidden="true"><div class="circle_right"></div></span>
+                            </a>   <%}%>
+                                                    </li>
+                                                    <li>
+                                                        <% if(specific=="worryposts"){%>
+                                                            <a href="/worryposts/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                            <%} else if(specific=="accident"){%>
+                                                                <a href="/accident/<%= Math.ceil(PostNum/10) %>" aria-label="Next">                            <span aria-hidden="true"><div class="circle_rightright"></div></span></a>
+                                                                <%} else if(specific=="notice"){%>
+                                                                    <a href="/notice/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                    <%} else if(specific=="club"){%>
+                                                                        <a href="/club/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                        <%}else if(specific=="festival"){%>
+                                                                        <a href="/festival/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                        <%}else if(specific=="promotion"){%>
+                                                                        <a href="/promotion/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                        <%}else if(specific=="accidentsearch"){%>
+                                                                <a href="/accident/search/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                                            <span aria-hidden="true"><div class="circle_rightright"></div></span></a>
+                                                                <%} else if(specific=="noticesearch"){%>
+                                                                    <a href="/notice/search/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                    <%} else if(specific=="clubsearch"){%>
+                                                                        <a href="/club/search/<= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                        <%}else if(specific=="festivalsearch"){%>
+                                                                        <a href="/festival/search/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a>
+                                                                        <%}else if(specific=="promotionsearch"){%>
+                                                                        <a href="/promotion/search/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a><%} else if(specific=="worrypostssearch"){%>
+                                                                        <a href="/worryposts/search/<%= searchstr%>/<%= Math.ceil(PostNum/10) %>" aria-label="Next">
+                                <span aria-hidden="true"><div class="circle_rightright"></div></span>
+                                </a><%}%>
+                                                    </li>
+                                                </div>
+                                            </div>
+
+                                            <form method="get" action="/" id="search" onsubmit="return setAction();">
+                                                <input type="text" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                                <input type="submit" id="searchbtn" value="검색" />
+                                            </form>
+
+                                            <div class="createpost">
+                                                <h3><a href='/<%= specific%>/create'>글 쓰기</a></h3>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                </div>
+
+        </div>
+        <script>
+            
+            <% var str; 
+                var str1;
+            var str2;
+            
+            if(specific=="worryposts")
+                {
+                    str="고민 상담";
+                    str1="고민 상담";
+                    str2="이번주 고민상담 게시판 베스트 글";
+                }
+            else if(specific=="accident")
+                {
+                    str="사건 사고";
+                    str1="사건 사고";
+                    str2="이번주 사건 사고 게시판 베스트 글";
+                }
+            else if(specific=="notice")
+                {
+                    str="공지사항";
+                    str1="공지사항";
+                    str2="공지 사항";
+                }
+            else if(specific=="club")
+                {
+                    str="동호회";
+                    str1="동호회";
+                    str2="이번주 동호회 게시판 베스트 글";
+                }
+            else if(specific=="festival")
+                {
+                    str="축제 정보";
+                    str1="축제 정보";
+                    str2="이번주 축제정보 게시판 베스트 글";
+                }
+            else if(specific=="promotion")
+                {
+                    str="홍보 게시판";
+                    str1="홍보 게시판";
+                    str2="이번주 홍보 게시판 베스트 글";
+                }
+            %>
+            var x=document.getElementsByClassName("loc_title");
+            var x1=document.getElementsByClassName("this");
+            var x2=document.getElementsByClassName("tit");
+            
+            x[0].innerHTML="<%= str%>";
+            x1[0].innerHTML="<%= str1%>";
+            x2[1].innerHTML="<%= str2%>";
+            
+                    function setAction() {
+                        var ac = document.getElementById("searchstring").value;
+                        console.log(ac);
+                        <% if(specific=="worryposts"||specific=="worrypostssearch"){%>
+                        document.getElementById("search").action = "/worryposts/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+                        
+                        <% if(specific=="accident"||specific=="accidentsearch"){%>
+                        document.getElementById("search").action = "/accident/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+                        
+                        <% if(specific=="notice"||specific=="noticesearch"){%>
+                        document.getElementById("search").action = "/notice/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+                        
+                        <% if(specific=="club"||specific=="clubsearch"){%>
+                        document.getElementById("search").action = "/club/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+                        
+                        <% if(specific=="festival"||specific=="festivalsearch"){%>
+                        document.getElementById("search").action = "/festival/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+                        
+                        <% if(specific=="promotion"||specific=="promotionsearch"){%>
+                        document.getElementById("search").action = "/promotion/search/" + ac + "/1";
+                        return true;
+                        <%}%>
+
+                    }
+                </script>
+        <% include ../views/rfooter%>
+    </div>
+</body>
+
+</html>
