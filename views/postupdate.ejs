@@ -1,0 +1,160 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/create.css">
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>글 수정</title>
+        
+        <% var temp=results._doc.images %>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+
+
+            </script>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    if (window.File && window.FileList && window.FileReader) {
+                        $("#files").on("change", function(e) {
+                            var files = e.target.files,
+                                filesLength = files.length;
+                            for (var i = 0; i < filesLength; i++) {
+                                var f = files[i]
+                                var fileReader = new FileReader();
+                                fileReader.onload = (function(e) {
+                                    var file = e.target;
+                                    $("<div id=\"preview\">" + "<span class=\"pip\">" +
+                                        "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + "목록에서 제거" + "\"/>" +
+                                        "</span>" + "<span class=\"cover\">" + "</span>" + "</div>").insertAfter("#uptarget");
+                                    $("#preview").click(function() {
+                                        $(this).remove();
+                                    });
+                                });
+                                fileReader.readAsDataURL(f);
+                            }
+                        });
+                    } else {
+                        alert("Your browser doesn't support to File API")
+                    }
+                });
+
+            </script>
+    
+    <style>
+        input[type="file"] {
+            display: block;
+        }
+
+        .imageThumb {
+            max-height: 100px;
+            
+        }
+
+        .pip {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contain">
+        <div class="main">
+            <% include ../views/leftside%>
+                <div id="contents">
+                    <div class="conwrap">
+                        <div class="conhead">
+                            <h3 class=loc_title>게시글 수정</h3>
+                        </div>
+                        <form method="post" action="/process/post/update/<%= results._doc._id%>" enctype="multipart/form-data" onsubmit="return validation();">
+                            <table>
+                                <%       var curTitle = results._doc.title;
+                var curContent = results._doc.content;
+            %>
+                                    <tr id="posttitle">
+                                        <td class="box"><input type="text" name="title" id="title" value="<%= curTitle%>" /></td>
+                                    </tr>
+                                    <tr id="postcontent">
+                                        <td class="box"><textarea name="content" id="content" value="<%= curContent%>"><%= curContent%></textarea></td>
+                                    </tr>
+                            </table>
+
+                            <div class="uploadform">
+                                <input class="upload" type='file' id='files' name='userimage' multiple='multiple'>
+                                <div class="uploadimg" id="uptarget"><img src="../public/upload.png" width="25px" height="25px"></div>
+                            </div>
+
+                            <div class="submit">
+                                <input type="hidden" id="delimg" name="todelete" />
+                            <input type="submit" value="글 수정하기" class="text">
+                        </div>
+                        </form>
+                        <script>
+
+                                var p = document.getElementById("firstP");
+                   var images = [];
+                   var todelete = [];         
+    <% var q=0; %>
+    <% for(var i=0;i< temp.length;i++)
+        {%>
+            var str = "<%= temp[i].images %>";
+            images.push(str);
+        <%}%>
+	           for(var i=0;i<images.length;i++)
+               {
+                   $("<div id=\"preview\">" + "<span class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"../uploads/" + images[i] + "\" title=\"" + "목록에서 제거" + "\"/>" +
+                                        "</span>" + "<span class=\"cover\" id=" + i + ">" + "</span>" + "</div>").insertAfter("#uptarget");
+    
+               
+                   $("#preview").click(function() {
+                                        $(this).remove();
+                                    });
+                   
+               }
+             $(".cover").click(function(){
+              todelete.push((this).id);
+              console.log((this).id);
+              console.log("투딜맅");
+              console.log(todelete);
+            $(this).remove();
+    document.getElementById("delimg").value = todelete;     
+    });
+
+                            
+    
+                            function area(text) {
+                                console.log(text);
+                                document.getElementById("Toggle").innerHTML = text;
+                                document.getElementById("areaerror").innerHTML = '';
+                            }
+
+                            function validation() {
+                                console.log("유효성 체크!");
+                                if (document.getElementById("title").value == '') {
+                                    document.getElementById("areaerror").innerHTML = "제목을 입력해 주세요";
+                                    console.log("실패");
+                                    return false;
+                                }
+                                if (document.getElementById("content").value == '') {
+                                    document.getElementById("areaerror").innerHTML = "내용을 입력해 주세요";
+                                    console.log("실패");
+                                    return false;
+                                }
+
+                                return true;
+                            }
+
+                        </script>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <% include ../views/rfooter%>
+</body>
+
+</html>

@@ -54,7 +54,7 @@ router.route('/signup').get(function (req, res) {
 
     database.UserModel.find({}, function (err, results) {
         res.render('signup', {
-            results: results
+            xresults: results
         });
 
     });
@@ -79,7 +79,7 @@ router.route('/adduser').post(function (req, res) {
         service: 'gmail',
         auth: {
             user: 'whghdud17@gmail.com',
-            pass: 'dkdeo6847!'
+            pass: '7169asdf'
         }
     });
 
@@ -1542,6 +1542,7 @@ router.route('/post/update').post(function (req, res) {
 
         if (results) {
             res.render('postupdate', {
+                islogin:1,
                 results: results,
                 req: req
             });
@@ -1578,7 +1579,7 @@ router.route('/post/recommend/:Upper').post(function (req, res) {
                 results.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/post/${filtered}/Upper`);
+                res.redirect(req.session.returnTo);
             }
         });
     } else {
@@ -2278,3 +2279,48 @@ router.route('/').get(function (req, res) {
 });
 
 module.exports = router;
+
+<!--은진추가-->
+router.route("/aroundeme_info").get(function (req, res) {
+
+    if (req.session.user) {
+        res.render('aboutus', {
+            islogin: 1
+        });
+        res.end();
+    } else {
+        res.render('aboutus', {
+            islogin: 0
+        });
+        res.end();
+    }
+});
+
+router.route("/people_info").get(function (req, res) {
+
+    if (req.session.user) {
+        res.render('people_info', {
+            islogin: 1
+        });
+        res.end();
+    } else {
+        res.render('people_info', {
+            islogin: 0
+        });
+        res.end();
+    }
+});
+router.route("/guide_info").get(function (req, res) {
+
+    if (req.session.user) {
+        res.render('guide_info', {
+            islogin: 1
+        });
+        res.end();
+    } else {
+        res.render('guide_info', {
+            islogin: 0
+        });
+        res.end();
+    }
+});

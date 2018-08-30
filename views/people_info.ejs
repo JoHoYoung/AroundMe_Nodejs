@@ -1,0 +1,58 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+<link rel="stylesheet" type="text/css" href="../public/posts.css">
+<base href='/'>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ../views/header%>
+        <meta charset="UTF-8">
+        <title>로그인 테스트</title>
+       
+        <style>
+            .h4group {
+                overflow: hidden;
+                margin: -30px -30px 0;
+                padding: 40px 30px 12px;
+                border-bottom: 1px solid #0000;
+            }
+
+        </style>
+</head>
+
+<body>
+
+    <div class=text_bubble>
+        <div class="text_bubblebg" id="tbt">
+        </div>
+        <div id="triangle"></div>
+    </div>
+    <div class="contain">
+        <div class="main">
+
+
+            <% include ../views/about_leftside%>
+                <div id="contents">
+                    <div class="time_hot">
+                        <div class="conhead">
+                            <h3 class="loc_title"><span class="whatarea"></span> 함께하는 사람들 [소소:SOSO]</h3>
+                            <div class="location">
+                                <strong class="this"><span class="whatarea"></span> About us</strong>
+                            </div>
+                        </div>
+                        <div class="h4group">
+                            <h4 class="tit">이번 주 지역별 게시글 TOP5!</h4>
+                                  
+                        </div>
+                            <div id="mArticle">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+        <% include ../views/rfooter%>
+    </body>
+</html>

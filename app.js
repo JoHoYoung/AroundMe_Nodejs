@@ -638,12 +638,14 @@ app.post('/process/post/update/:postroot', upload.array('userimage', 12), functi
 
             }
 
-            for (var i = 0; i < req.files.length; i++) {
+            
+        }
+        
+        for (var i = 0; i < req.files.length; i++) {
                 results.images.push({
                     images: req.files[i].filename
                 });
             }
-        }
         results.save(function (err) {
             if (err) throw err;
         });

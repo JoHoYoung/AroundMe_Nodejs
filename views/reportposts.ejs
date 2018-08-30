@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="../public/common.css">
 <link rel="stylesheet" type="text/css" href="../public/map.css" id="mapcss">
 <link rel="stylesheet" type="text/css" href="../public/posts.css">
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!DOCTYPE html>
@@ -43,12 +44,10 @@
         button:focus {outline:0;}
         
 .hotbox {
-    border:2px solid gray;
-    border-radius:10px;
-    background-color: white;
-    margin-top: 20px;
+    border: 4px solid white;
+    background-color: #f6f6f9;
     height: 270px;
-    margin-bottom: 10px;
+    margin-top: 25px;
 }
     .hotslider{
         height:100%;
@@ -134,16 +133,17 @@ button {
     display: block;
     text-align: left;
 }
-        .bannertitle{
-            width:98%;
-            display:inline-block;
-            padding-left:15px;
-            padding-top:10px;
-            padding-bottom:1px;
-            color:gray;
-            font-size:13px;
-            border-bottom:solid 2px ghostwhite;
-        }
+.bannertitle {
+    text-align: center;
+    width: 98%;
+    display: inline-block;
+    padding-left: 15px;
+    padding-top: 12;
+    padding-bottom: 12;
+    color: gray;
+    font-size: 20px;
+    border-bottom: solid 2px white;
+}
         .recombox
         {
             line-height:30px;
@@ -189,10 +189,18 @@ button {
         </div>
     <div class="contain">
         <div class="main">
-            
+             <% include ../views/leftside%>
                 <div id="contents">
+                    <div class="time_hot">
+                         <div class="conhead">
+                            <h3 class="loc_title"><span class="whatarea"></span> 제보로 바꾼 AROUND</h3>
+                            <div class="location">
+                                <strong class="this"><span class="whatarea"></span> What We Do?</strong>
+                            </div>
+                        </div>
                     <div class="hotbox">
-                        <div class="bannertitle">많은 공감을 얻은 불편사항</div>
+                          
+                        <div class="bannertitle">최근 개선된 불편사항은?</div>
                         <% for(var j=0;j<hot.length ;j++){
                     var date= hot[j]._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
                     date.splice(date.length-3,3);
@@ -210,7 +218,9 @@ button {
                 </span>
                 <%}%>
             </div>
-                <div class="all_post_list">
+      
+                </div>
+                              <div class="all_post_list">
                                 <div class="h4group">
                                     <h4 class="tit">전체글 보기</h4>
                                 </div>
@@ -401,8 +411,8 @@ button {
                                         </div>
                                     </div>
                                 
-                            </div>
-                </div>
+                         
+                    </div>
           
             <script>
                 
@@ -445,8 +455,9 @@ button {
         x[sliderdex-1].style.display="block";
         
     }
+                
     </script>
-            
+            </div>
             
 
         </div>

@@ -1,0 +1,435 @@
+<base href='/'>
+<link rel="stylesheet" type="text/css" href="../public/common.css">
+
+<link rel="stylesheet" type="text/css" href="../public/post.css">
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>글</title>
+</head>
+<script>
+    var images=[];
+    <% if(results._doc.images.length>0){
+    for(var z=0;z<results._doc.images.length;z++){%>
+        images.push('<%= results._doc.images[z].images%>');
+    <%}}%>
+    var imgdex;
+    function modal_del() {
+        var modal = document.getElementById("Delmodal");
+        modal.style.display = "block";
+
+    }
+
+    function modal_edit() {
+        var modal = document.getElementById("Updatemodal");
+        modal.style.display = "block";
+    }
+
+    function modal_commupdate(str) {
+        var modal = document.getElementById("CommUpdatemodal");
+        modal.style.display = "block";
+        document.getElementById("commtoupdate").value=str;
+        console.log(str);
+    }
+
+    function modal_img() {
+        var modal = document.getElementById("imgviewmodal");
+        modal.style.display = "block";
+
+    }
+
+    function modal_close() {
+        var mm = document.getElementsByClassName('modal');
+        i = mm.length;
+        while (i--) {
+            mm[i].style.display = "none";
+        }
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML = ("");
+    }
+
+    function doImgPop(img,idx) {
+        imgdex=idx;
+        img1 = new Image();
+        img1.src = (img);
+        imgControll(img);
+    }
+
+    function imgControll(img) {
+        if ((img1.width != 0) && (img1.height != 0)) {
+            viewImage(img);
+        } else {
+            controller = "imgControll('" + img + "')";
+            intervalID = setTimeout(controller, 20);
+        }
+    }
+    
+    function previousimg()
+    {
+        if(imgdex!=0)
+            {
+                imgdex-=1;
+                var string=images[imgdex];
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML="";
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<img src='../uploads/" + string + "'" + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+            }
+    }
+    
+    function nextimg()
+    {
+        if(imgdex!=(images.length-1))
+            {
+                imgdex+=1;
+                var string=images[imgdex];
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML="";
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<img src='../uploads/" + string + "'" + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+            }
+        
+    }
+
+    function viewImage(img) {
+        modal_img();
+        var targetdiv = document.getElementById("imgmodal_content");
+        targetdiv.innerHTML += ("<div class='leftarrow' onclick='previousimg()'>" + "<img src='../public/arrow_left.png' width='50px' height='50px'>" + "</div>");
+        targetdiv.innerHTML += ("<img src=" + img + " onclick='modal_close()' style='cursor:pointer;' title ='클릭하시면 창이 닫힙니다.'>");
+        targetdiv.innerHTML += ("<div class='rightarrow' onclick='nextimg()'>" + "<img src='../public/arrow_right.png' width='50px' height='50px'>" + "</div>");
+    }
+
+</script>
+<style>
+
+    input#paramcontent
+    {
+        border:3px solid #cacbda;
+        border-radius:5px;
+        padding-left:20px;
+        width:480px;
+        height:40px;
+    }
+    
+    input#combtn
+    {
+        background:#bfbfbf;
+        border:1px solid #6d6d6d;
+        border-radius:5px;
+        width:30px;
+        height:25px;
+        margin-top:2px;
+        margin-left:150px;
+        margin-right:100px;
+    }
+    
+    #closebtn{
+        background:#bfbfbf;
+        border:1px solid #6d6d6d;
+        border-radius:5px;
+        width:30px;
+        height:25px;
+        margin-top:2px;
+    }
+</style>
+<body>
+    <% include ../views/header%>
+        <div class="contain">
+            <div class="main">
+                <% if(Upper=="reportposts"||Upper=="posts"||Upper=="accident"||Upper=="hotposts"||Upper=="anonymous"){%>
+                <% include ../views/leftside%>
+                <%}else if(Upper=="areaposts"||Upper=="club"||Upper=="festival"||Upper=="picture"||Upper=="promotion"){%>
+                <% include ../views/arealeftside%>
+                <%}%>
+                
+                
+                    <div id="contents">
+                        <div class="conwrap">
+                            <% var curTitle = results._doc.title;
+       var curContent = results._doc.content;
+    %>
+                                <div class="conhead">
+                                    <h3 class="loc_title">자유게시판</h3>
+                                    <div class="location">
+                                        홈>자유게시판
+                                    </div>
+                                </div>
+                                <div class="conbody">
+                                    <div class="tit">
+                                        <h4>
+                                            <%= curTitle%>
+                                        </h4>
+                                        <h5>
+                                            <% if(Upper=="anonymous"){%>
+                                            익명
+                                            <%}else{%>
+                                            <%= results._doc.writer%>
+                                            <%}%>
+                                             | <%var date= results._doc.created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%><%= date.toString().replace(/,/g,'')%> | 조회:<%= results._doc.views%> | 추천:<%=results._doc.star%>
+                                        </h5>
+                                    </div>
+                                    <div class="cont">
+                                        <%= curContent%>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <% var images=results._doc.images;
+    for(var i=0;i<images.length;i++)
+    {%>                                     
+                                    <img src="../uploads/<%= results._doc.images[i].images%>" width="100" onclick="doImgPop('../uploads/<%= results._doc.images[i].images%>',<%= i%>)">
+                                    <%}
+    %>
+                                        <div class="post_btngroup">
+                                            <div class="common_view">
+
+                                                <form method="post" action="/post/recommend/<%= Upper%>" id="recomform">
+                                                    <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+                                                    <input type="submit" value="" />
+                                                </form>
+                                                <button type="submit" onclick="recommfunc()" class="btnpost" form="recomform"><span class="material-icons">thumb_up</span>
+                                                </button>
+                                                <% if(Upper=="areaposts"){%>
+                                                <a href="/areaposts/1/<%= areagroup%>"><%}else{%>
+                                                <a href="/<%= Upper%>/1"><%}%><button type="button" class="btnpost"><span class="material-icons">list</span></button>
+                                                    </a>
+                                                <%
+                                                if(req.session.user)
+                                                if(req.session.user.nickname == results._doc.writer){ %>
+                                            </div>
+                                            <div class="writer_view">
+
+                                                <button onclick="modal_edit()" type="button" class="btnpost" id="UpdateBtn" data-toggle="modal" data-target="#Updatemodal"><span class="material-icons">build</span></button>
+                                                <button onclick="modal_del()" type="button" class="btnpost" id="Delbtn" data-toggle="modal" data-target="#Delmodal"><span class="material-icons">delete</span>
+                                                </button>
+                                            </div>
+                                            <%}%>
+                                        </div>
+
+
+
+                        </div>
+                        <div class="conwrap">
+
+                            <div class="h4group">
+                                <h4 class="tit">
+                                    의견을 나눠보세요
+                                </h4>
+                            </div>
+                            <div class="com_write">
+                                <form method="post" action="/post/comment/create/<%= results._doc._id%>/<%= Upper%>">
+                                    <input autocomplete="off" name="content" class="cmt_contents" placeholder="댓글을 입력해 주세요. 500자 이내로 작성 가능합니다." maxlength="500">
+                                    <input class="cmtbtn" type="submit" value="작성" />
+                                </form>
+                            </div>
+                            <div class="com_read">
+                                <% var Comments = results._doc.comments;
+                            for( var i=0; i<Comments.length;i++)
+                            {%>
+                                    <div class="com_area">
+                                        <div class="com_info"><span id="writer_name">
+                                        <%= Comments[i].writer %></span>
+                                            <span id="writer_toggle">                                        
+                                                <%
+                                                if(req.session.user)
+                                                if(Comments[i].writer == req.session.user.nickname){%>
+                                            <button type="button" onclick="modal_commupdate('<%= Comments[i]._id%>')" class="btnpost" id="UpdateBtn" data-toggle="modal" data-target="#CommUpdatemodal"><span class="material-icons">build</span></button>
+                                                
+                                                <form method="post" id="postdestroyform<%= i%>" action="/post/comment/destroy/<%= results._doc._id%>/<%= Upper%>">
+                                        <input type="hidden" id="commentid" name="commentid" value="<%= Comments[i]._id%>" />
+                                                </form>
+                                            <button type="button" onclick="commdelfunc(<%= i%>)" class="btnpost" id="UpdateBtn"><span class="material-icons">delete</span></button>
+                                            </span>
+                                            <%}%>
+
+                                        </div>
+                                        <div class="com_cont">
+                                            <%= Comments[i].content %>
+                                            <%var commentdate= Comments[i].created_at.toISOString().replace(/T/, ' ').replace(/\..+/, '').replace(/2018/,'').replace(/-/,'').split('');
+                                                    date.splice(date.length-3,3);%><%= commentdate.toString().replace(/,/g,'')%>
+                                        </div>
+                                    </div>
+                                    <%}%>
+                            </div>
+                        </div>
+
+                    </div>
+
+            </div>
+
+            <div class="modal" id="imgviewmodal">
+                <div class="modal_img_body">
+
+                    <div id="imgmodal_content">
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="modal" id="CommUpdatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                <div class="commodal-dialog" role="document">
+                    <div class="commodal-content">
+                        <div class="commodal-body">
+                            <form method="post" action="/post/comment/update/<%= results._doc._id%>/<%= Upper%>">
+                                        <td><input type="text" id="paramcontent" name="paramcontent" placeholder="수정할 내용을 입력하세요." /></td>
+                                        <td><input type="hidden" id="commtoupdate" name="commentid" value="" /></td>
+                                    <br>
+                                        <input type="submit" id="combtn" value="수정" />
+                                    <button type="button" id="closebtn" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                    </form>
+                        </div>
+                        <div class="modal-footer">
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal" id="Delmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" onclick="modal_close()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body">
+                            게시글을 삭제 하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="/post/destroy">
+                                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+                                <input type="submit" value="삭제">
+                            </form>
+                            <button type="button" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal" id="Updatemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" onclick="modal_close()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body">
+                            게시글을 수정 하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                            <% if(type=="area"){%>
+                                <form method="post" action="/areapost/update">
+                                    <%}
+                                    else{%>
+                                        <form method="post" action="/post/update">
+                                            <%}%>
+                                                <td><input type="hidden" name="postid" value="<%= results._doc._id%>" /></td>
+                                                <input type="submit" value="수정" />
+                                        </form>
+                                        <button type="button" onclick="modal_close()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <script>
+                    var str="<%= Upper%>";
+                    var innerstr;
+                    if(str=="worryposts")
+                    {
+                            innerstr="고민상담";
+                    }else if(str=="accident")
+                        {
+                            innerstr="사건사고";
+                        }else if(str=="notice")
+                        {
+                            innerstr="공지사항";
+                        }else if(str=="anonymous")
+                        {
+                            innerstr="익명 게시판";
+                        }else if(str=="club")
+                        {
+                            innerstr="동호회";
+                        }else if(str=="festival")
+                        {
+                            innerstr="축제정보";
+                        }else if(str=="picture")
+                        {
+                            innerstr="사진 자랑";
+                            
+                        }else if(str=="promotion")
+                        {
+                            innerstr="홍보 게시판";
+                        }
+                        else if(str=="posts")
+                            {
+                                innerstr="자유 게시판";
+                            }
+                    else if(str=="hotposts")
+                        {
+                            innerstr="핫 게시판";
+                        }
+                    else if(str=="reportposts")
+                        {
+                            innerstr="제보 게시판";
+                        }
+                    else if(str=="areaposts")
+                        {
+                            innerstr="지역 게시판";
+                        }
+                    
+                    var x=document.getElementsByClassName("loc_title");
+                    var x1=document.getElementsByClassName("location");
+                    x[0].innerHTML=innerstr;
+                    x1[0].innerHTML=innerstr;
+                    
+                    var recommended=-1;
+                    <%
+                    console.log(results._doc.recommender.length);
+                    if(islogin==1)
+                    for(var k=0;k<results._doc.recommender.length;k++)
+                        {
+                            if(results._doc.recommender[k].recommender==req.session.user.nickname)
+                                {%>
+                                recommended=1;
+                                <%    break;
+                                }
+                        }%>
+                    
+                   function recommfunc() {
+                       var str;
+                       if(recommended==-1)
+                           str="이 글에 공감 하십니까?";
+                       else str="공감을 취소 하시겠습니까?"
+                if (confirm(str)) {
+                    document.getElementById("recomform").submit();
+                } 
+                }
+                    
+                    function commdelfunc(idx)
+                    {
+                        var todel="postdestroyform"+idx;
+                        if(confirm("댓글을 삭제 하시겠습니까?"))
+                        {document.getElementById(todel).submit();
+                        }
+                    }
+                </script>
+        </div>
+        <% include ../views/rfooter%>
+</body>
+
+</html>

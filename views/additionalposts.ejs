@@ -57,14 +57,14 @@
 <body>
     <div class="contain">
         <div class="main">
-            <% if(specific=="worryposts"||specific=="accident"||specific=="notice"){%>
+            <% if(specific=="worryposts"||specific=="accident"||specific=="notice"||specific=="accidentsearch"){%>
             <% include ../views/leftside%>
             <%}else{%> 
                 <% include ../views/arealeftside%>
               <%}%>
                 <div id="contents">
                     <% if(specific=="worryposts"||specific=="accident"||specific=="notice"||specific=="club"||specific=="festival"||specific=="promotion"){%>
-                        <div class="time_ahot">
+                        <div class="time_hot">
                             <div class="conhead">
                                 <h3 class="loc_title">자유게시판</h3>
                                 <div class="location">
