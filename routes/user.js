@@ -224,7 +224,7 @@ var addfestivalpost = function(database, title, content,id,callback){
     
 }
 var addpicturepost = function(database, title, content,id,callback){
-    console.log("왜 안돼");
+    console.log("사진 자랑 추가");
     
     var post = new database.PostModel({"title":title,"content":content,"writer":id,"areagroup":13,"star":0});
  

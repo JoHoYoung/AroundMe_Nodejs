@@ -220,7 +220,7 @@ app.post('/process/areacreate', upload.array('userimage', 12), function (req, re
     var paramuser = req.session.user.nickname;
     var area = req.body.area;
     var areagroup = req.body.areagroup;
-    area.splice(1, 1);
+    //area.splice(1, 1);
     console.log("지역은!?");
     console.log(area);
     if (database) {
@@ -475,7 +475,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/post/${result._id}/reportposts`);
+                res.redirect(`/post/${result._id}/picture`);
                 res.end();
             }
         });

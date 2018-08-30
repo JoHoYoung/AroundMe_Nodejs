@@ -1,0 +1,28 @@
+.areabtn{
+    cursor: pointer;
+    width: 200px;
+    height: 45px;
+    background: #656565;
+    color: white;
+    font-size: 20px;
+    float: right;
+}
+
+svg#Layer_1 {
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    height: 70%;
+}
+.modal{
+    background-color: none;
+}
+
+.selecth3{
+    color:white;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+    font-weight: 300;
+    padding-top: 5%;
+}

@@ -109,6 +109,7 @@ li {
 .meducate .hgroup {
     overflow: hidden;
     padding: 0 30px;
+    height: 80px;
     border-bottom: 1px solid #e6e6e8;
     background: #ffffff;
 }
@@ -117,8 +118,9 @@ li {
     float: left;
     font-family: 'NanumSquare';
     font-weight: 700;
-    font-size: 24px;
-    line-height: 82px;
+    font-size: 18px;
+    height:100%;
+    display:inline-block;
     color: #2d2d2d;
 }
 
@@ -179,6 +181,7 @@ li {
 
 .slick-slider {
     padding: 10px;
+    padding-top:0px;
     display: block;
     position: relative;
     box-sizing: border-box;

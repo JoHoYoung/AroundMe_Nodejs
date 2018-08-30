@@ -53,6 +53,39 @@
                 word-break: break-all;
                 float: right;
             }
+            #searchstring2 {
+    height: 100%;
+    float: left;
+    padding: 0px 10px;
+    width: 800px;
+    text-align: center;
+    background: #f1f1f1;
+}
+            h4.tit {
+    float: left;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 40px;
+    color: #2d2d2d;
+}
+            .h4group {
+    overflow: hidden;
+    margin: -30px -30px 20px;
+    padding: 40px 30px 12px;
+    border-bottom: 1px solid #e6e6e8;
+}
+            form#search {
+    height: 40px;
+    float: right;
+    margin-top: 30px;
+}
+            .time_hot {
+    margin: 0 0 20px;
+    padding: 30px 30px 1px;
+    background: #ffffff;
+    float: left;
+    width: 850px;
+}
 
         </style>
 </head>
@@ -71,7 +104,7 @@
         while (i--) {
             mm[i].style.display = "none";
         }
-        var targetdiv = document.getElementById("imgmodal_content");
+        var targetdiv ㄴ= document.getElementById("imgmodal_content");
         targetdiv.innerHTML = ("");
     }
 
@@ -94,6 +127,7 @@
                                 <strong class="this"> 한줄 글 남기기</strong>
                             </div>
                         </div>
+                        
                         <div class="h4group">
                             <h4 class="tit">이번 주 베스트 한줄</h4>
                             <div class="period">2018.07.27~2018.08.02</div>
@@ -101,7 +135,7 @@
                         <div class="rank_board">
                             <div class="lbox">
                                 <dl>
-                                    <dt>이번 주 추천이 가장 많은 게시글 </dt>
+                                    <dt>이번 주 추천이 가장 많은 한줄글 </dt>
                                     <dd>
                                         <ol>
                                             <% for(var k=0;k<hot.length;k++){%>
@@ -139,18 +173,18 @@
                                 </dl>
                             </div>
                         </div>
-                    </div>
-                    <div class="all_post_list">
                         <div class="h4group">
+                            
+                         <h4 class="tit">한줄 글을 남겨보세요!</h4>
                             <% if(islogin==1){%>
                                 <form method="post" action="/process/create" id="search">
-                                    <input type="text" name="title" accept="" id="searchstring" placeholder="내용을 입력해 주세요" />
+                                    <input type="text" name="title" accept="" id="searchstring2" placeholder="한 줄로 자유롭게 표현해 보세요!" />
                                     <input type="submit" id="searchbtn" value="작성" />
                                     <input type="hidden" name="type" value="oneline">
                                 </form>
                                 <%}else { %>
                                     <form method="get" action="/login" id="search">
-                                        <input type="text" name="title" id="searchstring" placeholder="제목이나 내용을 검색해 주세요" />
+                                        <input type="text" name="title" id="searchstring2" placeholder="로그인 후 이용이 가능합니다" />
                                         <input type="submit" id="searchbtn" value="작성" />
                                         <input type="hidden" name="type" value="oneline">
                                     </form>
@@ -162,9 +196,12 @@
                                                 <h4 class="tit">'
                                                     <%= searchstr%>' (으)로 검색결과</h4>
                                                 <%}else{%>
-                                                    <h4 class="tit">전체글 보기</h4>
                                                     <%}%>
                         </div>
+                    </div>
+                   
+                    <div class="all_post_list">
+                         <h4 class="tit">전체글 보기</h4>
                         <div class="table_list">
                             <table>
                                 <colgroup>

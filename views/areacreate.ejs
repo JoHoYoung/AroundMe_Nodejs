@@ -1,61 +1,21 @@
+<base href="/">
+<link rel="stylesheet" type="text/css" href="../public/map.css">
 <link rel="stylesheet" type="text/css" href="../public/common.css">
 
 <link rel="stylesheet" type="text/css" href="../public/create.css">
+<link rel="stylesheet" type="text/css" href="../public/areacreate.css">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-<base href="/">
 <!DOCTYPE html>
 <html>
-
 <head>
     
     <% include ../views/header%>
     <meta charset="UTF-8">
     <title>글 작성</title>
-    <style>
-        nput[type="file"] {
-            display: block;
-        }
-
-        .imageThumb {
-            max-height: 75px;
-            border: 2px solid;
-            padding: 1px;
-            cursor: pointer;
-        }
-
-        .pip {
-            display: inline-block;
-            margin: 10px 10px 0 0;
-        }
-
-        .dasds {
-            color: 123121f
-        }
-
-        .remove {
-            display: block;
-            background: #444;
-            border: 1px solid black;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .remove:hover {
-            background: white;
-            color: black;
-        }
-
-    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+      $(document).ready(function() {
             if (window.File && window.FileList && window.FileReader) {
                 $("#files").on("change", function(e) {
                     var files = e.target.files,
@@ -65,12 +25,11 @@
                         var fileReader = new FileReader();
                         fileReader.onload = (function(e) {
                             var file = e.target;
-                            $("<span class=\"pip\">" +
-                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-                                "<br/><span class=\"remove\">Remove image</span>" +
-                                "</span>").insertAfter("#files");
-                            $(".remove").click(function() {
-                                $(this).parent(".pip").remove();
+                            $("<div id=\"preview\">"+"<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" height=\"102px\" title=\"" + "목록에서 제거" + "\"/ >" +
+                                "</span>"+"<span class=\"cover\">"+"</span>"+"</div>").insertAfter("#uptarget");
+                            $("#preview").click(function() {
+                                $(this).remove();
                             });
                         });
                         fileReader.readAsDataURL(f);
@@ -82,71 +41,170 @@
         });
 
     </script>
+        <script>
+        function modal_close() {
+        var mm = document.getElementsByClassName('modal');
+        i = mm.length;
+        while (i--) {
+            mm[i].style.display = "none";
+        }
+            
+    }
+        var svglist = ["#Dobong-gu", "#Dongdaemun-gu", "#Dongjak-gu", "#Eunpyeong-gu", "#Gangbuk-gu", "#Gangdong-gu", "#Gangseo-gu","#Geumcheon-gu","#Guro-gu","#Gwanak-gu","#Gwangjin-gu","#Gangnam-gu","#Jongno-gu","#Jung-gu","#Jungnang-gu","#Mapo-gu","#Nowon-gu","#Seocho-gu","#Seodaemun-gu","#Seongbuk-gu","#Seongdong-gu","#Songpa-gu","#Yangcheon-gu","#Yeongdeungpo-gu_1_","#Yongsan-gu"];
+        var areaname = ["도봉구","동대문구","동작구","은평구","강북구","강동구","강서구","금천구","구로구","관악구","광진구","강남구","종로구","중구가 시키드나?","중랑구","마포구","노원구","서초구","서대문구","성북구","성동구","송파구","양천구","영등포구","용산구"];
+        var areatag = ["도심","강북","동서울","동남","강남","남서울","서남","서서울"];
+        var areatagnum =[7,6,3,1,7,5,2,3,2,3,6,4,0,0,6,1,7,4,1,7,6,5,2,2,0]
+
+        function modal_select() {
+        var modal = document.getElementById("areamodal");
+        modal.style.display = "block";
+        }
+
+         $(document).ready(function() {
+                $(document).mouseup(function(e) {
+                    var containers = $("#Layer_1");
+                    if (!containers.is(e.target)) {
+                        modal_close();
+                        var i;
+                    for(i=0;i<25;i++){
+                        if($(event.target).is(svglist[i])){
+                        console.log(areatagnum[i]);
+                        document.getElementById("area").value = areaname[i];
+                        document.getElementById("areaselect").innerHTML = areaname[i];
+                        document.getElementById("areagroup").value = areatagnum[i];
+                    };
+                    }
+                    }
+                });
+
+                $('path').hover(function() {
+                    $('.text_bubble').css("opacity", "1");
+
+                }, function() {
+                    $('.text_bubble').css("opacity", "0");
+                });
+
+                $('.map_path').mouseenter(function(e) {
+                    var i;
+                    for(i=0;i<25;i++){
+                        if($(event.target).is(svglist[i])){
+                        $("#tbt").html(areaname[i]+'<p>'+areatag[areatagnum[i]]+'</p>');
+                    };
+                    }
+                    
+                    if($(event.target).hasClass('cls-2')){
+                        $("#tbt").html('강북<p>도봉·강북·성북·노원</p>');
+                    };
+                    if($(event.target).hasClass('cls-3')){
+                        $("#tbt").html('동서울<p>동대문·중랑·성동·광진</p>');
+                    };
+                    if($(event.target).hasClass('cls-4')){
+                        $("#tbt").html('동남<p>강동·송파</p>');
+                    };
+                    if($(event.target).hasClass('cls-5')){
+                        $("#tbt").html('강남<p>서초·강남</p>');
+                    };
+                    if($(event.target).hasClass('cls-6')){
+                        $("#tbt").html('남서울<p>동작·관악·금천</p>');
+                    };
+                    if($(event.target).hasClass('cls-7')){
+                        $("#tbt").html('서남<p>강서·양천·영등포·구로</p>');
+                    };
+                    if($(event.target).hasClass('cls-8')){
+                        $("#tbt").html('서서울<p>은평·마포·서대문</p>');
+                    };
+                
+                });
+
+            });
+    </script>
 </head>
 
 <body>
+    <div class=text_bubble>
+            <div class="text_bubblebg" id="tbt">
+            </div>
+            <div id="triangle"></div>
+        </div>
     <div class="contain">
         <div class="main">
-            <div class="leftside">
-                <h1></h1>
-            </div>
+            <% include ../views/leftside%>
+            <div id="contents">
+                <div class="conwrap">
+                    <div class="conhead">
+                        <h3 class=loc_title>지역을 선택하세요</h3>
+                        <button type="button" onclick="modal_select()" id="areaselect" class="areabtn">지역선택</button>
+                    </div>
+            <p id="areaerror">
+            </p>
             <form autocomplete="off" method="post" action="/process/areacreate" enctype="multipart/form-data" onsubmit="return validation();">
                 <table>
-                    <h3>게시물 작성</h3>
-            <br>
                     <tr id="posttitle">
-                        <input type="hidden" id="area" name="area" />
                         <td class="box"><input type="text" name="title" id ="title" placeholder="제목" /></td>
                     </tr>
-                    <div class="btn-group" role="group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="Toggle">
-      지역
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <a onclick='area("종로",0)'><li>종로</li></a>
-        <a onclick='area("중구",0)'><li>중구</li></a>
-        <a onclick='area("용산",0)'><li>용산</li></a>
-        <a onclick='area("은평",1)'><li>은평</li></a>
-        <a onclick='area("마포",1)'><li>마포</li></a>
-        <a onclick='area("서대문",1)'><li>서대문</li></a>
-        <a onclick='area("강서",2)'><li>강서</li></a>
-        <a onclick='area("양천",2)'><li>양천</li></a>
-        <a onclick='area("영등포",2)'><li>영등포</li></a>
-        <a onclick='area("구로",2)'><li>구로</li></a>
-        <a onclick='area("동작",3)'><li>동작</li></a>
-        <a onclick='area("관악",3)'><li>관악</li></a>
-        <a onclick='area("금천",3)'><li>금천</li></a>
-        <a onclick='area("서초",4)'><li>서초</li></a>
-        <a onclick='area("강남",4)'><li>강남</li></a>
-        <a onclick='area("강동",5)'><li>강동</li></a>
-        <a onclick='area("송파",5)'><li>송파</li></a>
-        <a onclick='area("동대문",6)'><li>동대문</li></a>
-        <a onclick='area("중랑",6)'><li>중랑</li></a>
-        <a onclick='area("성동",6)'><li>성동</li></a>
-        <a onclick='area("광진",6)'><li>광진</li></a>
-        <a onclick='area("도봉",7)'><li>도봉</li></a>
-        <a onclick='area("강북",7)'><li>강북</li></a>
-        <a onclick='area("성북",7)'><li>성북</li></a>
-        <a onclick='area("노원",7)'><li>노원</li></a>
-        
-    </ul>
-  </div>
-                <p id="areaerror">
-        </p>
-                <input type="hidden" id="area" name="area"/>
+            
                     <tr id="postcontent">
                         <td class="box"><textarea name="content" id="content" placeholder="내용"></textarea></td>
+                        <input type="hidden" name="area" id="area" value="">
+                        <input type="hidden" name="areagroup" id="areagroup" value="">
                     </tr>
                 </table>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                <input type='hidden' id='areagroup' name='areagroup'>
-                <input type='file' id='files' name='userimage' multiple='multiple'>
-                <div id="preview">
+                <div class="uploadform">
+                    <input class="upload" type='file' id='files' name='userimage' multiple='multiple'>
+                    <div class="uploadimg" id="uptarget"><img src="../public/upload.png" width="25px" height="25px"></div>
                 </div>
-                <input type="submit" value="작성" />
+                
+                
+                
+                
+               
+                <div class="submit">
+                            <input type="submit" value="글 작성하기" class="text">
+                        </div>
+                
             </form>
-            <script>
+        <script>
+            document.getElementById("title").value = '';
+            document.getElementById("content").value = '';
+        
+            function validation()
+            {
+                console.log("유효성 체크!");
+              
+                if(document.getElementById("title").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "제목을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                if(document.getElementById("content").value =='')
+                    {
+                        document.getElementById("areaerror").innerHTML = "내용을 입력해 주세요";
+                        console.log("실패");
+                        return false;
+                    }
+                
+                return true;
+            }
+        
+                    
+        </script>
+                    
+                </div>
+                
+        </div>
+        </div>
+        
+        <div class="modal" id="areamodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+               <h3 class="selecth3">지역을 선택하세요</h3>
+                            <% include ../views/seoulmap%>
+            </div>
+        
+    </div>
+    <% include ../views/rfooter%>
+    
+    <script>
             
             document.getElementById("title").value = '';
             document.getElementById("content").value = '';
@@ -161,6 +219,7 @@
                 console.log(document.getElementById("area").value);
                 console.log(document.getElementById("areagroup").value);
             }
+        
         function validation()
             {
                 console.log("유효성 체크!");
@@ -185,11 +244,17 @@
                 
                 return true;
             }
-        </script>
-            <br>
-        </div>
-    </div>
-    <% include ../views/rfooter%>
+        
+                var cssfile = document.styleSheets[0].rules[0];
+                document.addEventListener('mousemove', evt => {
+                    let x = evt.clientX;
+                    let y = evt.clientY;
+                    cssfile.style.setProperty('--mouse-x', (x - 65) + "px");
+                    cssfile.style.setProperty('--mouse-y', (y - 85) + "px");
+
+                });
+
+            </script>
 </body>
 
 

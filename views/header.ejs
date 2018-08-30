@@ -1,4 +1,24 @@
 <link rel="stylesheet" type="text/css" href="../public/header.css">
+
+<style>
+
+
+    .case{
+        
+        display:none;
+        
+    }
+    .case:hover
+    {
+        display:block;
+    }
+    
+.test:hover .case
+    {
+        display:block;
+    }
+</style>
+       
 <nav1>
     <div class="wrap">
         <div id="logo">
@@ -19,11 +39,17 @@
         <%}%>
         </ul>
         <ul id="menu">
-        <li><a href="/posts/1">커뮤니티</a></li>
+        <li class="test"><a href="/posts/1">커뮤니티</a>
+            <span class="case">
+            <h4>안녕</h4>
+                <h4>안녕</h4>
+            </span>
+        </li>
         <li><a href='/hotposts/1'>핫 게시판</a></li>
         <li><a href="/areaposts/1/0">지역 커뮤니티</a></li>
         <li><a href="/resolveposts/1">What We Do</a></li>
         <li><a href="/reportposts/1">제안 게시판</a></li>
+        <li><a href="/kk">ㅇㅇ</a></li>
     </ul>
     </div>
 </nav1>
