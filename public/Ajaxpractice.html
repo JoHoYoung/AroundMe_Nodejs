@@ -1,0 +1,29 @@
+<html>
+    <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+<span id="result"></span>
+<input type="text" id="msg"/>
+<button id="okbtn">클릭!</button>
+        </body>
+<script>
+$('#okbtn').click(function(e){
+    $('#result').html('');
+    $.ajax({
+        
+        url:'http://localhost:3000/ajax',
+        dataType:'json',
+        type:'POST',
+        data:{'msg':$('#msg').val()},
+        success:function(result)
+        {
+            console.log(result['result']);
+            $('#result').html(result['result']);
+        }
+              
+    });
+    console.log("왜 안됨");
+});
+</script>
+</html>

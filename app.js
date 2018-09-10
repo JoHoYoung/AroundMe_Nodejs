@@ -1,4 +1,3 @@
-//Express 기본 모듈
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -51,7 +50,6 @@ passport.use(new LocalStrategy({
         if (results.length > 0) {
             console.log('아이디와 일치하는 사용자 찾음.');
 
-            // 2. 패스워드 확인 : 모델 인스턴스를 객체를 만들고 authenticate() 메소드 호출
             var user = new database.UserModel({
                 id: id
             });
@@ -80,7 +78,7 @@ passport.use(new LocalStrategy({
     });
 }));
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function (user, done){
 
     console.log('serilaize');
     done(null, user);
@@ -104,13 +102,9 @@ passport.use(new FacebookStrategy({
 
 function ensureAuthenticated(req, res, next) {
 
-    // 로그인이 되어 있으면, 다음 파이프라인으로 진행
-
     if (req.isAuthenticated()) {
         return next();
     }
-
-    // 로그인이 안되어 있으면, login 페이지로 진행
 
     res.redirect('/');
 
@@ -133,14 +127,18 @@ var mongoose = require('mongoose');
 //기본 속성
 app.set('port', process.env.PORT || 3000);
 
+//일반적인 요청 파라미터를 파싱 하게 된다.
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+// application/json 형식으로 전달된 요청 파라미터를 파싱 하게 된다.
 app.use(bodyParser.json());
+// --> 이 과정들을 거치면 미들웨어 안에서 요청 객체의 body객체 안에 요청 파라미터들이 들어가게 된다.
 
+//public폴더안에 있는 파일들을 사이트의 /public 패스로 접근 할 수 있게 함.
 app.use('/public', static(path.join(__dirname, 'public')));
-
+//upload폴더안에 있는 파일들을 사이트의 /upload 패스로 접근 할 수 있게 함
 app.use('/uploads', static(path.join(__dirname, 'uploads')));
 
 
@@ -157,7 +155,6 @@ app.use('/', router);
 app.use(passport.initialize());
 
 app.use(passport.session());
-
 
 app.set('view engine', 'ejs');
 app.set('views', './views')
@@ -698,13 +695,11 @@ function connectDB() {
     });
 
     database.on('disconnected', function () {
-
+        
         console.log('연결 끊어짐');
         setInterval(connectDB, 5000);
     });
-
     app.set('database', database);
-
 }
 
 function createUserSchema(database) {

@@ -37,7 +37,11 @@ Schema.createSchema = function(mongoose)
     UserSchema.method('makeSalt', function() {
 		return Math.round((new Date().valueOf() * Math.random())) + '';
 	});
-    
+    //내생각에... encryptPassword나 authenticate 를 static이 아니라 method로 하는이유는..
+    // static으로 하면 모델에서 쓸 수있고 method로 하면 객체 에서 쓸 수 있는거지.
+    // encryptPassword나 authenticate는 인스턴스 객체의 비밀번호를 암호화, 인스턴스 객체의 
+    // 비밀번호 비교.. 라서 method()로 하는거고, findById 같은거는.. 모델? 에서 정보를 찾는거니까
+    // static으로 하는게 아닐까... 잘은 모르겠다.
     UserSchema.method('encryptPassword', function(plainText, inSalt) {
 		if (inSalt) {
 			return crypto.createHmac('sha1', inSalt).update(plainText).digest('hex');
@@ -60,19 +64,6 @@ Schema.createSchema = function(mongoose)
 		return value && value.length;
 	};
     
-//    UserSchema.path('id').validate(function (id) {
-//		return id.length;
-//	}, 'id 칼럼의 값이 없습니다.');
-//	
-//	UserSchema.path('name').validate(function (name) {
-//		return name.length;
-//	}, 'name 칼럼의 값이 없습니다.');
-//	
-//	UserSchema.path('hashed_password').validate(function (hashed_password) {
-//		return hashed_password.length;
-//	}, 'hashed_password 칼럼의 값이 없습니다.');
-//	
-	   
 	// 스키마에 static 메소드 추가
 	UserSchema.static('findById', function(id, callback) {
 		return this.find({id:id}, callback);

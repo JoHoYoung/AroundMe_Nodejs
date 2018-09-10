@@ -111,16 +111,17 @@
                                         "</span>" + "<span class=\"cover\" id=" + i + ">" + "</span>" + "</div>").insertAfter("#uptarget");
     
                
-                   $("#preview").click(function() {
-                                        $(this).remove();
-                                    });
-                   
+//                   $("#preview").click(function() {
+//                                        $(this).remove();
+//                                    });
+//                   
                }
              $(".cover").click(function(){
               todelete.push((this).id);
               console.log((this).id);
               console.log("투딜맅");
               console.log(todelete);
+                 $(this).parent("#preview").remove();
             $(this).remove();
     document.getElementById("delimg").value = todelete;     
     });

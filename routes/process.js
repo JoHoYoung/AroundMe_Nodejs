@@ -11,7 +11,7 @@ var static = require('serve-static');
 var errorHandler = require('errorhandler');
 var passport = require('passport');
 var multer = require('multer');
-
+//multer.diskStorag({})
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, '../uploads')
@@ -34,6 +34,11 @@ var user = require('./user.js');
 var popup = require('window-popup').windowPopup;
 var LocalStrategy = require('passport-local').Strategy;
 var nodemailer = require('nodemailer');
+var MongoClient = require('mongodb').MongoClient;
+
+var database;
+var UserSchema;
+var UserModel;
 
 router.route('/policies').get(function (req, res) {
     res.render('policies', {});
@@ -54,7 +59,7 @@ router.route('/signup').get(function (req, res) {
 
     database.UserModel.find({}, function (err, results) {
         res.render('signup', {
-            xresults: results
+            results: results
         });
 
     });
@@ -299,13 +304,6 @@ router.route('/posts/search/all/:str/:idx').get(function (req, res) {
     var skip = path.parse(req.params.idx).base;
     req.session.returnTo = req.path;
     var Postnum;
-    $or: [{
-        quantity: {
-            $lt: 20
-        }
-    }, {
-        price: 10
-    }]
     database.PostModel.find({
         $or: [{
             content: {
@@ -997,6 +995,7 @@ router.route('/posts/:num').get(function (req, res) {
                 return;
             }
             if (results) {
+                console.dir(results[0].title);
                 areagroup = results.areagroup;
                 if (areagroup != '')
                     type = "area";
@@ -2310,6 +2309,19 @@ router.route("/people_info").get(function (req, res) {
         res.end();
     }
 });
+
+router.route("/ajax").post(function(req,res){
+
+    //console.log(req.msg);
+    var result="성공인가";
+    //res.writeHead('200',{'Content-Type':'text/json;charset=utf8'});
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    console.log(req.body.msg);
+      var responseData = {'result' : 'ok', 'email' : req.body.email}
+    res.json(responseData);
+    
+});
+
 router.route("/guide_info").get(function (req, res) {
 
     if (req.session.user) {
