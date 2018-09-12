@@ -132,7 +132,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-app.user(cors());
+app.use(cors());
 // application/json 형식으로 전달된 요청 파라미터를 파싱 하게 된다.
 app.use(bodyParser.json());
 // --> 이 과정들을 거치면 미들웨어 안에서 요청 객체의 body객체 안에 요청 파라미터들이 들어가게 된다.
@@ -560,7 +560,7 @@ app.post('/process/create', upload.array('userimage', 12), function (req, res) {
                 result.save(function (err) {
                     if (err) throw err;
                 });
-                res.redirect(`/post/${rsesult._id}/resolveposts`);
+                res.redirect(`/post/${result._id}/resolveposts`);
                 res.end();
             }
         });
