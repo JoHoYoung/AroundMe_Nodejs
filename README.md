@@ -1,4 +1,14 @@
 # Proj_SoSo
+#### 예비창업팀 '소소'(지역안전 커뮤니티 서비스). 팀 '소소' :  Society Solution라는 뜻, 사회문제 해결을 목적으로 결성한 창업 팀. 안전사고가 만연한 현 상황에서도 여전히 국민들의 안전불감증이 만연하고 있는 현실에서 그를 해결하기 위한 누구나 쉽게 접근할 수 있는 지역 안전 커뮤니티 서비스
+>- 중앙대 창업창직동아리 선정
+- K-ICT 창업멘토링 대학생팀선정
+- SVCA 최종 대회 출전팀
+
+### Server : Nodejs(Express)
+
+### Database : Mongodb + mongoose
+
+### View : EJS(Embeded JavaScript)
 
 ## 2018.07.04 Developing Note
 * * *
@@ -10,24 +20,58 @@
 > 추가할점) 추천수 기능이 필요할지도 모름, 또는 여러가지 기능이 필요할지도모름. 일단은 스키마를 간단하게 설정하되 나중에 추가사항에 따라 스키마를 변경하여야함.
 
 #### 3. 게시판 글들의 목록 -> 글을 눌렀을때 그 글들만의 각각 페이지로 구현해야함. 거기에 들어가야함. 동적으로 EJS가 필요할듯.
- 
+
 #### 4. EJS 템플릿 공부 -> EJS를 어느정도 사용하여 동적인 뷰파일, 게시판 글 목록들을 구현하는 것을 공부하였다. 좀더 공부하여 여러가지 기능을 구현할 수 있을 수준이 되어야함.
 
 * * *
 ## 2018.07.05 Developing Note
 
 #### 1. 회원가입의 비밀번호를 암호화하여 db에 저장하는 기능 구현.
-
+```
+ UserSchema
+    .virtual('password')
+    .set(function(password){
+        this._password=password;
+        this.salt = this.makeSalt();
+        this.hashed_password = this.encryptPassword(password);
+    })
+    .get(function(){return this._password});
+    
+    UserSchema.method('makeSalt', function() {
+		return Math.round((new Date().valueOf() * Math.random())) + '';
+	});
+    UserSchema.method('encryptPassword', function(plainText, inSalt) {
+		if (inSalt) {
+			return crypto.createHmac('sha1', inSalt).update(plainText).digest('hex');
+		} else {
+			return crypto.createHmac('sha1', this.salt).update(plainText).digest('hex');
+		}
+	});    
+```
 #### 2. 글 목록에서 제목을 눌렀을때 글만의 페이지로 이동하는 기능 구현.
 
 #### 3. 댓글기능 구현.
-
+```
+ database.PostModel.findOne({
+            "_id": filterd
+        }, function (err, rawContent) {
+            if (err) throw err;
+            rawContent.commentcount += 1;
+            rawContent.comments.unshift({
+                content: req.body.content,
+                writer: req.session.user.nickname
+            });
+            rawContent.save(function (err) {
+                if (err) throw err;
+            });
+        });
+```
 #### 4. 댓글, 글들의 삭제기능 구현. 현재 세션의 사용자와 비교하여, 작성자만 삭제, 수정 할 수 있게끔 구현 완료.
-> 추가할점) 게시판글 ,제목, 댓글의 수정기능 구현
-.
+> 추가할점) 게시판글 ,제목, 댓글의 수정기능 구현.
+
 #### 5. 게시판 글들의 스키마 수정, 다듬음 추천수 기능 구현을 위해 스키마 수정. 추후 구현 예정.
 
-#### 6. EJS 템플릿에 대한 이해 수준이 올라감. 동적으로 게시판을 보여주는 페이지 구현, 그리고 하나의 EJS파일로 모든 게시글의 자체 페이지 구현 완료하였음.
+#### 6. EJS 템플릿사용 동적으로 게시판을 보여주는 페이지 구현, 그리고 하나의 EJS파일로 모든 게시글의 자체 페이지 구현 완료하였음.
 
 #### 7. 라우트 정리, 코드정리 할 필요 있음.
 
@@ -40,13 +84,13 @@
 #### 2. 댓글 수정기능 실패
 > 작은 창을 띄워 거기에 적은내용으로 수정하는 기능을 구현하려 하는데 데이터 전달하는..?방법이 난처해서 실패하였다.. 다음주 안에 구현하자.
 
-#### 3. 대부분의 html 파일을 ejs로 바꾸었다. ejs에 대한 이해가 조금씩 생기는 중. 
+#### 3. 대부분의 html 파일을 ejs로 바꾸었다. ejs에 대한 이해가 조금씩 생기는 중.
 > ejs는 정말 편한것 같다. html을 동적으로 구현할 수 있다니. 대단함.
 * * *
 ## 2018.07.08 Developing Note
 
-#### 1. 조회수 기능 추가. 
-> view의 숫자를 늘린후 save를 하는 과정이 find로 하면 실패하고 findOne을 한후 save를 하면 되었다. 진짜 몇시간 동안 했는데 도대체 왜 안되는지 모르겠다. 다른 부분에서는 그냥 find로 해도 됐는데 진짜 왜!!!!!!!!!! ...하 너무 힘들었다 몇시간동안 실패했다.
+#### 1. 조회수 기능 추가.
+> view의 숫자를 늘린후 save를 하는 과정이 find로 하면 실패하고 findOne을 한후 save를 하면 되었다. 진짜 몇시간 동안 했는데 도대체 왜 안되는지 모르겠다. 힘들었다 몇시간동안 실패했다.
 
 #### 2. 게시글 추천기능 추가.
 > 같은 사용자는 해당게시물에 한번밖에 추천 못하고, 한번더 누를시 추천이 취소되는 기능 구현.. 힘들었다.
@@ -62,8 +106,22 @@
 
 ## 2018.07.11 Developing Note
 
-#### 1. 사진 업로드 기능 추가. 
-> fs모듈을 이용해 사진을 업로드 기능을 구현 하였다. 업로드된 사진 파일은 db에 저장되며 각 사진들은 파일명으로 각 게시글에 귀속된다. 게시글을 열었을때 귀속된 파일명을 참조하여 게시물에 같이 올린 사진이 나타나게 하였다. -> 사진업로드시 미리보기, 그리고 글 삭제, 수정시 이미지파일의 삭제, 수정 하는 기능을 추가하여야 한다. 사진업로드 미리보기는 정말 오래걸릴것 같은 예감이 든다.
+#### 1. 사진 업로드 기능 추가.
+> multer모듈을 이용해 사진을 업로드 기능을 구현 하였다. 업로드된 사진 파일은 db에 저장되며 각 사진들은 파일명으로 각 게시글에 귀속된다. 게시글을 열었을때 귀속된 파일명을 참조하여 게시물에 같이 올린 사진이 나타나게 하였다. -> 사진업로드시 미리보기, 그리고 글 삭제, 수정시 이미지파일의 삭제, 수정 하는 기능을 추가하여야 한다. 사진업로드 미리보기는 정말 오래걸릴것 같은 예감이 든다.
+```
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, req.session.user.id + '-' + Date.now())
+    }
+})
+
+var upload = multer({
+    storage: storage
+})
+```
 
 #### 2. 글작성자가 글삭제, 수정을 눌렀을때 바로 실행하지 않고 사용자에게 중요한 작업이니 만큼 한번더 묻는 팝업이 뜨는 기능 추가.
 > mordal을 이용하여 한번 더 묻도록 구현하였다. 낯선 작업이라 오래 걸린것 같다. bootstrap없이 자체적으로 mordal을 디자인 하여 사용해보고 싶다. 아직은 backend쪽 공부중이라 어느정도 되면.. 10월쯤? 이면 front를 공부할 여유가 생겨 시작할것 같다. 잘은 모르지만 vue.js를 배워보고 싶다.
@@ -72,13 +130,62 @@
 > 처음에 기초를 구현할때는 html로 충분하지만 점점 개발한 것들이 쌓여가다 보니 html로는 한계가 있는것 같다. ejs는 정말 좋은 템플릿 인것 같다. 아직도 brace닫는 부분에서는 실수가 나서 10분씩 눈을 치켜뜨고 찾곤 한다.
 
 #### 4. 게시글 카운트를 정상적으로 받아와서 게시글을 10개단위로 페이징 하는것에 성공하였다.
-
+```
+database.PostModel.find({
+            "areagroup": -1
+        }).sort('-created_at').skip((skip - 1) * 10).limit(10).exec(function (err, results) {..
+```
 * * *
 
 ## 2018.07.13 Developing Note
 
-#### 1. 사진 업로드 기능 보수작업 ) 다중 업로드 기능 추가. 
+#### 1. 사진 업로드 기능 보수작업 ) 다중 업로드 기능 추가.
 > multer 모듈을 활용해 사진을 여러장 올리게끔 구현 하였다. 사진을 올리기전에 미리 보여주는 작업은 너무 어려운것 같다. 몇시간을 투자했으나 아직 구현하지 못하였다. 반드시 구현하고 말것이다.
+```
+app.post('/process/areacreate', upload.array('userimage', 12), function (req, res) {
+    var database = req.app.get('database');
+    var paramtitle = req.body.title || req.query.title;
+    var paramcontent = req.body.content || req.query.content;
+    var paramuser = req.session.user.nickname;
+    var area = req.body.area;
+    var areagroup = req.body.areagroup;
+    //area.splice(1, 1);
+    console.log("지역은!?");
+    console.log(area);
+    if (database) {
+        user.addAreaPost(database, paramtitle, paramcontent, req.session.user.nickname, area, areagroup, function (err, result) {
+
+            if (err) {
+                throw err;
+            }
+            if (result) {
+
+                for (var i = 0; i < req.files.length; i++) {
+                    result.images.push({
+                        images: req.files[i].filename
+                    });
+                }
+                result.save(function (err) {
+                    if (err) throw err;
+                });
+                res.redirect(`/areaposts/1/${areagroup}`);
+                res.end();
+            } else {
+                res.write('<h2>사용자 추가 실패</h2>');
+                res.redirect('/public/signin.html');
+                res.end();
+            }
+        });
+
+    } else {
+        res.writeHead('200', {
+            'Content-Type': 'text/html;charset=utf8'
+        });
+        res.write('<h2>데이터 베이스 연결 실패</h2>');
+        res.end();
+    }
+});
+```
 
 #### 2. 글 작성 보수작업.  
 > 지금 진행하는 soso 창업팀 프로젝트에 따라 게시글을 작성할때 작성자의 지역을 입력하는 것이 필요해 보였다. button dropdown 식으로 구현하였다. 그리고 글작성을 보수하였다. 지금까지는 글제목, 내용이 비어있어도 작성이 가능했는데 글제목 또는 내용이 비어있으면 작성이 불가능하여 error 메세지가 뜨도록 구현하였다. 지금은 InnerHTML로 에러메세지를 해당 위치에 추가하는 낮은 수준이지만 곧 css로 입력되지 않은 부분의 바깥박스가 옅은 붉은색으로 바뀐다던가 하는 기능으로 바꿀것이다. 알고리즘은 모두 작성해 놓았으니 css만 익혀 바꾸면 되는 것이다.
@@ -92,23 +199,74 @@
 
 ## 2018.07.15 Developing Note
 
-### 경! 축! 드디어 미리보기 구현 성공하다.
-
 #### 1. 드디어 사진 올리기전 미리보기 구현에 성공하였다. 이것때문에 몇일 몇시간을 고생했는지 모르겠다.
 > 사진을 올리기전에 미리보기 기능을 구현하느라 정말 며칠간 애먹었는데 드디어 성공했다. 한술 더떠 게시글을 작성하기전 올린 사진을 클릭하면 업로드 취소 기능까지 만들었다. 휴.. 정말 기나긴 여정이었다. 이제 남은것은 사진을 올려 이미 작성한 게시글 수정을 눌렀을때 올렸던 사진들이 사진 올리기 미리보기처럼 뜨고 그것또한 삭제, 할 수 있어야한다. 그리고 이미 업로드 되었던 사진을 삭제 하려고 하면.. 무엇을 삭제할지 정보를 받아서 db 및 사진저장소 에서 삭제해야 하는데 어떻게 해야하는지 정말 고민이다.. 큰일이다..
+```
+    <script type="text/javascript">
+        $(document).ready(function() {
+            if (window.File && window.FileList && window.FileReader) {
+                $("#files").on("change", function(e) {
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function(e) {
+                            var file = e.target;
+                            $("<div id=\"preview\">"+"<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + "목록에서 제거" + "\"/>" +
+                                "</span>"+"<span class=\"cover\">"+"</span>"+"</div>").insertAfter("#uptarget");
+                            $("#preview").click(function() {
+                                $(this).remove();
+                            });
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
+
+    </script>
+```
 
 #### 2. 핫 게시판 구현.  
 > 게시글들 중 추천수가 10개 이상인 것들을 모아놓은 핫 게시판을 구현하였다. 몽고db 쿼리 $gt를 이용해서 하였다. 나중에는 mysql로도 구현해보고 싶은데... 정말 막막하다. 언어가 너무많고 프레임워크도 너무많은데 db도 너무 많으니 .. 이걸 어떻게 다 알고 해보지? 정말 큰일이다. 일단 지금 공부하는 Node js , Mongodb가 익숙해 지고 나면 Spring, Mysql을 공부해 보고 싶다.
-
-#### 3. Front를 공부중인 멤버들의 Front 작업
-> 나포함 3인 팀에서 2명의 멤버들은 Front 작업을 공부후 수행해 주고 있다. 완벽한 디자인은 아니라도 컨텐츠들의 배치만 조금 다듬었을 뿐인데 페이지가 확 달라보인다. 이게 내가만든건가 싶다. 내가 만든건 아니지만... Back은 내가했다 아무튼 나도 나중에 front를 공부해야겠다 흥미로워 보인다. 
 
 * * *
 
 ## 2018.07.17 Developing Note
 
-#### 1. 게시글 수정시, 업로드한 사진 보기, 해당 사진 클릭시 삭제기능 구현. 
-> 이미 업로드한 사진들을 업로드할때 사진 미리보기 하는것과 같은 모양으로 보여주고, 클릭시 삭제 기능을 구현하였다. 클릭하면 index를 받고, 여러개일 경우 그때마다 push하여 서버로 배열을 전달, 그 index들에 해당하는 사진파일 삭제, 게시글 스키마에서 사진 이름을 저장하는 배열 splice를 해주었다. 이때 큰 문제가 생겼는데 splice를 하니 배열들이 앞으로 당겨지고, 비어있는 index의 사진을 제거하자니 에러가 났다. 방법을 한참 고민하다 인덱스들을 내림차순으로 sorting한 후 splice를 진행하니 문제가 해결 되었다. 이 아이디어를 떠올리고 나니 뿌듯했다ㅋ. 아무튼 정말 오래걸린 작업이었다. 3일내내 노트북 앞에서 머리를 잡아 뜯었다.
+#### 1. 게시글 수정시, 업로드한 사진 보기, 해당 사진 클릭시 삭제기능 구현.
+> 이미 업로드한 사진들을 업로드할때 사진 미리보기 하는것과 같은 모양으로 보여주고, 클릭시 삭제 기능을 구현하였다. 클릭하면 index를 받고, 여러개일 경우 그때마다 push하여 서버로 배열을 전달, 그 index들에 해당하는 사진파일 삭제, 게시글 스키마에서 사진 이름을 저장하는 배열 splice를 해주었다. 이때 큰 문제가 생겼는데 splice를 하니 배열들이 앞으로 당겨지고, 비어있는 index의 사진을 제거하자니 에러가 났다. 방법을 한참 고민하다 인덱스들을 내림차순으로 sorting한 후 splice를 진행하니 문제가 해결 되었다. 이 아이디어를 떠올리고 나니 뿌듯했다. 아무튼 정말 오래걸린 작업이었다. 3일내내 노트북 앞에서 머리를 잡아 뜯었다.
+```
+프론트단 (삭제할 사진들의 정보들을 전달)
+      $(".cover").click(function(){
+              todelete.push((this).id);
+              console.log((this).id);
+              console.log(todelete);
+                 $(this).parent("#preview").remove();
+            $(this).remove();
+    document.getElementById("delimg").value = todelete;     
+    });
+
+서버단 (Sort 한후 삭제)
+ todelete = todelete.split(',');
+        todelete = todelete.sort().reverse();
+
+        for (var i = 0; i < todelete.length; i++) {
+            if (todelete[i] != '') {
+                fs.unlink(`./uploads/${results.images[todelete[i]].images}`, function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            }
+            results.images.splice(todelete[i], 1);
+
+        }
+```
 
 * * *
 
@@ -129,7 +287,61 @@
 
 #### 1. 회원가입 과정, nodemailer 를 사용하여 이메일인증 구현.
 > nodemailer 모듈을 사용하여 회원가입시, 이메일인증을 하기 전까진 가입은 되었으나 로그인 불가, 이메일로 보낸 링크를 타면 임시저장할때 생성한 토큰과 비교(비정상적인 경로로의 접근을 차단하기 위해 토큰 랜덤생성), 일치하면 회원가입승인, 로그인가능 하게 만들었다. nodemailer 모듈을 처음 접하다보니 익숙하지 않아 사용법을 익히는데 오래걸렸다. 몇시간은 걸린듯 하다.
+```
+프론트 단에서의 토큰 생성 과정
+var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+                for (var i = 0; i < 8; i++)
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+nodemailer 메일 발송 과정
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: '******',
+            pass: '****'
+        }
+    });
+
+    let mailOptions = {
+        from: 'whghdud17@gmail.com',
+        to: email,
+        subject: '소소에서 본인 확인인증 메일 보내드립니다',
+        html: '<p>아래의 링크를 클릭해주세요 !</p>' +
+            "<a href='http://localhost:3000/auth/?id=" + paramId + "&token=" + tokken + "'>여기를 눌러 인증해주세요</a>"
+    };
+
+    transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+    
+서버단에서의 인증과정
+router.route('/auth').get(function (req, res) {
+
+    var database = req.app.get('database');
+    var paramid = req.query.id;
+    var tokken = req.query.token;
+    console.log(paramid);
+
+    database.UserModel.findOneAndUpdate({
+        "id": paramid,
+        "tokken": tokken
+    }, {
+        "auth": 1
+    }, function (err, results) {
+
+        if (err) throw err;
+    });
+    res.redirect('/main');
+    res.end();
+
+});
+```
 #### 2. 스키마 변경
 > 개발이 쌓여갈수록 스키마가 계속 바뀌고, 라우트가 계속 바뀌고있다. 애초에 개발을 시작하기 전에 스키마, 라우트 부터 세우고 시작했어야 했는데 아무것도 모르는 상태라서 일단 뭐라도 만들면서 해보자 라고 시작했던 것이 지금 일이 커졌다. 점점 바뀌는 스키마, 추가되는 기능, 그에따라 라우트 수정등등 점점 복잡해지고 있다. 프로젝트가 작았을때는 기능 하나 추가하는것이 그렇게 힘든일이 아니었는데 점점 커지면 커질수록 기능하나 추가, 조금 바꾸는 것이 복잡해 지고 있다. 한달후에 개발이 쌓여서 프로젝트가 더 커지면 나 혼자서 이것들을 감당할 수 있을까? 기능을 하나 추가하는데 나 혼자 힘으로 가능할까? 혼자서 백엔드 개발 하는것은 쉬운일이 아니며 사람들이 하나 추가해달라는것이 개발자 입장에서 정말 골치아픈일이라고 말하는것을 조금씩 알것 같다.
 
@@ -140,15 +352,70 @@
 
 ## 2018.07.22 Developing Note
 
-#### 1. FaceBook 로그인 구현.
+#### 1. OAuth(FaceBook)구현.
 > passport-facebook 모듈을 활용하여  Facebook계정으로 로그인 하는것을 구현하였다. 페이스북에서 제공하는 정보는 이름, id 값 등이었는데 id값은 231213123같은 숫자로 되어있었다. 때문에 지금껏 만들어왔던 스키마를 또 변경하였다. 지금까지는 글 작성자, 이용자의 아이덴티티를 아이디로 정하였는데 페이스북 계정 로그인을 추가함으로서 닉네임 이라는것을 사용해야했다. 일단 페이스북으로 인증이 되면, 사용자에게 닉네임을 입력하고 그것으로 모든 이용자의 음.. 말하자면 데이터베이스의 기본키 같은 개념으로 설정하기로 하였다. 스키마를 계속 변경하게된다.. 내일도.. 모레도.. 언제쯤 틀이 딱 잡힐까. 8월안으로는 어느정도 서비스가 가능하게 안정적이면 좋겠다. 이또한 처음 써보는 모듈이라 너무 힘들었으며 추후에 kakao, naver 로그인도 구현해야겠다. 이것도 4시간은 걸린듯 하다..
+```
+var FacebookStrategy = require('passport-facebook').Strategy;
 
+passport.use(new FacebookStrategy({
+        clientID: '****',
+        clientSecret: '***',
+        callbackURL: "http://localhost:3000/auth/facebook/callback"
+    },
+    function (accessToken, refreshToken, profile, done) {
+        console.log(profile);
+        done(null, profile);
+    }
+));
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/login_success',
+
+    failureRedirect: '/login_fail'
+}));
+
+app.get('/login_success', ensureAuthenticated, function (req, res) {
+
+    var database = req.app.get('database');
+    //res.render('main', {islogin:1});
+    database.UserModel.findOne({
+        "id": req.user.id,
+        "provider": "facebook"
+    }, function (err, results) {
+        if (results) {
+            req.session.user = {
+                id: req.user.id,
+                name: results.name,
+                nickname: results.nickname,
+                authorized: true
+            };
+            if (req.session.returnTo) {
+                res.redirect(req.session.returnTo);
+                res.end();
+            } else {
+                res.redirect('/');
+                res.end();
+            }
+        } else {
+            console.log("결과없음");
+            res.render('facebooksignup', {
+                id: req.user.id,
+                name: req.user.username
+            });
+        }
+    });
+
+});
+```
+> OAuth를 통해 넘겨주는 값을 그대로 유저들이 사용하기엔 문제점이 많았다. 페이스북에서 제공하는 아이디는 숫자로 길게 이루어져있어 사용하기에는 난처했다. 따라서 페이스북으로 최초 로그인시 닉네임을 설정하게했다. 그리고 두번째 페이스북 로그인 부터는 설정 없이, 로그인이 가능하게끔 구현하였다. 닉네임을 설정하게 한 이유는 닉네임은 중복될수 없는 유일성을 충족하는 값이기 때문이다.
 * * *
 
 ## 2018.07.23 Developing Note
 
 #### 1. 게시판 세분화 복잡한 작업.(지역별 게시판 추가)
-> 지금껏 게시판이 하나만 있었다. 게시판의 갯수를 늘리는것은 문제가 아니지만 다른 성격의 게시판을 추가해야 했다. 글을 작성할때 화제, 이슈의 지역을 반드시 선택 해야하는 게시판을 만들어야 했다. 글을 쓸때 지역(서울시 내 구)을 반드시 선택해야 하며 게시판에 표시되는 글들도 구 별로 분류 할 수 있어야 했다. 버튼 드랍다운을 통해 토글식으로 지역을 선택하면 그 지역을 선택하여 작성한 글들만 보여주는 작업을 하였다. 기존 게시판과는 다른 성격이기 때문에 스키마를 변경하고, 새로운 ejs파일 두개를 만들었다. 게시글들을 보여주는 게시판과 글을 작성하는 ejs. 함수, 라우트도 하나하나 추가하였다. 지금까지 쌓아놓은게 있어서 거기에 어떤 한 기능을 추가하려니 정말 오래걸렸다. 게시판과 비슷한 기능에 조금만 추가하면 되는거라 방법은 머리속으로 알았지만 구현하는 과정에서 실수, 놓친것들이 너무 많아 디버깅에 수많은 시간을 쏟았다. console.log만 300번정도 적은것 같다. 몇번의 디버깅으로 오류를 잡아낼 수 있는 실력을 갖고싶다. 그리고 프로젝트가 더 커지기전에 기능, 컨텐츠를 세우고 작업을 해야겠다. 나중에 추가하려면.. 정말 대참사가 일어날지도 모른다. 
+> 지금껏 게시판이 하나만 있었다. 게시판의 갯수를 늘리는것은 문제가 아니지만 다른 성격의 게시판을 추가해야 했다. 글을 작성할때 화제, 이슈의 지역을 반드시 선택 해야하는 게시판을 만들어야 했다. 글을 쓸때 지역(서울시 내 구)을 반드시 선택해야 하며 게시판에 표시되는 글들도 구 별로 분류 할 수 있어야 했다. 버튼 드랍다운을 통해 토글식으로 지역을 선택하면 그 지역을 선택하여 작성한 글들만 보여주는 작업을 하였다. 기존 게시판과는 다른 성격이기 때문에 스키마를 변경하고, 새로운 ejs파일 두개를 만들었다. 게시글들을 보여주는 게시판과 글을 작성하는 ejs. 함수, 라우트도 하나하나 추가하였다. 지금까지 쌓아놓은게 있어서 거기에 어떤 한 기능을 추가하려니 정말 오래걸렸다. 게시판과 비슷한 기능에 조금만 추가하면 되는거라 방법은 머리속으로 알았지만 구현하는 과정에서 실수, 놓친것들이 너무 많아 디버깅에 수많은 시간을 쏟았다. console.log만 300번정도 적은것 같다. 몇번의 디버깅으로 오류를 잡아낼 수 있는 실력을 갖고싶다. 그리고 프로젝트가 더 커지기전에 기능, 컨텐츠를 세우고 작업을 해야겠다. 나중에 추가하려면.. 정말 대참사가 일어날지도 모른다.
 
 #### 2. 내일 할것
 > 게시판 기능 다듬기, 글수정, 삭제, 기능 다듬기, route정리, 코드정리(코드가 너무 중구난방이다. 정리해야겠다. 진짜 코드정리해야지. 진짜). 지금까지 만든것 오류체크, 다듬기.. 진짜 많이 부족하다 오류안나게 잘 다듬어야 겠다 (세션, 권한 관련).
@@ -257,11 +524,16 @@
 ## 2018.08.09 Developing Note
 
 #### 1. 몽고DB Date.now 사용시 한국시간과 맞지 않는 현상.
-> 게시글 작성 일자를 Date.now 값을 주었을때 한국시간보다 9시간이 빨랐다. 왜그런가 알아보니 국제표준시를 사용하며, 지역별 시간은 지원하지 않는다고 한다. 그래서 저장할때 9시간을 더해서 저장해 주었다. Date.now => new Date().getTime() + 1000 * 60 * 60 * 9
+> 게시글 작성 일자를 Date.now 값을 주었을때 한국시간보다 9시간이 빨랐다. 왜그런가 알아보니 국제표준시를 사용하며, 지역별 시간은 지원하지 않는다고 한다. 그래서 저장할때 9시간을 더해서 저장해 주었다. 
+```
+Date.now => new Date().getTime() + 1000 * 60 * 60 * 9
+```
 
 #### 2. 글쓴후, 로그인 한 후 즉, 사용자가 어떤작업을 한 후의 경로 동적으로 변경.
-> 어떤 작업 이전의 path를 받아오는 법을 몰라서 로그인, 글쓰기 등 의 작업을 하면 메인, 어떤 특정한 게시판 등으로 경로설정을 해놓았었다. 로그인 하지 않은 사용자가 글을보다 댓글을 달고자 로그인을 하면 메인으로 돌아가게 되어있었는데 사용자 입장에서 불편할 것 같아 언젠가 수정해야지 하다 오늘 공부를 하여 수정했다. db를 바꾸는 route를 제외하고 단순히 보기만 하는 작업은 path를 session에 저장해 둔다. 그리고 로그인을 하면 저장된 route로 돌아가고 글을 쓰고 난 후에는 자신이 쓴 글로 이동한다. req.session.returnTo=req.path;
-
+> 어떤 작업 이전의 path를 받아오는 법을 몰라서 로그인, 글쓰기 등 의 작업을 하면 메인, 어떤 특정한 게시판 등으로 경로설정을 해놓았었다. 로그인 하지 않은 사용자가 글을보다 댓글을 달고자 로그인을 하면 메인으로 돌아가게 되어있었는데 사용자 입장에서 불편할 것 같아 언젠가 수정해야지 하다 오늘 공부를 하여 수정했다. db를 바꾸는 route를 제외하고 단순히 보기만 하는 작업은 path를 session에 저장해 둔다. 그리고 로그인을 하면 저장된 route로 돌아가고 글을 쓰고 난 후에는 자신이 쓴 글로 이동한다. 
+```
+req.session.returnTo=req.path;
+```
 * * *
 
 ## 2018.08.10 Developing Note
@@ -269,7 +541,7 @@
 #### 1. 팀을 이루어 작업한다는 것.
 > 의사소통이 잘 되지 않아 팀원들이 한 프론트작업, 내가 한 서버작업을 합치는 와중에 날아간 코드들이 많았다. script태그가 날아가고... 설정해 놓았던 form tag의 id값이 날아가고.. 바뀌고.. 검색이 안되고... 정말 고생을 했다. 의사소통이 제대로 되지 않은채로 작업을 맡기고, 하니 이렇게 되는구나.. 큰 깨달음을 얻었다. 앞으로는 .. 날아갈일이 없진 않겠지만 최대한 덜 날아가는 방향으로 되도록 작업을 해야겠다.
 
-#### 2. 굳이 모달이 아니어도 되는것 제거 -> window popup으로 대체. 
+#### 2. 굳이 모달이 아니어도 되는것 제거 -> window popup으로 대체.
 > 사실 댓글수정 기능을 제외하고는 모달을 쓸 필요가 없는것 같았다. 모달을 제거하고 popup으로 대체하였다. document.getElementById(todel).submit();기능을 유용하게 써서 가능했다. 댓글 수정기능은 저번에 모달로 구현하였는데 정말 유용한것 같다.
 
 * * *
@@ -293,7 +565,7 @@
 
 ## 2018.08.14 Developing Note
 
-#### 1. passport모듈에 대하여 공부 
+#### 1. passport모듈에 대하여 공부
 > 페이스북 로그인 기능같은 경우는 passport로 구현 하였는데 기능을 구현하는 시점에는 어느정도 코드를 알아 볼 수 있어 구현이 가능하였던 거였고 처음에 로그인 기능을 만들때 passport로 구현을 하려 했으나 너무 어렵고 뭔말인지 모르겠어서 실패했다. passport를 사용하지 않아도 지금 잘 돌아가는 상태고, 문제가 없어보이는데 다들 이 모듈로 구현을 하는것 같길래 나도 공부를 하였다. 내일 구현을 해봐야겠다. 공부를 했으나 아직도 내가만든 로그인, 인증 기능이 passport에 비해 어떤점이 부족한지 잘 모르겠다.
 
 * * *
@@ -302,7 +574,84 @@
 
 #### 1. 로그인, 인증기능 passport로 재구현.
 > 예전에 구현해놨던 기능을 passport모듈을 사용하는 것으로 바꾸었다. 공부한 부분에서는 내가 원하는 기능까지 자세하게 알려주지 않아 바꾸는데 아주 고생하였다. 수많은 구글링..  어렵게 어렵게 성공하였다. 이미 만들어 놓은것을 다른것으로 바꾸는 것이 정말 어려움을 알게 되었고 차라리 다 지우고 처음부터 다시 만드는것이 더 쉬울것 같다는 생각을 하였다. 구조같은것을 잡지 않고 무조건 만들고 보자는 식으로 마음먹고 시작해서 그런지 복잡했다. passport로 바꾸기는 했으나 원래 되어있던 기능보다 부족한 부분을 잘 모르겠다. passport의 장점을 잘 모르겠다. 원래 했던 방식은 복잡했으나 passport도 충분히 복잡했으며 속도가 더 빠른지? 도 모르겠고 어렵기만 엄청 어려웠다. 나중에 실력이 오르면 뭐가 좋은지 알 날이 오겠지..
+```
+LocalStrategy 정의
+passport.use(new LocalStrategy({
 
+    usernameField: 'id',
+    passwordField: 'password',
+    passReqToCallback: true
+}, function (req, id, password, callback) {
+    var database = req.app.get('database');
+    database.UserModel.find({
+        "id": id,
+        "auth": {
+            $ne: 0
+        }
+    }, function (err, results) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+
+        console.log('아이디 [%s]로 사용자 검색결과', id);
+        console.dir(results);
+
+        if (results.length > 0) {
+            console.log('아이디와 일치하는 사용자 찾음.');
+
+            var user = new database.UserModel({
+                id: id
+            });
+            console.log(results[0]._doc);
+            var authenticated = user.authenticate(password, results[0]._doc.salt, results[0]._doc.hashed_password);
+            if (authenticated) {
+                req.session.user = {
+                    id: results[0]._doc.id,
+                    nickname: results[0]._doc.nickname,
+                    name: results[0]._doc.name,
+                    authorized: true
+                };
+                console.log('비밀번호 일치함');
+                console.log(req.session.user);
+                callback(null, results);
+            } else {
+                console.log('비밀번호 일치하지 않음');
+                callback(null, null);
+            }
+
+        } else {
+            console.log("아이디와 일치하는 사용자를 찾지 못함.");
+            callback(null, null);
+        }
+
+    });
+}));
+
+정의 후, 라우트의 Parameter로 passport 전달
+app.post('/process/login', passport.authenticate('local', {
+    failureRedirect: '/loginfail',
+    successRedirect: '/loginsuccess'
+}), (req, res) => {
+
+    console.log("응답값은?");
+    //console.log(res);
+    var database = req.app.get('database');
+    var paramId = req.body.id || req.query.id;
+    var paramPassword = req.body.password || req.query.password;
+    console.log(req.session.returnTo);
+
+    if (req.session.returnTo) {
+        res.redirect(req.session.returnTo);
+        res.end();
+    } else {
+        res.redirect('/');
+        res.end();
+    }
+});
+
+정의한 방침으로 자동으로 인증해준다.
+```
 * * *
 
 ## 2018.08.16 Developing Note
@@ -325,7 +674,7 @@
 #### 6. 메인화면등의 여러 컨텐츠 문제.
 > 회의를 통해 결정을 해야될 부분이다. 많이 부족하다.
 
-#### 7. 글쓰기, 추천, 삭제 등을 진행했을때 redirect 되는 경로 설정, 변경. 
+#### 7. 글쓰기, 추천, 삭제 등을 진행했을때 redirect 되는 경로 설정, 변경.
 > 글쓰기나 추천 같은것을 하고 난 후 돌아가게 되는 페이지가 왠지 사용자에게 좋지 않은것 같다는 생각이 들어 좋다고 생각이 드는 방향으로 바꾸어 구현하였다.
 
 #### 8. 오늘의 느낀점
@@ -344,6 +693,51 @@
 
 #### 1. 네이버 지도 API 사용, 적용
 > 처음에는 구글지도를 사용하려 했으나 돈이 드는것 같다 네이버지도 API로 구현하였다. 한번도 써본적이 없어 많이 낯설어 헤메기도 했지만 어찌어찌 해냈다. 주변에 사고난 지역에 Maker를 표시하며 마크를 클릭하면 간단한 정보, 위치 등을 보여주게끔 구현하였고 좋은 경험이었다. 지도 API를 사용하는것이 거의 처음이라 두려웠지만 막상 사용해보니 별로 어렵지는 않았다. 나중에 다른 여러 API를 사용할때 두려움 없이 접근할 수 있을것 같다.
+```
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=axS6xOzdFZLTLeVznqet&submodules=geocoder"></script>
+
+ var position = new naver.maps.LatLng(37.503804, 126.955782);
+
+        var map = new naver.maps.Map('map', {
+            center: position,
+            zoom: 12, //지도의 초기 줌 레벨
+            minZoom: 5, //지도의 최소 줌 레벨
+            zoomControl: true, //줌 컨트롤의 표시 여부
+            zoomControlOptions: { //줌 컨트롤의 옵션
+                position: naver.maps.Position.TOP_RIGHT
+            }
+        });
+
+마커의 위치정보.
+        var soso = new naver.maps.Marker({
+            position: new naver.maps.LatLng(37.503804, 126.955782),
+            map: map
+        });
+
+창에 표시될 정보 내용
+        var SoSoString = [
+            '<div class="iw_inner">',
+            '   <h3>Society Solution</h3>',
+            '   <p>서울특별시 동작구 흑석동 흑석로 84<br />',
+            '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',
+            '   </p>',
+            '</div>'
+        ].join('');
+
+클릭 리스너로 전달해줄 윈도우 창.
+        var sosowindow = new naver.maps.InfoWindow({
+            content: SoSoString
+        });
+
+리스너 등록.
+        naver.maps.Event.addListener(soso, "click", function(e) {
+            if (sosowindow.getMap()) {
+                sosowindow.close();
+            } else {
+                sosowindow.open(map, soso);
+            }
+        });
+```
 
 #### 2. 게시판별 서브게시판 컨텐츠 구상, 적용
 > 자유게시판, 지역별 게시판 안에 어떤 서브게시판이 있을까를 고민한 후 자유게시판에는 고민상담, 한줄글, 사건사고, 공지사항등을 추가, 지역별 게시판에는 동호회, 축제정보, 사진자랑, 홍보 게시판을 추가하였다. 한번에 8개나 추가하게 되어 글생성, 글수정, 게시판 표시 등 작업을 하는데 많은 시간이 걸릴것 같다. 예전에 했던 작업의 반복이라 기술적인 어려움은 없을것 같고 많은 노가다(?) 노동의 과정이 필요할 것 같다.
@@ -391,7 +785,7 @@
 ## 2018.08.26 Developing Note
 
 #### 1. 모바일서버 개발을 위해 간단히 수정후 모바일에 데이터 전송하는 법 공부
-> 모바일서버도 공부 하고싶어서 공부했다. 알아보니 Json형태로 전송하면 된다고 한다. 안드로이드 스튜디오는 거의 처음써봐서 많은 시간을 썼다. 하루종일 잡고 공부하고 안돼서 찾아보고 질문하고... JSON으로 받은데이터를 Parsing 하는것이 처음이라 어려웠지만 어떻게어떻게 해냈었는데 두개의 JSON파일을 보내는 것에서 많이 헤맸다. 두개를 각각 따로보냈을때 Parsing하는 법은 도저히 알아낼 수가 없었고 합치자니 각각 JSON파일에 key가 없어서 방법을 도저히 찾지 못하다가 stackoverflow를 통해 알아냈다. 
+> 모바일서버도 공부 하고싶어서 공부했다. 알아보니 Json형태로 전송하면 된다고 한다. 안드로이드 스튜디오는 거의 처음써봐서 많은 시간을 썼다. 하루종일 잡고 공부하고 안돼서 찾아보고 질문하고... JSON으로 받은데이터를 Parsing 하는것이 처음이라 어려웠지만 어떻게어떻게 해냈었는데 두개의 JSON파일을 보내는 것에서 많이 헤맸다. 두개를 각각 따로보냈을때 Parsing하는 법은 도저히 알아낼 수가 없었고 합치자니 각각 JSON파일에 key가 없어서 방법을 도저히 찾지 못하다가 stackoverflow를 통해 알아냈다.
 res.write(Json.stringify({result,hot})) 이런식으로 보내면 키값이 추가되어 전송되는데 받는쪽에서 어떻게 해야할지 몰랐다. 구조가 각각 1차원 배열인것은 쉽게 해냈는데 각각 json의 구조가 2차원 배열이라 많이 헷갈렸다. volley를 사용하였고 JSONObject obj = new JSONObject(response);
 후 JSONArray arr = obj.getJSONArray("key"); 이런식으로 받은 후 String title=arr.getJSONObject(i).getString("title")의 루틴.... 안드로이드 스튜디오에서 JSON관련 변수, 함수의 사용법을 몰라 많이 헤맸지만.. 이정도 루틴을 알고 있으니.. 나머지는 찾아보면서 한다면 앱개발할때 서버도 문제없이 개발할 수 있을것 같다. 한가지 고민은 웹서버를 모바일서버로 사용하여도 되는지.. 보통은 어떻게하는지... 흠.. 곧 있을 관광공사 앱개발 공모전에 서버개발자로 참여하기에 충분한것 같다. 아이디어는 있으니 팀원을 모집 해 봐야겠다.
 
@@ -427,3 +821,37 @@ res.write(Json.stringify({result,hot})) 이런식으로 보내면 키값이 추�
 
 #### 2. Ajax 공부
 > Ajax는 정말 알아야 될 것 같았던 기능이다. 회원가입시 아이디, 닉네임의 중복체크를 진행할때 Ajax 쓰는법을 몰라 회원가입경로로 이동시 유저데이터를 모두 넘겨주고 javascript로 비교하는 식으로 구현했었다. 다른 방법으로 하고 싶었는데 Ajax를 몰라서.. 꾸역꾸역 구현했던 기능이다. Ajax를 공부하고 나니 내가 원래 생각했던 방법과 딱 맞아 떨어진다. 중복체크 기능을 Ajax로 바꿔봐야겠다. 간단한 html, 서버를 만들어 Ajax로 서로 통신하는 것을 성공했다. 구현중 곤란했던 점은 'res.setHeader("Access-Control-Allow-Origin", "*");' 이 코드가 없으니 작동하지 않았던 것이다. 저 코드가 무엇을 의미하기에 있어야 하는 코드인지 공부해서 알아봐야겠다.
+```
+서버단
+router.route("/ajax").post(function(req,res){
+
+    //console.log(req.msg);
+    var result="성공인가";
+    //res.writeHead('200',{'Content-Type':'text/json;charset=utf8'});
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    console.log(req.body.msg);
+      var responseData = {'result' : 'ok', 'email' : req.body.email}
+    res.json(responseData);
+    
+});
+프론트단
+<script>
+$('#okbtn').click(function(e){
+    $('#result').html('');
+    $.ajax({
+        
+        url:'http://localhost:3000/ajax',
+        dataType:'json',
+        type:'POST',
+        data:{'msg':$('#msg').val()},
+        success:function(result)
+        {
+            console.log(result['result']);
+            $('#result').html(result['result']);
+        }
+              
+    });
+    console.log("왜 안됨");
+});
+</script>
+```
