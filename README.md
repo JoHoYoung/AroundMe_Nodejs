@@ -694,7 +694,7 @@ app.post('/process/login', passport.authenticate('local', {
 #### 1. 네이버 지도 API 사용, 적용
 > 처음에는 구글지도를 사용하려 했으나 돈이 드는것 같다 네이버지도 API로 구현하였다. 한번도 써본적이 없어 많이 낯설어 헤메기도 했지만 어찌어찌 해냈다. 주변에 사고난 지역에 Maker를 표시하며 마크를 클릭하면 간단한 정보, 위치 등을 보여주게끔 구현하였고 좋은 경험이었다. 지도 API를 사용하는것이 거의 처음이라 두려웠지만 막상 사용해보니 별로 어렵지는 않았다. 나중에 다른 여러 API를 사용할때 두려움 없이 접근할 수 있을것 같다.
 ```
-<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=axS6xOzdFZLTLeVznqet&submodules=geocoder"></script>
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=*****&submodules=geocoder"></script>
 
  var position = new naver.maps.LatLng(37.503804, 126.955782);
 
